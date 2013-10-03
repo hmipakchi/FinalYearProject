@@ -11,17 +11,14 @@
 #include "tweet_analyser.h"
 
 int main(int argc, const char * argv[]){
-//    string inputTweetDataFilename = "3_tweets.txt";
-//    string inputTweetDataFilename = "100_tweets.txt";
-    string inputTweetDataFilename = "100k_tweets.txt";
     
-//    string parsedTweetDataFilename = "3_tweets_parsed.txt";
-//    string parsedTweetDataFilename = "100_tweets_parsed.txt";
+    string inputTweetDataFilename = "100k_tweets.txt";
     string parsedTweetDataFilename = "100k_tweets_parsed.txt";
     
     vector<string> keywords;
-    keywords.push_back("london");
-    tweetAnalyserKeywordSearchOption option = OR;
+    keywords.push_back("shelvey");
+    keywords.push_back("red");
+    tweetAnalyserKeywordSearchOption option = AND;
     
     vector <string> screenNames;
     screenNames.push_back("108Lord");
@@ -39,22 +36,22 @@ int main(int argc, const char * argv[]){
     vector<Tweet> parsedTweetData = tweetAnalyser.readParsedTweetDataFromFile(parsedTweetDataFilename);
     
     /* test functionality: return tweet data of tweets that contain certain combination of keywords */
-//    vector<Tweet> twitterKeywordSelectionData = tweetAnalyser.extractKeywordsContainedTweetData(parsedTweetData, keywords, option);
-//    cout << "##########       TESTING KEYWORD SECTION         #########" << endl;
-//    for (int i = 0; i < keywords.size(); i++) {
-//        if (i == 0 && i != keywords.size()-1)
-//            cout << "##########      TESTING KEYWORDS with option '" << option << "': " << keywords.at(i);
-//        else if (i == 0 && i == keywords.size()-1)
-//            cout << "##########      TESTING KEYWORDS with option '" << option << "': " << keywords.at(i) << "      #########" << endl;
-//        else if (i != 0 && i != keywords.size()-1)
-//            cout << ", " << keywords.at(i);
-//        else
-//            cout << ", " << keywords.at(i) << "      #########" << endl;
-//    }
-//    cout << "##########         NUMBER OF TWEETS SELECTED: " << twitterKeywordSelectionData.size() << "         #########" << endl;
-//    sort(twitterKeywordSelectionData.begin(), twitterKeywordSelectionData.end());
-//    tweetAnalyser.printTweetData(twitterKeywordSelectionData);
-//    twitterKeywordSelectionData.clear();
+    vector<Tweet> twitterKeywordSelectionData = tweetAnalyser.extractKeywordsContainedTweetData(parsedTweetData, keywords, option);
+    cout << "##########       TESTING KEYWORD SECTION         #########" << endl;
+    for (int i = 0; i < keywords.size(); i++) {
+        if (i == 0 && i != keywords.size()-1)
+            cout << "##########      TESTING KEYWORDS with option '" << option << "': " << keywords.at(i);
+        else if (i == 0 && i == keywords.size()-1)
+            cout << "##########      TESTING KEYWORDS with option '" << option << "': " << keywords.at(i) << "      #########" << endl;
+        else if (i != 0 && i != keywords.size()-1)
+            cout << ", " << keywords.at(i);
+        else
+            cout << ", " << keywords.at(i) << "      #########" << endl;
+    }
+    cout << "##########         NUMBER OF TWEETS SELECTED: " << twitterKeywordSelectionData.size() << "         #########" << endl;
+    sort(twitterKeywordSelectionData.begin(), twitterKeywordSelectionData.end());
+    tweetAnalyser.printTweetData(twitterKeywordSelectionData);
+    twitterKeywordSelectionData.clear();
     
      /* test functionality: return tweet data of tweets sent by certain accounts */
 //    vector<Tweet> twitterSpecificScreenNameData = tweetAnalyser.extractSpecificScreenNameTweetData(parsedTweetData, screenNames);
@@ -113,23 +110,23 @@ int main(int argc, const char * argv[]){
 //    tweetScreenNameOccurenceCache.clear();
     
     /* test functionality: return tweets that have been @username mentioned by and to users, that have actively tweeted, and messages contains combination of the keywords (depending on the option) */
-    vector<TweetKeywordUsernameMentionedCacheItem> twitterKeywordContainedUsernameMentionedCache = tweetAnalyser.extractKeywordsContainedUsernameMentionedTweetData(parsedTweetData, keywords, option);
-    cout << "##########       TESTING KEYWORD USERNAME MENTIONED SECTION         #########" << endl;
-    for (int i = 0; i < keywords.size(); i++) {
-        if (i == 0 && i != keywords.size()-1)
-            cout << "##########      TESTING KEYWORDS with option '" << option << "': " << keywords.at(i);
-        else if (i == 0 && i == keywords.size()-1)
-            cout << "##########      TESTING KEYWORDS with option '" << option << "': " << keywords.at(i) << "      #########" << endl;
-        else if (i != 0 && i != keywords.size()-1)
-            cout << ", " << keywords.at(i);
-        else
-            cout << ", " << keywords.at(i) << "      #########" << endl;
-    }
-    cout << "##########         NUMBER OF TWEETS SELECTED: " << twitterKeywordContainedUsernameMentionedCache.size() << "         #########" << endl;
-    for (int i = 0; i < twitterKeywordContainedUsernameMentionedCache.size(); i++) {
-        cout << "[" << i << "] -> " << twitterKeywordContainedUsernameMentionedCache.at(i).toString() << endl;
-    }
-    twitterKeywordContainedUsernameMentionedCache.clear();
+//    vector<TweetKeywordUsernameMentionedCacheItem> twitterKeywordContainedUsernameMentionedCache = tweetAnalyser.extractKeywordsContainedUsernameMentionedTweetData(parsedTweetData, keywords, option);
+//    cout << "##########       TESTING KEYWORD USERNAME MENTIONED SECTION         #########" << endl;
+//    for (int i = 0; i < keywords.size(); i++) {
+//        if (i == 0 && i != keywords.size()-1)
+//            cout << "##########      TESTING KEYWORDS with option '" << option << "': " << keywords.at(i);
+//        else if (i == 0 && i == keywords.size()-1)
+//            cout << "##########      TESTING KEYWORDS with option '" << option << "': " << keywords.at(i) << "      #########" << endl;
+//        else if (i != 0 && i != keywords.size()-1)
+//            cout << ", " << keywords.at(i);
+//        else
+//            cout << ", " << keywords.at(i) << "      #########" << endl;
+//    }
+//    cout << "##########         NUMBER OF TWEETS SELECTED: " << twitterKeywordContainedUsernameMentionedCache.size() << "         #########" << endl;
+//    for (int i = 0; i < twitterKeywordContainedUsernameMentionedCache.size(); i++) {
+//        cout << "[" << i << "] -> " << twitterKeywordContainedUsernameMentionedCache.at(i).toString() << endl;
+//    }
+//    twitterKeywordContainedUsernameMentionedCache.clear();
     
     parsedTweetData.clear();
     keywords.clear();
