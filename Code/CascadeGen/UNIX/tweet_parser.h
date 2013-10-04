@@ -2,6 +2,7 @@
 #define tweet_parser_h
 
 #include "tweet.h"
+#include "utility.h"
 
 /* TweetParser class */
 

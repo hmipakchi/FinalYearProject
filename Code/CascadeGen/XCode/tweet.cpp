@@ -41,9 +41,7 @@ string TwitterAccount::getScreenName() const {
 }
 
 string TwitterAccount::toString() const {
-    stringstream id_ss;
-    id_ss << id;
-    return id_ss.str() + "," + screenName;
+    return convertIntToString(id) + "," + screenName;
 }
 
 
@@ -128,10 +126,7 @@ string Tweet::toString() const {
     for (int i = 0; i < mentions.size(); i++) {
         allMentions += mentions.at(i) + ";";
     }
-    stringstream id_ss, screenNameId_ss;
-    id_ss << id;
-    screenNameId_ss << account.getId();
-    return id_ss.str() + "\n" + account.getScreenName() + "\n" + screenNameId_ss.str() + "\n" + timeStamp + "\n" + content + "\n" + allMentions;
+    return convertIntToString(id) + "\n" + account.getScreenName() + "\n" + convertIntToString(account.getId()) + "\n" + timeStamp + "\n" + content + "\n" + allMentions;
 }
 
 bool Tweet::compareTimeStamps(const Tweet& tweet2) const {
@@ -235,9 +230,7 @@ string TweetScreenNameOccurenceCacheItem::toString() const {
         allTweetsIds_ss << tweetIds.at(i);
         allTweetsIds_ss << ";";
     }
-    stringstream noTweetsSent_ss;
-    noTweetsSent_ss << noTweetsSent;
-    return screenName + ", " + noTweetsSent_ss.str() + ", " + allTweetsIds_ss.str();
+    return screenName + ", " + convertIntToString(noTweetsSent)+ ", " + allTweetsIds_ss.str();
 }
 
 bool TweetScreenNameOccurenceCacheItem::compareNoTweetsSent(const TweetScreenNameOccurenceCacheItem& tweetScreenNameOccurenceCacheItem2) const {
@@ -317,9 +310,7 @@ string TweetKeywordOccurenceCacheItem::toString() const {
         allTweetsIds_ss << tweetIds.at(i);
         allTweetsIds_ss << ";";
     }
-    stringstream noTweetsSent_ss;
-    noTweetsSent_ss << noTweetsSent;
-    return keyword + ", " + noTweetsSent_ss.str() + ", " + allTweetsIds_ss.str();
+    return keyword + ", " + convertIntToString(noTweetsSent) + ", " + allTweetsIds_ss.str();
 }
 
 bool TweetKeywordOccurenceCacheItem::compareNoTweetsSent(const TweetKeywordOccurenceCacheItem& tweetKeywordOccurenceCacheItem2) const {

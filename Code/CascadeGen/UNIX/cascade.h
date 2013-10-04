@@ -2,6 +2,8 @@
 #define cascade_h
 
 #include "tweet.h"
+#include "utility.h"
+
 
 /* CascadeItem class */
 

@@ -3,6 +3,7 @@
 
 #include "tweet.h"
 #include "cascade.h"
+#include "utility.h"
 
 typedef enum {OR = 0, AND = 1, NOT = 2} tweetAnalyserKeywordSearchOption;
 
@@ -41,16 +42,24 @@ public:
     // return tweets that have been @username mentioned by and to users, that have actively tweeted, and messages contains combination of the keywords (depending on the option),
     vector<TweetKeywordUsernameMentionedCacheItem> extractKeywordsContainedUsernameMentionedTweetData(const vector<Tweet> tweetData, vector<string> keywords, tweetAnalyserKeywordSearchOption option);
     
-    vector<Tweet> extractOnlyFirstInfectionsTweetData(const vector<Tweet> tweetData);
-    
-    vector<Cascade> generateCascades(const vector<Tweet> tweetData, vector<string> keywords);
-    
-    vector<TwitterAccount> generateTwitterAccounts(const vector<Tweet> tweetData);
-    
+    // given tweet data and a list of keywords, write all cascades generated to an output file
     void writeCascadesDataToFile(string casacdesDataFilename, const vector<Tweet> tweetData, vector<string> keywords);
     
 private:
+    
+    // return only the first infections for each twitter account from all tweets sent
+    vector<Tweet> extractOnlyFirstInfectionsTweetData(const vector<Tweet> tweetData);
+    
+    // return a list of twitter accounts that sent tweets within the tweet data specified
+    vector<TwitterAccount> generateTwitterAccounts(const vector<Tweet> tweetData);
+    
+    // generate a single cascade from tweet data based upon a keyword
     Cascade generateCascade(const vector<Tweet> tweetData, string keyword);
+    
+    // generate a list of cascades from tweet data based upon a list of keywords
+    vector<Cascade> generateCascades(const vector<Tweet> tweetData, vector<string> keywords);
+    
+    // return a list of individual mentions from an input string
     vector<string> extractMentionsAndStoreFromString(string mentions);
     
     string mentionPostMentionAsString;

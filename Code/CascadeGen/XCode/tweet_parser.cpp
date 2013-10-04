@@ -30,10 +30,14 @@ vector<Tweet> TweetParser::parseTweetData(string inputTweetDataFilename) {
         while (!fInp.eof()) {
             getline(fInp, tweet);
             if (tweet != "") {
-                tweetScreenName = getScreenNameForSingleTweet(tweet);
-                tweetTimeStamp = getTimeStampForSingleTweet(tweet);
-                tweetContent = getContentForSingleTweet(tweet);
-                tweetMentions = getMentionsForSingleTweet(tweet);
+                try {
+                    tweetScreenName = getScreenNameForSingleTweet(tweet);
+                    tweetTimeStamp = getTimeStampForSingleTweet(tweet);
+                    tweetContent = getContentForSingleTweet(tweet);
+                    tweetMentions = getMentionsForSingleTweet(tweet);
+                } catch (const char* msg) {
+                    cerr << msg << endl;
+                }
                 vector<string>::iterator it = find(screenNames.begin(), screenNames.end(), tweetScreenName);
                 if (it == screenNames.end()) {
                     screenNames.push_back(tweetScreenName);
@@ -54,11 +58,12 @@ vector<Tweet> TweetParser::parseTweetData(string inputTweetDataFilename) {
         tweetMentions.clear();
         screenNames.clear();
         cout << "######   *****   NUMBER OF TWEETS = " << parsedTweetData.size() << "   *****   ######" << endl;
+        return parsedTweetData;
     }
     else {
-        cout << "error opening file: " << inputTweetDataFilename << endl;
+        string message = "TweetParser::parseTweetData: error opening file: " + inputTweetDataFilename;
+        throw message.c_str();
     }
-    return parsedTweetData;
 }
 
 void TweetParser::writeParsedTweetDataToFile(string parsedTweetDataFilename, vector<Tweet> parsedTweetData) {
@@ -77,7 +82,8 @@ void TweetParser::writeParsedTweetDataToFile(string parsedTweetDataFilename, vec
         fOut.close();
     }
     else {
-        cout << "error opening file: " << parsedTweetDataFilename << endl;
+        string message = "TweetParser::writeParsedTweetDataToFile: error opening file: " + parsedTweetDataFilename;
+        throw message.c_str();
     }
 }
 
@@ -93,18 +99,18 @@ string TweetParser::getScreenNameForSingleTweet(string tweet) const {
                 return screenName;
             }
             else {
-                cout << "error with tweetScreenNameStringEndPosition, position = " << tweetScreenNameStringEndPosition << endl;
-                return "";
+                string message = "TweetParser::getScreenNameForSingleTweet: error with tweetScreenNameStringEndPosition, position = " + convertIntToString((int) tweetScreenNameStringEndPosition);
+                throw message.c_str();
             }
         }
         else {
-            cout << "error with tweetScreenNameStringStartPosition, position = " << tweetScreenNameStringStartPosition << endl;
-            return "";
+            string message = "TweetParser::getScreenNameForSingleTweet: error with tweetScreenNameStringStartPosition, position = " + convertIntToString((int) tweetScreenNameStringStartPosition);
+            throw message.c_str();
         }
     }
     else {
-        cout << "error with tweetProfileSidebarFillColorStringPosition, position = " << tweetProfileSidebarFillColorStringPosition << endl;
-        return "";
+        string message = "TweetParser::getScreenNameForSingleTweet: error with tweetProfileSidebarFillColorStringPosition, position = " + convertIntToString((int) tweetProfileSidebarFillColorStringPosition);
+        throw message.c_str();
     }
 }
 
@@ -119,13 +125,13 @@ string TweetParser::getTimeStampForSingleTweet(string tweet) const {
             return timeStamp;
         }
         else {
-            cout << "error with stringStringEndPosition, position = " << stringStringEndPosition << endl;
-            return "";
+            string message = "TweetParser::getTimeStampForSingleTweet: error with stringStringEndPosition, position = " + convertIntToString((int) stringStringEndPosition);
+            throw message.c_str();
         }
     }
     else {
-        cout << "error with stringStringStartPosition, position = " << stringStringStartPosition << endl;
-        return "";
+        string message = "TweetParser::getTimeStampForSingleTweet: error with stringStringStartPosition, position = " + convertIntToString((int) stringStringStartPosition);
+        throw message.c_str();
     }
 }
 
@@ -140,13 +146,13 @@ string TweetParser::getContentForSingleTweet(string tweet) const {
             return content;
         }
         else {
-            cout << "error with tweetContentStringEndPosition, position = " << tweetContentStringEndPosition << endl;
-            return "";
+            string message = "TweetParser::getContentForSingleTweet: error with tweetContentStringEndPosition, position = " + convertIntToString((int) tweetContentStringEndPosition);
+            throw message.c_str();
         }
     }
     else {
-        cout << "error with tweetContentStringStartPosition, position = " << tweetContentStringStartPosition << endl;
-        return "";
+        string message = "TweetParser::getContentForSingleTweet: error with tweetContentStringStartPosition, position = " + convertIntToString((int) tweetContentStringStartPosition);
+        throw message.c_str();
     }
 }
 
@@ -166,20 +172,25 @@ vector<string> TweetParser::getMentionsForSingleTweet(string tweet) const {
             // at least one mention in tweet
             else {
                 while (mentions != "") {
-                    string firstMention = eraseAndReturnFirstMention(mentions);
+                    string firstMention;
+                    try {
+                        firstMention = eraseAndReturnFirstMention(mentions);
+                    } catch (const char* msg) {
+                        cerr << msg << endl;
+                    }
                     mentions_v.push_back(firstMention);
                 }
                 return mentions_v;
             }
         }
         else {
-            cout << "error with tweetMentionsStringEndPosition, position = " << tweetMentionsStringEndPosition << endl;
-            return mentions_v;
+            string message = "TweetParser::getMentionsForSingleTweet: error with tweetMentionsStringEndPosition, position = " + convertIntToString((int) tweetMentionsStringEndPosition);
+            throw message.c_str();
         }
     }
     else {
-        cout << "error with tweetMentionsStringStartPosition, position = " << tweetMentionsStringStartPosition << endl;
-        return mentions_v;
+        string message = "TweetParser::getMentionsForSingleTweet: error with tweetMentionsStringStartPosition, position = " + convertIntToString((int) tweetMentionsStringStartPosition);
+        throw message.c_str();
     }
 }
 
@@ -208,20 +219,24 @@ string TweetParser::eraseAndReturnFirstMention(string& mentions) const {
                     }
                     return screenName;
                 }
-                else
-                    cout << "error with firstMentionScreenNameEndPosition, position = " << firstMentionScreenNameEndPosition << endl;
-                return "";
+                else {
+                    string message = "TweetParser::eraseAndReturnFirstMention: error with firstMentionScreenNameEndPosition, position = " + convertIntToString((int) firstMentionScreenNameEndPosition);
+                    throw message.c_str();
+                }
             }
-            else
-                cout << "error with firstMentionScreenNameStartPosition, position = " << firstMentionScreenNameStartPosition << endl;
-            return "";
+            else {
+                string message = "TweetParser::eraseAndReturnFirstMention: error with firstMentionScreenNameStartPosition, position = " + convertIntToString((int) firstMentionScreenNameStartPosition);
+                throw message.c_str();
+            }
         }
-        else
-            cout << "error with firstMentionEndPosition, position = " << firstMentionEndPosition << endl;
-        return "";
+        else {
+            string message = "TweetParser::eraseAndReturnFirstMention: error with firstMentionEndPosition, position = " + convertIntToString((int) firstMentionEndPosition);
+            throw message.c_str();
+        }
     }
     // assume no mentions left
-    else
-        cout << "error with firstMentionStartPosition, position = " << firstMentionStartPosition << endl;
-    return "";
+    else {
+        string message = "TweetParser::eraseAndReturnFirstMention: error with firstMentionStartPosition, position = " + convertIntToString((int) firstMentionStartPosition);
+        throw message.c_str();
+    }
 }

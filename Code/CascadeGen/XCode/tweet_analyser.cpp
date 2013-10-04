@@ -39,7 +39,8 @@ vector<Tweet> TweetAnalyser::readParsedTweetDataFromFile(string parsedTweetDataF
         mentions_v.clear();
     }
     else {
-        cout << "error opening file: " << parsedTweetDataFilename << endl;
+        string message = "TweetAnalyser::readParsedTweetDataFromFile: error opening file: " + parsedTweetDataFilename;
+        throw message.c_str();
     }
     return parsedTweetData;
 }
@@ -286,6 +287,7 @@ vector<TweetKeywordUsernameMentionedCacheItem> TweetAnalyser::extractKeywordsCon
     return keywordsContainedUsernameMentionedTweetData;
 }
 
+// return a list of individual mentions from an input string
 vector<string> TweetAnalyser::extractMentionsAndStoreFromString(string mentions) {
     vector<string> mentions_v;
     if (mentions == "") {
@@ -307,6 +309,7 @@ vector<string> TweetAnalyser::extractMentionsAndStoreFromString(string mentions)
     }
 }
 
+// return only the first infections for each twitter account from all tweets sent
 vector<Tweet> TweetAnalyser::extractOnlyFirstInfectionsTweetData(const vector<Tweet> tweetData) {
     // sort tweets by screenName
     vector<Tweet> sortedTweetData = tweetData;
@@ -324,6 +327,7 @@ vector<Tweet> TweetAnalyser::extractOnlyFirstInfectionsTweetData(const vector<Tw
     return onlyFirstInfectionsTweetData;
 }
 
+// generate a list of cascades from tweet data based upon a list of keywords
 vector<Cascade> TweetAnalyser::generateCascades(const vector<Tweet> tweetData, vector<string> keywords) {
     vector<Cascade> cascades;
     for (int i = 0; i < keywords.size(); i++) {
@@ -332,6 +336,7 @@ vector<Cascade> TweetAnalyser::generateCascades(const vector<Tweet> tweetData, v
     return cascades;
 }
 
+// generate a single cascade from tweet data based upon a keyword
 Cascade TweetAnalyser::generateCascade(const vector<Tweet> tweetData, string keyword) {
     Cascade cascade;
     vector<string> keywords;
@@ -346,6 +351,7 @@ Cascade TweetAnalyser::generateCascade(const vector<Tweet> tweetData, string key
     return cascade;
 }
 
+// return a list of twitter accounts that sent tweets within the tweet data specified
 vector<TwitterAccount> TweetAnalyser::generateTwitterAccounts(const vector<Tweet> tweetData) {
     vector<TwitterAccount> accounts;
     vector<TweetScreenNameOccurenceCacheItem> screenNameOccurenceCache = extractAmountTweetDataForAllScreenNames(tweetData);
@@ -356,6 +362,7 @@ vector<TwitterAccount> TweetAnalyser::generateTwitterAccounts(const vector<Tweet
     return accounts;
 }
 
+// given tweet data and a list of keywords, write all cascades generated to an output file
 void TweetAnalyser::writeCascadesDataToFile(string casacdesDataFilename, const vector<Tweet> tweetData, vector<string> keywords) {
     ofstream fOut;
     fOut.open(casacdesDataFilename.c_str(), fstream::out);
@@ -379,6 +386,7 @@ void TweetAnalyser::writeCascadesDataToFile(string casacdesDataFilename, const v
         cascades.clear();
     }
     else {
-        cout << "error opening file: " << casacdesDataFilename << endl;
+        string message = "TweetAnalyser::writeCascadesDataToFile: error opening file: " + casacdesDataFilename;
+        throw message.c_str();
     }
 }

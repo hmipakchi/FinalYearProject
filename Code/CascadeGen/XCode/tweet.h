@@ -1,16 +1,7 @@
 #ifndef tweet_h
 #define tweet_h
 
-#include <iostream>
-#include <fstream>
-#include <string>
-#include <sstream>
-#include <vector>
-#include <time.h>
-#include <cctype>
-#include <algorithm>
-
-using namespace std;
+#include "utility.h"
 
 
 /* Twitter Account class */

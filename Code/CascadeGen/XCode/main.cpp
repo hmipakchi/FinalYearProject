@@ -6,31 +6,31 @@
 //  Copyright (c) 2013 Hesam Ipakchi. All rights reserved.
 //
 
+#include "utility.h"
 #include "tweet.h"
 #include "tweet_parser.h"
 #include "tweet_analyser.h"
 #include "cascade.h"
 
-int main(int argc, const char * argv[]){
+
+int main(int argc, const char * argv[]) {
+    
 //    string inputTweetDataFilename = "3_tweets.txt";
-    string inputTweetDataFilename = "100_tweets.txt";
-//    string inputTweetDataFilename = "100k_tweets.txt";
+//    string inputTweetDataFilename = "100_tweets.txt";
+    string inputTweetDataFilename = "100k_tweets.txt";
     
 //    string parsedTweetDataFilename = "3_tweets_parsed.txt";
-    string parsedTweetDataFilename = "100_tweets_parsed.txt";
-//    string parsedTweetDataFilename = "100k_tweets_parsed.txt";
+//    string parsedTweetDataFilename = "100_tweets_parsed.txt";
+    string parsedTweetDataFilename = "100k_tweets_parsed.txt";
     
     string cascadesDataFilename = "cascades.txt";
     
     vector<string> keywords;
-//    keywords.push_back("referee");
-//    keywords.push_back("red card");
-//    keywords.push_back("shelvey");
-//    keywords.push_back("lfc");
-//    keywords.push_back("mufc");
-    keywords.push_back("temperature");
-    keywords.push_back("hollyoaks");
-    keywords.push_back("nice");
+    keywords.push_back("referee");
+    keywords.push_back("red card");
+    keywords.push_back("shelvey");
+    keywords.push_back("lfc");
+    keywords.push_back("mufc");
     tweetAnalyserKeywordSearchOption option = OR;
     
     vector <string> screenNames;
@@ -41,26 +41,36 @@ int main(int argc, const char * argv[]){
 
     /* parse tweet data to a cleaner format */
 //    TweetParser tweetParser;
-//    vector<Tweet> parsedTweetData = tweetParser.parseTweetData(inputTweetDataFilename);
-//    tweetParser.writeParsedTweetDataToFile(parsedTweetDataFilename, parsedTweetData);
+//    vector<Tweet> parsedTweetData;
+//    try {
+//        parsedTweetData = tweetParser.parseTweetData(inputTweetDataFilename);
+//        tweetParser.writeParsedTweetDataToFile(parsedTweetDataFilename, parsedTweetData);
+//    } catch (const char* msg) {
+//        cerr << msg << endl;
+//    }
     
     /* analysed parsed tweet data */
     TweetAnalyser tweetAnalyser;
-    vector<Tweet> parsedTweetData = tweetAnalyser.readParsedTweetDataFromFile(parsedTweetDataFilename);
+    vector<Tweet> parsedTweetData;
+    try {
+        parsedTweetData = tweetAnalyser.readParsedTweetDataFromFile(parsedTweetDataFilename);
+    } catch (const char* msg) {
+        cerr << msg << endl;
+    }
 
     /* test functionality: write cascades to file based on input tweets and keywords */
-    cout << "##########       TESTING CASCADES SECTION         #########" << endl;
-    for (int i = 0; i < keywords.size(); i++) {
-        if (i == 0 && i != keywords.size()-1)
-            cout << "##########      TESTING KEYWORDS: " << keywords.at(i);
-        else if (i == 0 && i == keywords.size()-1)
-            cout << "##########      TESTING KEYWORDS: " << keywords.at(i) << "      #########" << endl;
-        else if (i != 0 && i != keywords.size()-1)
-            cout << ", " << keywords.at(i);
-        else
-            cout << ", " << keywords.at(i) << "      #########" << endl;
-    }
-    tweetAnalyser.writeCascadesDataToFile(cascadesDataFilename, parsedTweetData, keywords);
+//    cout << "##########       TESTING CASCADES SECTION         #########" << endl;
+//    for (int i = 0; i < keywords.size(); i++) {
+//        if (i == 0 && i != keywords.size()-1)
+//            cout << "##########      TESTING KEYWORDS: " << keywords.at(i);
+//        else if (i == 0 && i == keywords.size()-1)
+//            cout << "##########      TESTING KEYWORDS: " << keywords.at(i) << "      #########" << endl;
+//        else if (i != 0 && i != keywords.size()-1)
+//            cout << ", " << keywords.at(i);
+//        else
+//            cout << ", " << keywords.at(i) << "      #########" << endl;
+//    }
+//    tweetAnalyser.writeCascadesDataToFile(cascadesDataFilename, parsedTweetData, keywords);
     
     /* test functionality: return tweet data of tweets that contain certain combination of keywords */
 //    vector<Tweet> twitterKeywordSelectionData = tweetAnalyser.extractKeywordsContainedTweetData(parsedTweetData, keywords, option);

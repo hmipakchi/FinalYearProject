@@ -50,10 +50,7 @@ string CascadeItem::getTimeStampFormat() const {
 }
 
 string CascadeItem::toString() const {
-    stringstream id_ss, timeStamp_ss;
-    id_ss << account.getId();
-    timeStamp_ss << convertTimeStampToSeconds(timeStamp);
-    return id_ss.str() + "," + timeStamp_ss.str();
+    return convertIntToString(account.getId()) + "," + convertDoubleToString(convertTimeStampToSeconds(timeStamp));
 }
 
 // note: keep reference time of September 21, 2012 00:00:00
