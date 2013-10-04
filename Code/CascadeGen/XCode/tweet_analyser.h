@@ -33,6 +33,9 @@ public:
     // return, for each screen name, all tweets sent by the account
     vector<Tweet> extractSpecificScreenNameTweetData(const vector<Tweet> tweetData, vector<string> screenNames);
     
+    // return, for each screen name id, all tweets sent by the account
+    vector<Tweet> extractSpecificScreenNameTweetData(const vector<Tweet> tweetData, vector<int> screenNameIds);
+    
     // return, for a combination of the keywords (depending on the option), all tweets containing the combination
     vector<Tweet> extractKeywordsContainedTweetData(const vector<Tweet> tweetData, vector<string> keywords, tweetAnalyserKeywordSearchOption option);
     

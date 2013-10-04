@@ -155,8 +155,14 @@ bool Tweet::compareIds(const Tweet& tweet2) const {
     return (id1 < id2) ? true : false;
 }
 
+bool Tweet::compareScreenNameIds(const Tweet& tweet2) const {
+    int id1 = account.getId();
+    int id2 = tweet2.account.getId();
+    return (id1 < id2) ? true : false;
+}
+
 bool Tweet::operator<(const Tweet& tweet2) const {
-    return compareScreenNames(tweet2);
+    return compareScreenNameIds(tweet2);
 }
 
 
@@ -173,27 +179,21 @@ TweetScreenNameOccurenceCacheItem TweetScreenNameOccurenceCacheItem::operator=(c
         return *this;
     }
     else {
-        screenName = tc.screenName;
-        screenNameId = tc.screenNameId;
-        noTweetsSent= tc.noTweetsSent;
+        account = tc.account;
+        noTweetsSent = tc.noTweetsSent;
         tweetIds = tc.tweetIds;
         return *this;
     }
 }
 
-TweetScreenNameOccurenceCacheItem::TweetScreenNameOccurenceCacheItem(string screenName, int screenNameId, int noTweetsSent, vector<int> tweetIds) {
-    this->screenName = screenName;
-    this->screenNameId = screenNameId;
+TweetScreenNameOccurenceCacheItem::TweetScreenNameOccurenceCacheItem(TwitterAccount account, int noTweetsSent, vector<int> tweetIds) {
+    this->account = account;
     this->noTweetsSent = noTweetsSent;
     this->tweetIds = tweetIds;
 }
 
-string TweetScreenNameOccurenceCacheItem::getScreenName() const {
-    return screenName;
-}
-
-int TweetScreenNameOccurenceCacheItem::getScreenNameId() const {
-    return screenNameId;
+TwitterAccount TweetScreenNameOccurenceCacheItem::getAccount() const {
+    return account;
 }
 
 int TweetScreenNameOccurenceCacheItem::getNoTweetsSent() const {
@@ -204,12 +204,8 @@ vector<int> TweetScreenNameOccurenceCacheItem::getTweetIds() const {
     return tweetIds;
 }
 
-void TweetScreenNameOccurenceCacheItem::setScreenName(const string screenName) {
-    this->screenName = screenName;
-}
-
-void TweetScreenNameOccurenceCacheItem::setScreenNameId(const int screenNameId) {
-    this->screenNameId = screenNameId;
+void TweetScreenNameOccurenceCacheItem::setAccount(const TwitterAccount& account) {
+    this->account = account;
 }
 
 void TweetScreenNameOccurenceCacheItem::setNoTweetsSent(const int noTweetsSent) {
@@ -230,7 +226,7 @@ string TweetScreenNameOccurenceCacheItem::toString() const {
         allTweetsIds_ss << tweetIds.at(i);
         allTweetsIds_ss << ";";
     }
-    return screenName + ", " + convertIntToString(noTweetsSent)+ ", " + allTweetsIds_ss.str();
+    return account.toString() + ", " + convertIntToString(noTweetsSent)+ ", " + allTweetsIds_ss.str();
 }
 
 bool TweetScreenNameOccurenceCacheItem::compareNoTweetsSent(const TweetScreenNameOccurenceCacheItem& tweetScreenNameOccurenceCacheItem2) const {
@@ -238,8 +234,8 @@ bool TweetScreenNameOccurenceCacheItem::compareNoTweetsSent(const TweetScreenNam
 }
 
 bool TweetScreenNameOccurenceCacheItem::compareScreenNames(const TweetScreenNameOccurenceCacheItem& tweetScreenNameOccurenceCacheItem2) const {
-    string screenName1 = screenName;
-    string screenName2 = tweetScreenNameOccurenceCacheItem2.screenName;
+    string screenName1 = account.getScreenName();
+    string screenName2 = tweetScreenNameOccurenceCacheItem2.account.getScreenName();
     transform(screenName1.begin(), screenName1.end(), screenName1.begin(), ::tolower);
     transform(screenName2.begin(), screenName2.end(), screenName2.begin(), ::tolower);
     return (screenName1 < screenName2) ? true : false;

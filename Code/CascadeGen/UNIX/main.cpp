@@ -15,15 +15,13 @@
 
 int main(int argc, const char * argv[]) {
     
-//    string inputTweetDataFilename = "3_tweets.txt";
-//    string inputTweetDataFilename = "100_tweets.txt";
     string inputTweetDataFilename = "100k_tweets.txt";
     
-//    string parsedTweetDataFilename = "3_tweets_parsed.txt";
-//    string parsedTweetDataFilename = "100_tweets_parsed.txt";
     string parsedTweetDataFilename = "100k_tweets_parsed.txt";
     
-    string cascadesDataFilename = "cascades.txt";
+    vector<Tweet> parsedTweetData;
+    
+    string cascadesDataFilename = "example-cascades.txt";
     
     vector<string> keywords;
     keywords.push_back("referee");
@@ -36,12 +34,17 @@ int main(int argc, const char * argv[]) {
     vector <string> screenNames;
     screenNames.push_back("108Lord");
     
+    vector<int> screenNameIds;
+    screenNameIds.push_back(18227);
+    screenNameIds.push_back(11589);
+    screenNameIds.push_back(3644);
+    screenNameIds.push_back(3195);
+    
     vector<int> tweetIds;
     tweetIds.push_back(21297);
     
     /* parse tweet data to a cleaner format */
     //    TweetParser tweetParser;
-    //    vector<Tweet> parsedTweetData;
     //    try {
     //        parsedTweetData = tweetParser.parseTweetData(inputTweetDataFilename);
     //        tweetParser.writeParsedTweetDataToFile(parsedTweetDataFilename, parsedTweetData);
@@ -51,7 +54,6 @@ int main(int argc, const char * argv[]) {
     
     /* analysed parsed tweet data */
     TweetAnalyser tweetAnalyser;
-    vector<Tweet> parsedTweetData;
     try {
         parsedTweetData = tweetAnalyser.readParsedTweetDataFromFile(parsedTweetDataFilename);
     } catch (const char* msg) {
@@ -59,18 +61,18 @@ int main(int argc, const char * argv[]) {
     }
     
     /* test functionality: write cascades to file based on input tweets and keywords */
-    //    cout << "##########       TESTING CASCADES SECTION         #########" << endl;
-    //    for (int i = 0; i < keywords.size(); i++) {
-    //        if (i == 0 && i != keywords.size()-1)
-    //            cout << "##########      TESTING KEYWORDS: " << keywords.at(i);
-    //        else if (i == 0 && i == keywords.size()-1)
-    //            cout << "##########      TESTING KEYWORDS: " << keywords.at(i) << "      #########" << endl;
-    //        else if (i != 0 && i != keywords.size()-1)
-    //            cout << ", " << keywords.at(i);
-    //        else
-    //            cout << ", " << keywords.at(i) << "      #########" << endl;
-    //    }
-    //    tweetAnalyser.writeCascadesDataToFile(cascadesDataFilename, parsedTweetData, keywords);
+    cout << "##########       TESTING CASCADES SECTION         #########" << endl;
+    for (int i = 0; i < keywords.size(); i++) {
+        if (i == 0 && i != keywords.size()-1)
+            cout << "##########      TESTING KEYWORDS: " << keywords.at(i);
+        else if (i == 0 && i == keywords.size()-1)
+            cout << "##########      TESTING KEYWORDS: " << keywords.at(i) << "      #########" << endl;
+        else if (i != 0 && i != keywords.size()-1)
+            cout << ", " << keywords.at(i);
+        else
+            cout << ", " << keywords.at(i) << "      #########" << endl;
+    }
+    tweetAnalyser.writeCascadesDataToFile(cascadesDataFilename, parsedTweetData, keywords);
     
     /* test functionality: return tweet data of tweets that contain certain combination of keywords */
     //    vector<Tweet> twitterKeywordSelectionData = tweetAnalyser.extractKeywordsContainedTweetData(parsedTweetData, keywords, option);
@@ -90,7 +92,7 @@ int main(int argc, const char * argv[]) {
     //    tweetAnalyser.printTweetData(twitterKeywordSelectionData);
     //    twitterKeywordSelectionData.clear();
     
-    /* test functionality: return tweet data of tweets sent by certain accounts */
+    /* test functionality: return tweet data of tweets sent by certain accounts via screenName check */
     //    vector<Tweet> twitterSpecificScreenNameData = tweetAnalyser.extractSpecificScreenNameTweetData(parsedTweetData, screenNames);
     //    cout << "##########       TESTING SCREENAME SECTION         #########" << endl;
     //    for (int i = 0; i < screenNames.size(); i++) {
@@ -105,6 +107,23 @@ int main(int argc, const char * argv[]) {
     //    }
     //    cout << "##########         NUMBER OF TWEETS SELECTED: " << twitterSpecificScreenNameData.size() << "         #########" << endl;
     //    sort(twitterSpecificScreenNameData.begin(), twitterSpecificScreenNameData.end());
+    //    tweetAnalyser.printTweetData(twitterSpecificScreenNameData);
+    //    twitterSpecificScreenNameData.clear();
+    
+    /* test functionality: return tweet data of tweets sent by certain accounts via sreenNameId check */
+    //    vector<Tweet> twitterSpecificScreenNameData = tweetAnalyser.extractSpecificScreenNameTweetData(parsedTweetData, screenNameIds);
+    //    cout << "##########       TESTING SCREENAME IDS SECTION         #########" << endl;
+    //    for (int i = 0; i < screenNameIds.size(); i++) {
+    //        if (i == 0 && i != screenNameIds.size()-1)
+    //            cout << "##########      TESTING SCREENAME IDS: " << screenNameIds.at(i);
+    //        else if (i == 0 && i == screenNameIds.size()-1)
+    //            cout << "##########      TESTING SCREENAME IDS: " << screenNameIds.at(i) << "      #########" << endl;
+    //        else if (i != 0 && i != screenNameIds.size()-1)
+    //            cout << ", " << screenNameIds.at(i);
+    //        else
+    //            cout << ", " << screenNameIds.at(i) << "      #########" << endl;
+    //    }
+    //    cout << "##########         NUMBER OF TWEETS SELECTED: " << twitterSpecificScreenNameData.size() << "         #########" << endl;
     //    tweetAnalyser.printTweetData(twitterSpecificScreenNameData);
     //    twitterSpecificScreenNameData.clear();
     
@@ -137,14 +156,14 @@ int main(int argc, const char * argv[]) {
     //    tweetKeywordOccurenceCache.clear();
     
     /* test functionality: return statistics (number of tweets) sent by all distinct accounts */
-    //    vector<TweetScreenNameOccurenceCacheItem> tweetScreenNameOccurenceCache = tweetAnalyser.extractAmountTweetDataForAllScreenNames(parsedTweetData);
-    //    cout << "##########       TESTING SCREENAME OCURENCE CACHE SECTION         #########" << endl;
-    //    cout << "##########         NUMBER OF DISTINCT SCERENNAMES: " << tweetScreenNameOccurenceCache.size() << "         #########" << endl;
-    //    sort(tweetScreenNameOccurenceCache.begin(), tweetScreenNameOccurenceCache.end());
-    //    for (int i = 0; i < tweetScreenNameOccurenceCache.size(); i++) {
-    //        cout << "[" << i << "] -> " << tweetScreenNameOccurenceCache.at(i).toString() << endl;
-    //    }
-    //    tweetScreenNameOccurenceCache.clear();
+//    vector<TweetScreenNameOccurenceCacheItem> tweetScreenNameOccurenceCache = tweetAnalyser.extractAmountTweetDataForAllScreenNames(parsedTweetData);
+//    cout << "##########       TESTING SCREENAME OCURENCE CACHE SECTION         #########" << endl;
+//    cout << "##########         NUMBER OF DISTINCT SCERENNAMES: " << tweetScreenNameOccurenceCache.size() << "         #########" << endl;
+//    sort(tweetScreenNameOccurenceCache.begin(), tweetScreenNameOccurenceCache.end());
+//    for (int i = 0; i < tweetScreenNameOccurenceCache.size(); i++) {
+//        cout << "[" << i << "] -> " << tweetScreenNameOccurenceCache.at(i).toString() << endl;
+//    }
+//    tweetScreenNameOccurenceCache.clear();
     
     /* test functionality: return tweets that have been @username mentioned by and to users, that have actively tweeted, and messages contains combination of the keywords (depending on the option) */
     //    vector<TweetKeywordUsernameMentionedCacheItem> twitterKeywordContainedUsernameMentionedCache = tweetAnalyser.extractKeywordsContainedUsernameMentionedTweetData(parsedTweetData, keywords, option);
@@ -168,6 +187,7 @@ int main(int argc, const char * argv[]) {
     parsedTweetData.clear();
     keywords.clear();
     screenNames.clear();
+    screenNameIds.clear();
     tweetIds.clear();
     
     return 0;

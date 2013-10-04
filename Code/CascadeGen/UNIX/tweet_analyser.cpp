@@ -55,34 +55,39 @@ void TweetAnalyser::printTweetData(vector<Tweet> tweetData) {
     }
 }
 
-// note: NEED to sort Tweet objects by screenName !!!
+// note: NEED to sort Tweet objects by screenNameId !!!
 // return all distinct screen names with number of tweets sent from each screen name, as well as id's of all tweets sent
 vector<TweetScreenNameOccurenceCacheItem> TweetAnalyser::extractAmountTweetDataForAllScreenNames(const vector<Tweet> tweetData) const {
-    string screenName;
-    string screenNamePreviousTweet;
-    int noDistinctScreenNames = 0;
+    int screenNameId;
+    int screenNameIdPreviousTweet;
     vector<TweetScreenNameOccurenceCacheItem> tweetScreenNameOccurenceCache;
     vector<Tweet> sortedTweetData = tweetData;
     vector<int> tweetIds;
+    vector<int> screenNameIds;
+    int noDistinctAccounts = 0;
     sort(sortedTweetData.begin(), sortedTweetData.end());
     for (int i = 0; i < sortedTweetData.size(); i++) {
-        screenNamePreviousTweet = screenName;
-        screenName = sortedTweetData.at(i).getAccount().getScreenName();
-        // if screen name has not occurred previously
-        if (screenName.compare(screenNamePreviousTweet) != 0) {
+        screenNameIdPreviousTweet = screenNameId;
+        screenNameId = sortedTweetData.at(i).getAccount().getId();
+        // if screen name id is new
+        if (screenNameIdPreviousTweet != screenNameId) {
+            screenNameIds.push_back(screenNameId);
             tweetIds.clear();
             tweetIds.push_back(sortedTweetData.at(i).getId());
-            tweetScreenNameOccurenceCache.push_back(TweetScreenNameOccurenceCacheItem(screenName, noDistinctScreenNames, 1, tweetIds));
-            noDistinctScreenNames++;
+            tweetScreenNameOccurenceCache.push_back(TweetScreenNameOccurenceCacheItem(TwitterAccount(sortedTweetData.at(i).getAccount()), 1, tweetIds));
+            noDistinctAccounts++;
         }
-        // if screen name has not occurred previously
+        // if screen name id is not new
         else {
-            tweetIds = tweetScreenNameOccurenceCache.at(noDistinctScreenNames-1).getTweetIds();
+            tweetIds = tweetScreenNameOccurenceCache.at(noDistinctAccounts-1).getTweetIds();
             tweetIds.push_back(sortedTweetData.at(i).getId());
-            tweetScreenNameOccurenceCache.at(noDistinctScreenNames-1).incrementNoTweetsSent();
-            tweetScreenNameOccurenceCache.at(noDistinctScreenNames-1).setTweetIds(tweetIds);
+            tweetScreenNameOccurenceCache.at(noDistinctAccounts-1).incrementNoTweetsSent();
+            tweetScreenNameOccurenceCache.at(noDistinctAccounts-1).setTweetIds(tweetIds);
         }
     }
+    tweetIds.clear();
+    screenNameIds.clear();
+    sortedTweetData.clear();
     return tweetScreenNameOccurenceCache;
 }
 
@@ -126,6 +131,31 @@ vector<Tweet> TweetAnalyser::extractSpecificScreenNameTweetData(const vector<Twe
             }
             else {
                 if ((tweetScreenName.compare(screenNames.at(j)) == 0) || tweetSelectionOR) {
+                    specificScreenNameTweetData.push_back(tweetData.at(i));
+                }
+            }
+        }
+        tweetSelectionOR = false;
+    }
+    return specificScreenNameTweetData;
+}
+
+// return, for each screen name id, all tweets sent by the account
+vector<Tweet> TweetAnalyser::extractSpecificScreenNameTweetData(const vector<Tweet> tweetData, vector<int> screenNameIds) {
+    vector<Tweet> specificScreenNameTweetData;
+    // false => case insensitive, true => case sensitive
+    bool tweetSelectionOR = false;
+    int tweetScreenNameId;
+    for (int i = 0; i < tweetData.size(); i++) {
+        tweetScreenNameId = tweetData.at(i).getAccount().getId();
+        for (int j = 0; j < screenNameIds.size(); j++) {
+            if (j != screenNameIds.size()-1) {
+                if (tweetScreenNameId == screenNameIds.at(j)) {
+                    tweetSelectionOR = true;
+                }
+            }
+            else {
+                if ((tweetScreenNameId == screenNameIds.at(j)) || tweetSelectionOR) {
                     specificScreenNameTweetData.push_back(tweetData.at(i));
                 }
             }
@@ -359,7 +389,7 @@ vector<TwitterAccount> TweetAnalyser::generateTwitterAccounts(const vector<Tweet
     vector<TwitterAccount> accounts;
     vector<TweetScreenNameOccurenceCacheItem> screenNameOccurenceCache = extractAmountTweetDataForAllScreenNames(tweetData);
     for (int i = 0; i < screenNameOccurenceCache.size(); i++) {
-        accounts.push_back(TwitterAccount(screenNameOccurenceCache.at(i).getScreenNameId(), screenNameOccurenceCache.at(i).getScreenName()));
+        accounts.push_back(TwitterAccount(screenNameOccurenceCache.at(i).getAccount()));
     }
     screenNameOccurenceCache.clear();
     return accounts;

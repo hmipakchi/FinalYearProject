@@ -23,6 +23,7 @@ vector<Tweet> TweetParser::parseTweetData(string inputTweetDataFilename) {
     if (fInp.is_open()) {
         int id = 0;
         int screenNameId = 0;
+        int resetScreenNameId = 0;
         string tweetScreenName, tweetTimeStamp, tweetContent;
         vector<string> tweetMentions;
         vector<string> screenNames;
@@ -39,25 +40,32 @@ vector<Tweet> TweetParser::parseTweetData(string inputTweetDataFilename) {
                     cerr << msg << endl;
                 }
                 vector<string>::iterator it = find(screenNames.begin(), screenNames.end(), tweetScreenName);
+                // new screen name found
                 if (it == screenNames.end()) {
                     screenNames.push_back(tweetScreenName);
                     incrementScreenNameId = true;
                 }
+                // screen name already found
                 else {
+                    resetScreenNameId = screenNameId;
                     screenNameId = (int) (it - screenNames.begin());
                     incrementScreenNameId = false;
                 }
                 parsedTweetData.push_back(Tweet(id, TwitterAccount(screenNameId, tweetScreenName), tweetTimeStamp, tweetContent, tweetMentions));
+                if (incrementScreenNameId) {
+                    screenNameId++;
+                }
+                else {
+                    screenNameId = resetScreenNameId;
+                }
+                id++;
             }
-            if (incrementScreenNameId) {
-                screenNameId++;
-            }
-            id++;
         }
         fInp.close();
         tweetMentions.clear();
         screenNames.clear();
         cout << "######   *****   NUMBER OF TWEETS = " << parsedTweetData.size() << "   *****   ######" << endl;
+        cout << "######   *****   NUMBER OF TWITTER ACCOUNTS = " << screenNameId << "   *****   ######" << endl;
         return parsedTweetData;
     }
     else {

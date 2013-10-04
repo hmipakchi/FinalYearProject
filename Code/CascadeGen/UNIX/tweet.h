@@ -77,6 +77,8 @@ public:
     
     bool compareIds(const Tweet& tweet2) const;
     
+    bool compareScreenNameIds(const Tweet& tweet2) const;
+    
     bool operator<(const Tweet& tweet2) const;
     
 private:
@@ -99,19 +101,15 @@ public:
     
     TweetScreenNameOccurenceCacheItem operator=(const TweetScreenNameOccurenceCacheItem& tc);
     
-    TweetScreenNameOccurenceCacheItem(string screenName, int screenNameId, int noTweetsSent, vector<int> tweetIds);
+    TweetScreenNameOccurenceCacheItem(TwitterAccount account, int noTweetsSent, vector<int> tweetIds);
     
-    string getScreenName() const;
-    
-    int getScreenNameId() const;
+    TwitterAccount getAccount() const;
     
     int getNoTweetsSent() const;
     
     vector<int> getTweetIds() const;
     
-    void setScreenName(const string screenName);
-    
-    void setScreenNameId(const int screenNameId);
+    void setAccount(const TwitterAccount& account);
     
     void setNoTweetsSent(const int noTweetsSent);
     
@@ -128,8 +126,7 @@ public:
     bool operator<(const TweetScreenNameOccurenceCacheItem& tweetScreenNameOccurenceCacheItem2) const;
     
 private:
-    string screenName;
-    int screenNameId;
+    TwitterAccount account;
     int noTweetsSent;
     vector<int> tweetIds;
 };
