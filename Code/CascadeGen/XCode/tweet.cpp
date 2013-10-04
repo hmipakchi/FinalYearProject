@@ -1,5 +1,52 @@
 #include "tweet.h"
 
+/* Twitter Account class methods */
+
+TwitterAccount::TwitterAccount() {}
+
+TwitterAccount::~TwitterAccount() {}
+
+TwitterAccount::TwitterAccount(const TwitterAccount& tc):id(tc.id), screenName(tc.screenName) {}
+
+TwitterAccount::TwitterAccount(int id, string screenName) {
+    this->id = id;
+    this->screenName = screenName;
+}
+
+TwitterAccount TwitterAccount::operator=(const TwitterAccount& tc) {
+    if (this == &tc) {
+        return *this;
+    }
+    else {
+        id = tc.id;
+        screenName = tc.screenName;
+        return *this;
+    }
+}
+
+void TwitterAccount::setId(const int id) {
+    this->id = id;
+}
+
+int TwitterAccount::getId() const {
+    return id;
+}
+
+void TwitterAccount::setScreenName (const string screenName) {
+    this->screenName = screenName;
+}
+
+string TwitterAccount::getScreenName() const {
+    return screenName;
+}
+
+string TwitterAccount::toString() const {
+    stringstream id_ss;
+    id_ss << id;
+    return id_ss.str() + "," + screenName;
+}
+
+
 /* Tweet class methods */
 
 Tweet::Tweet() {}
@@ -8,11 +55,11 @@ Tweet::~Tweet() {
     mentions.clear();
 }
 
-Tweet::Tweet(const Tweet& tc):id(tc.id), screenName(tc.screenName), timeStamp(tc.timeStamp), content(tc.content), mentions(tc.mentions) {}
+Tweet::Tweet(const Tweet& tc):id(tc.id), account(tc.account), timeStamp(tc.timeStamp), content(tc.content), mentions(tc.mentions) {}
 
-Tweet::Tweet(int id, string screenName, string timeStamp, string content, vector<string> mentions) {
+Tweet::Tweet(int id, TwitterAccount account, string timeStamp, string content, vector<string> mentions) {
     this->id = id;
-    this->screenName = screenName;
+    this->account = account;
     this->timeStamp = timeStamp;
     this->content = content;
     this->mentions = mentions;
@@ -24,7 +71,7 @@ Tweet Tweet::operator=(const Tweet& tc) {
     }
     else {
         id = tc.id;
-        screenName = tc.screenName;
+        account = tc.account;
         timeStamp = tc.timeStamp;
         content = tc.content;
         mentions = tc.mentions;
@@ -40,12 +87,12 @@ int Tweet::getId() const {
     return id;
 }
 
-void Tweet::setScreenName(const string screenName) {
-    this->screenName = screenName;
+void Tweet::setAccount(const TwitterAccount account) {
+    this->account = account;
 }
 
-string Tweet::getScreenName() const {
-    return screenName;
+TwitterAccount Tweet::getAccount() const {
+    return account;
 }
 
 void Tweet::setTimeStamp(const string timeStamp) {
@@ -81,9 +128,10 @@ string Tweet::toString() const {
     for (int i = 0; i < mentions.size(); i++) {
         allMentions += mentions.at(i) + ";";
     }
-    stringstream id_ss;
+    stringstream id_ss, screenNameId_ss;
     id_ss << id;
-    return id_ss.str() + "\n" + screenName + "\n" + timeStamp + "\n" + content + "\n" + allMentions;
+    screenNameId_ss << account.getId();
+    return id_ss.str() + "\n" + account.getScreenName() + "\n" + screenNameId_ss.str() + "\n" + timeStamp + "\n" + content + "\n" + allMentions;
 }
 
 bool Tweet::compareTimeStamps(const Tweet& tweet2) const {
@@ -99,8 +147,8 @@ bool Tweet::compareTimeStamps(const Tweet& tweet2) const {
 }
 
 bool Tweet::compareScreenNames(const Tweet& tweet2) const {
-    string screenName1 = screenName;
-    string screenName2 = tweet2.screenName;
+    string screenName1 = account.getScreenName();
+    string screenName2 = tweet2.account.getScreenName();
     transform(screenName1.begin(), screenName1.end(), screenName1.begin(), ::tolower);
     transform(screenName2.begin(), screenName2.end(), screenName2.begin(), ::tolower);
     return (screenName1 < screenName2) ? true : false;
@@ -112,11 +160,8 @@ bool Tweet::compareIds(const Tweet& tweet2) const {
     return (id1 < id2) ? true : false;
 }
 
-bool operator<(const Tweet& tweet1, const Tweet& tweet2) {
-    // compare using timestamps or screennames or ids
-    //    return tweet1.compareTimeStamps(tweet2);
-    return tweet1.compareScreenNames(tweet2);
-    //    return tweet1.compareIds(tweet2);
+bool Tweet::operator<(const Tweet& tweet2) const {
+    return compareScreenNames(tweet2);
 }
 
 
@@ -134,20 +179,26 @@ TweetScreenNameOccurenceCacheItem TweetScreenNameOccurenceCacheItem::operator=(c
     }
     else {
         screenName = tc.screenName;
+        screenNameId = tc.screenNameId;
         noTweetsSent= tc.noTweetsSent;
         tweetIds = tc.tweetIds;
         return *this;
     }
 }
 
-TweetScreenNameOccurenceCacheItem::TweetScreenNameOccurenceCacheItem(string screenName, int noTweetsSent, vector<int> tweetIds) {
+TweetScreenNameOccurenceCacheItem::TweetScreenNameOccurenceCacheItem(string screenName, int screenNameId, int noTweetsSent, vector<int> tweetIds) {
     this->screenName = screenName;
+    this->screenNameId = screenNameId;
     this->noTweetsSent = noTweetsSent;
     this->tweetIds = tweetIds;
 }
 
 string TweetScreenNameOccurenceCacheItem::getScreenName() const {
     return screenName;
+}
+
+int TweetScreenNameOccurenceCacheItem::getScreenNameId() const {
+    return screenNameId;
 }
 
 int TweetScreenNameOccurenceCacheItem::getNoTweetsSent() const {
@@ -160,6 +211,10 @@ vector<int> TweetScreenNameOccurenceCacheItem::getTweetIds() const {
 
 void TweetScreenNameOccurenceCacheItem::setScreenName(const string screenName) {
     this->screenName = screenName;
+}
+
+void TweetScreenNameOccurenceCacheItem::setScreenNameId(const int screenNameId) {
+    this->screenNameId = screenNameId;
 }
 
 void TweetScreenNameOccurenceCacheItem::setNoTweetsSent(const int noTweetsSent) {
@@ -197,10 +252,8 @@ bool TweetScreenNameOccurenceCacheItem::compareScreenNames(const TweetScreenName
     return (screenName1 < screenName2) ? true : false;
 }
 
-bool operator<(const TweetScreenNameOccurenceCacheItem& tweetScreenNameOccurenceCacheItem1, const TweetScreenNameOccurenceCacheItem& tweetScreenNameOccurenceCacheItem2) {
-    // compare using noTweetsSent or keywords
-    return tweetScreenNameOccurenceCacheItem1.compareNoTweetsSent(tweetScreenNameOccurenceCacheItem2);
-    //    return tweetScreenNameOccurenceCacheItem1.compareScreenNames(tweetScreenNameOccurenceCacheItem2);
+bool TweetScreenNameOccurenceCacheItem::operator<(const TweetScreenNameOccurenceCacheItem& tweetScreenNameOccurenceCacheItem2) const {
+    return compareNoTweetsSent(tweetScreenNameOccurenceCacheItem2);
 }
 
 
@@ -281,10 +334,8 @@ bool TweetKeywordOccurenceCacheItem::compareKeywords(const TweetKeywordOccurence
     return (keyword1 < keyword2) ? true : false;
 }
 
-bool operator<(const TweetKeywordOccurenceCacheItem& tweetKeywordOccurenceCacheItem1, const TweetKeywordOccurenceCacheItem& tweetKeywordOccurenceCacheItem2) {
-    // compare using noTweetsSent or keywords
-    return tweetKeywordOccurenceCacheItem1.compareNoTweetsSent(tweetKeywordOccurenceCacheItem2);
-    //    return tweetKeywordOccurenceCacheItem1.compareKeywords(tweetKeywordOccurenceCacheItem2);
+bool TweetKeywordOccurenceCacheItem::operator<(const TweetKeywordOccurenceCacheItem& tweetKeywordOccurenceCacheItem2) const {
+    return compareNoTweetsSent(tweetKeywordOccurenceCacheItem2);
 }
 
 

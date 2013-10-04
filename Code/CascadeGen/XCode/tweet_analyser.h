@@ -2,6 +2,7 @@
 #define tweet_analyser_h
 
 #include "tweet.h"
+#include "cascade.h"
 
 typedef enum {OR = 0, AND = 1, NOT = 2} tweetAnalyserKeywordSearchOption;
 
@@ -40,7 +41,16 @@ public:
     // return tweets that have been @username mentioned by and to users, that have actively tweeted, and messages contains combination of the keywords (depending on the option),
     vector<TweetKeywordUsernameMentionedCacheItem> extractKeywordsContainedUsernameMentionedTweetData(const vector<Tweet> tweetData, vector<string> keywords, tweetAnalyserKeywordSearchOption option);
     
+    vector<Tweet> extractOnlyFirstInfectionsTweetData(const vector<Tweet> tweetData);
+    
+    vector<Cascade> generateCascades(const vector<Tweet> tweetData, vector<string> keywords);
+    
+    vector<TwitterAccount> generateTwitterAccounts(const vector<Tweet> tweetData);
+    
+    void writeCascadesDataToFile(string casacdesDataFilename, const vector<Tweet> tweetData, vector<string> keywords);
+    
 private:
+    Cascade generateCascade(const vector<Tweet> tweetData, string keyword);
     vector<string> extractMentionsAndStoreFromString(string mentions);
     
     const string mentionPostMentionAsString = ";";

@@ -19,20 +19,21 @@ TweetAnalyser TweetAnalyser::operator=(const TweetAnalyser& tc) {
 vector<Tweet> TweetAnalyser::readParsedTweetDataFromFile(string parsedTweetDataFilename) {
     vector<Tweet> parsedTweetData;
     ifstream fInp;
-    string screenName, timeStamp, content, mentions;
-    string idString;
+    string idString, screenName, screenNameIdString, timeStamp, content, mentions;
     vector<string> mentions_v;
     fInp.open(parsedTweetDataFilename.c_str());
     if (fInp.is_open()) {
         while (!fInp.eof()) {
             getline(fInp, idString);
             getline(fInp, screenName);
+            getline(fInp, screenNameIdString);
             getline(fInp, timeStamp);
             getline(fInp, content);
             getline(fInp, mentions);
             mentions_v = extractMentionsAndStoreFromString(mentions);
             int id = atoi(idString.c_str());
-            parsedTweetData.push_back(Tweet(id, screenName, timeStamp, content, mentions_v));
+            int screenNameId = atoi(screenNameIdString.c_str());
+            parsedTweetData.push_back(Tweet(id, TwitterAccount(screenNameId, screenName), timeStamp, content, mentions_v));
         }
         fInp.close();
         mentions_v.clear();
@@ -62,12 +63,12 @@ vector<TweetScreenNameOccurenceCacheItem> TweetAnalyser::extractAmountTweetDataF
     sort(sortedTweetData.begin(), sortedTweetData.end());
     for (int i = 0; i < sortedTweetData.size(); i++) {
         screenNamePreviousTweet = screenName;
-        screenName = sortedTweetData.at(i).getScreenName();
+        screenName = sortedTweetData.at(i).getAccount().getScreenName();
         // if screen name has not occurred previously
         if (screenName.compare(screenNamePreviousTweet) != 0) {
             tweetIds.clear();
             tweetIds.push_back(sortedTweetData.at(i).getId());
-            tweetScreenNameOccurenceCache.push_back(TweetScreenNameOccurenceCacheItem(screenName, 1, tweetIds));
+            tweetScreenNameOccurenceCache.push_back(TweetScreenNameOccurenceCacheItem(screenName, noDistinctScreenNames, 1, tweetIds));
             noDistinctScreenNames++;
         }
         // if screen name has not occurred previously
@@ -109,7 +110,7 @@ vector<Tweet> TweetAnalyser::extractSpecificScreenNameTweetData(const vector<Twe
     bool tweetSelectionOR = false;
     string tweetScreenName;
     for (int i = 0; i < tweetData.size(); i++) {
-        tweetScreenName = tweetData.at(i).getScreenName();
+        tweetScreenName = tweetData.at(i).getAccount().getScreenName();
         if (!caseSensitivity) {
             transform(tweetScreenName.begin(), tweetScreenName.end(), tweetScreenName.begin(), ::tolower);
         }
@@ -261,7 +262,7 @@ vector<TweetKeywordUsernameMentionedCacheItem> TweetAnalyser::extractKeywordsCon
     vector<Tweet> keywordsContainedTweetData = extractKeywordsContainedTweetData(tweetData, keywords, option);
     for (int i = 0; i < keywordsContainedTweetData.size(); i++) {
         vector<string> mentions = keywordsContainedTweetData.at(i).getMentions();
-        string screenName = keywordsContainedTweetData.at(i).getScreenName();
+        string screenName = keywordsContainedTweetData.at(i).getAccount().getScreenName();
         Tweet influencedTweet = keywordsContainedTweetData.at(i);
         for (int j = 0; j < mentions.size(); j++) {
             string mention = mentions.at(j);
@@ -303,5 +304,81 @@ vector<string> TweetAnalyser::extractMentionsAndStoreFromString(string mentions)
             }
         }
         return mentions_v;
+    }
+}
+
+vector<Tweet> TweetAnalyser::extractOnlyFirstInfectionsTweetData(const vector<Tweet> tweetData) {
+    // sort tweets by screenName
+    vector<Tweet> sortedTweetData = tweetData;
+    sort(sortedTweetData.begin(), sortedTweetData.end());
+    vector<Tweet> onlyFirstInfectionsTweetData;
+    string screenName, previousScreenName;
+    for (int i = 0; i < tweetData.size(); i++) {
+        previousScreenName = screenName;
+        screenName = tweetData.at(i).getAccount().getScreenName();
+        if (previousScreenName.compare(screenName) != 0) {
+            onlyFirstInfectionsTweetData.push_back(tweetData.at(i));
+        }
+    }
+    sortedTweetData.clear();
+    return onlyFirstInfectionsTweetData;
+}
+
+vector<Cascade> TweetAnalyser::generateCascades(const vector<Tweet> tweetData, vector<string> keywords) {
+    vector<Cascade> cascades;
+    for (int i = 0; i < keywords.size(); i++) {
+        cascades.push_back(generateCascade(tweetData, keywords.at(i)));
+    }
+    return cascades;
+}
+
+Cascade TweetAnalyser::generateCascade(const vector<Tweet> tweetData, string keyword) {
+    Cascade cascade;
+    vector<string> keywords;
+    keywords.push_back(keyword);
+    vector<Tweet> onlyFirstInfectionsKeywordsContainedTweetData = extractOnlyFirstInfectionsTweetData(extractKeywordsContainedTweetData(tweetData, keywords, OR));
+    for (int i = 0; i < onlyFirstInfectionsKeywordsContainedTweetData.size(); i++) {
+        Tweet tweet = onlyFirstInfectionsKeywordsContainedTweetData.at(i);
+        TwitterAccount account = TwitterAccount(tweet.getAccount());
+        cascade.addCascadeItem(CascadeItem(account, tweet.getTimeStamp()));
+    }
+    keywords.clear();
+    return cascade;
+}
+
+vector<TwitterAccount> TweetAnalyser::generateTwitterAccounts(const vector<Tweet> tweetData) {
+    vector<TwitterAccount> accounts;
+    vector<TweetScreenNameOccurenceCacheItem> screenNameOccurenceCache = extractAmountTweetDataForAllScreenNames(tweetData);
+    for (int i = 0; i < screenNameOccurenceCache.size(); i++) {
+        accounts.push_back(TwitterAccount(screenNameOccurenceCache.at(i).getScreenNameId(), screenNameOccurenceCache.at(i).getScreenName()));
+    }
+    screenNameOccurenceCache.clear();
+    return accounts;
+}
+
+void TweetAnalyser::writeCascadesDataToFile(string casacdesDataFilename, const vector<Tweet> tweetData, vector<string> keywords) {
+    ofstream fOut;
+    fOut.open(casacdesDataFilename.c_str(), fstream::out);
+    if (fOut.is_open()) {
+        vector<TwitterAccount> accounts = generateTwitterAccounts(tweetData);
+        for (int i = 0; i < accounts.size(); i++) {
+            fOut << accounts.at(i).toString() << "\n";
+        }
+        fOut << "\n";
+        vector<Cascade> cascades = generateCascades(tweetData, keywords);
+        for (int j = 0; j < cascades.size(); j++) {
+            if (j != cascades.size()-1) {
+                fOut << cascades.at(j).toString() << "\n";
+            }
+            else {
+                fOut << cascades.at(j).toString();
+            }
+        }
+        fOut.close();
+        accounts.clear();
+        cascades.clear();
+    }
+    else {
+        cout << "error opening file: " << casacdesDataFilename << endl;
     }
 }

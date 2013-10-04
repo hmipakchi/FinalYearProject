@@ -13,11 +13,9 @@ public:
     
     TweetParser operator=(const TweetParser& tc);
     
-    vector<Tweet> getParsedTweetData() const;
+    vector<Tweet> parseTweetData(string inputTweetDataFilename);
     
-    void parseTweetData(string inputTweetDataFilename);
-    
-    void writeParsedTweetDataToFile(string parsedTweetDataFilename);
+    void writeParsedTweetDataToFile(string parsedTweetDataFilename, vector<Tweet> parsedTweetData);
     
 private:
     string getScreenNameForSingleTweet(string tweet) const;

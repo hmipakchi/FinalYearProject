@@ -12,6 +12,36 @@
 
 using namespace std;
 
+
+/* Twitter Account class */
+
+class TwitterAccount {
+public:
+    TwitterAccount();
+    
+    ~TwitterAccount();
+    
+    TwitterAccount(const TwitterAccount& tc);
+    
+    TwitterAccount(int id, string screenName);
+    
+    TwitterAccount operator=(const TwitterAccount& tc);
+    
+    void setId(const int id);
+    
+    int getId() const;
+    
+    void setScreenName (const string screenName);
+    
+    string getScreenName() const;
+    
+    string toString() const;
+private:
+    int id;
+    string screenName;
+};
+
+
 /* Tweet class */
 
 class Tweet {
@@ -22,7 +52,7 @@ public:
     
     Tweet(const Tweet& tc);
     
-    Tweet(int id, string screenName, string timeStamp, string content, vector<string> mentions);
+    Tweet(int id, TwitterAccount account, string timeStamp, string content, vector<string> mentions);
     
     Tweet operator=(const Tweet& tc);
     
@@ -30,9 +60,9 @@ public:
     
     int getId() const;
     
-    void setScreenName(const string screenName);
+    void setAccount(const TwitterAccount account);
     
-    string getScreenName() const;
+    TwitterAccount getAccount() const;
     
     void setTimeStamp(const string timeStamp);
     
@@ -55,16 +85,17 @@ public:
     bool compareScreenNames(const Tweet& tweet2) const;
     
     bool compareIds(const Tweet& tweet2) const;
+    
+    bool operator<(const Tweet& tweet2) const;
+    
 private:
     int id;
-    string screenName;
+    TwitterAccount account;
     string timeStamp;
     string content;
     vector<string> mentions;
     const string timeStampFormat = "%a %b %d %T %z %Y";
 };
-
-bool operator<(const Tweet& tweet1, const Tweet& tweet2);
 
 
 /* TweetScreenNameOccurenceCacheItem class */
@@ -77,15 +108,19 @@ public:
     
     TweetScreenNameOccurenceCacheItem operator=(const TweetScreenNameOccurenceCacheItem& tc);
     
-    TweetScreenNameOccurenceCacheItem(string screenName, int noTweetsSent, vector<int> tweetIds);
+    TweetScreenNameOccurenceCacheItem(string screenName, int screenNameId, int noTweetsSent, vector<int> tweetIds);
     
     string getScreenName() const;
+    
+    int getScreenNameId() const;
     
     int getNoTweetsSent() const;
     
     vector<int> getTweetIds() const;
     
     void setScreenName(const string screenName);
+    
+    void setScreenNameId(const int screenNameId);
     
     void setNoTweetsSent(const int noTweetsSent);
     
@@ -98,13 +133,15 @@ public:
     bool compareNoTweetsSent(const TweetScreenNameOccurenceCacheItem& tweetScreenNameOccurenceCacheItem2) const;
     
     bool compareScreenNames(const TweetScreenNameOccurenceCacheItem& tweetScreenNameOccurenceCacheItem2) const;
+    
+    bool operator<(const TweetScreenNameOccurenceCacheItem& tweetScreenNameOccurenceCacheItem2) const;
+    
 private:
     string screenName;
+    int screenNameId;
     int noTweetsSent;
     vector<int> tweetIds;
 };
-
-bool operator<(const TweetScreenNameOccurenceCacheItem& tweetScreenNameOccurenceCacheItem1, const TweetScreenNameOccurenceCacheItem& tweetScreenNameOccurenceCacheItem2);
 
 
 /* TweetKeywordOccurenceCacheItem class */
@@ -138,13 +175,14 @@ public:
     bool compareNoTweetsSent(const TweetKeywordOccurenceCacheItem& tweetKeywordOccurenceCacheItem2) const;
     
     bool compareKeywords(const TweetKeywordOccurenceCacheItem& tweetKeywordOccurenceCacheItem2) const;
+    
+    bool operator<(const TweetKeywordOccurenceCacheItem& tweetKeywordOccurenceCacheItem2) const;
+    
 private:
     string keyword;
     int noTweetsSent;
     vector<int> tweetIds;
 };
-
-bool operator<(const TweetKeywordOccurenceCacheItem& tweetKeywordOccurenceCacheItem1, const TweetKeywordOccurenceCacheItem& tweetKeywordOccurenceCacheItem2);
 
 
 /* TweetKeywordUsernameMentionedCacheItem class */

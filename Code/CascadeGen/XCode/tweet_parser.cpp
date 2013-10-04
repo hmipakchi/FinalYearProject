@@ -4,51 +4,64 @@
 
 TweetParser::TweetParser() {}
 
-TweetParser::~TweetParser() {
-    parsedTweetData.clear();
-}
+TweetParser::~TweetParser() {}
 
 TweetParser TweetParser::operator=(const TweetParser& tc) {
     if (this == &tc) {
         return *this;
     }
     else {
-        parsedTweetData = tc.parsedTweetData;
         return *this;
     }
 }
 
-vector<Tweet> TweetParser::getParsedTweetData() const {
-    return parsedTweetData;
-}
-
-void TweetParser::parseTweetData(string inputTweetDataFilename) {
+vector<Tweet> TweetParser::parseTweetData(string inputTweetDataFilename) {
     ifstream fInp;
+    vector<Tweet> parsedTweetData;
     string tweet;
     fInp.open(inputTweetDataFilename.c_str());
     if (fInp.is_open()) {
-        int id = 1;
+        int id = 0;
+        int screenNameId = 0;
+        string tweetScreenName, tweetTimeStamp, tweetContent;
+        vector<string> tweetMentions;
+        vector<string> screenNames;
+        bool incrementScreenNameId = true;
         while (!fInp.eof()) {
             getline(fInp, tweet);
             if (tweet != "") {
-                string tweetScreenName = getScreenNameForSingleTweet(tweet);
-                string tweetTimeStamp = getTimeStampForSingleTweet(tweet);
-                string tweetContent = getContentForSingleTweet(tweet);
-                vector<string> tweetMentions = getMentionsForSingleTweet(tweet);
-                parsedTweetData.push_back(Tweet(id, tweetScreenName, tweetTimeStamp, tweetContent, tweetMentions));
+                tweetScreenName = getScreenNameForSingleTweet(tweet);
+                tweetTimeStamp = getTimeStampForSingleTweet(tweet);
+                tweetContent = getContentForSingleTweet(tweet);
+                tweetMentions = getMentionsForSingleTweet(tweet);
+                vector<string>::iterator it = find(screenNames.begin(), screenNames.end(), tweetScreenName);
+                if (it == screenNames.end()) {
+                    screenNames.push_back(tweetScreenName);
+                    incrementScreenNameId = true;
+                }
+                else {
+                    screenNameId = (int) (it - screenNames.begin());
+                    incrementScreenNameId = false;
+                }
+                parsedTweetData.push_back(Tweet(id, TwitterAccount(screenNameId, tweetScreenName), tweetTimeStamp, tweetContent, tweetMentions));
+            }
+            if (incrementScreenNameId) {
+                screenNameId++;
             }
             id++;
         }
         fInp.close();
-        
+        tweetMentions.clear();
+        screenNames.clear();
         cout << "######   *****   NUMBER OF TWEETS = " << parsedTweetData.size() << "   *****   ######" << endl;
     }
     else {
         cout << "error opening file: " << inputTweetDataFilename << endl;
     }
+    return parsedTweetData;
 }
 
-void TweetParser::writeParsedTweetDataToFile(string parsedTweetDataFilename) {
+void TweetParser::writeParsedTweetDataToFile(string parsedTweetDataFilename, vector<Tweet> parsedTweetData) {
     ofstream fOut;
     fOut.open(parsedTweetDataFilename.c_str(), fstream::out);
     if (fOut.is_open()) {

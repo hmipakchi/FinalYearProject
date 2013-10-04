@@ -13,11 +13,9 @@ public:
     
     TweetParser operator=(const TweetParser& tc);
     
-    vector<Tweet> getParsedTweetData() const;
+    vector<Tweet> parseTweetData(string inputTweetDataFilename);
     
-    void parseTweetData(string inputTweetDataFilename);
-    
-    void writeParsedTweetDataToFile(string parsedTweetDataFilename);
+    void writeParsedTweetDataToFile(string parsedTweetDataFilename, vector<Tweet> parsedTweetData);
     
 private:
     string getScreenNameForSingleTweet(string tweet) const;
@@ -31,7 +29,6 @@ private:
     // takes as input a string of mentions, and returns the FIRST mention in the string, also DELETING the mention from input
     string eraseAndReturnFirstMention(string& mentions) const;
     
-    vector<Tweet> parsedTweetData;
     const string tweetPreScreenNameAsString = "\"screen_name\":\"";
     const string tweetPostScreenNameAsString = "\",\"";
     const string tweetProfileSidebarFillColorAsString = "profile_sidebar_fill_color";
