@@ -44,6 +44,11 @@ string TwitterAccount::toString() const {
     return convertIntToString(id) + "," + screenName;
 }
 
+ostream& operator<<(ostream& os, const TwitterAccount& obj) {
+    os << obj.toString();
+    return os;
+}
+
 
 /* Tweet class methods */
 
@@ -146,23 +151,28 @@ bool Tweet::compareScreenNames(const Tweet& tweet2) const {
     string screenName2 = tweet2.account.getScreenName();
     transform(screenName1.begin(), screenName1.end(), screenName1.begin(), ::tolower);
     transform(screenName2.begin(), screenName2.end(), screenName2.begin(), ::tolower);
-    return (screenName1 < screenName2) ? true : false;
+    return screenName1 < screenName2;
 }
 
 bool Tweet::compareIds(const Tweet& tweet2) const {
     int id1 = id;
     int id2 = tweet2.id;
-    return (id1 < id2) ? true : false;
+    return id1 < id2;
 }
 
 bool Tweet::compareScreenNameIds(const Tweet& tweet2) const {
     int id1 = account.getId();
     int id2 = tweet2.account.getId();
-    return (id1 < id2) ? true : false;
+    return id1 < id2;
 }
 
 bool Tweet::operator<(const Tweet& tweet2) const {
     return compareScreenNameIds(tweet2);
+}
+
+ostream& operator<<(ostream& os, const Tweet& obj) {
+    os << obj.toString();
+    return os;
 }
 
 
@@ -230,7 +240,7 @@ string TweetScreenNameOccurenceCacheItem::toString() const {
 }
 
 bool TweetScreenNameOccurenceCacheItem::compareNoTweetsSent(const TweetScreenNameOccurenceCacheItem& tweetScreenNameOccurenceCacheItem2) const {
-    return (noTweetsSent < tweetScreenNameOccurenceCacheItem2.noTweetsSent) ? true : false;
+    return noTweetsSent < tweetScreenNameOccurenceCacheItem2.noTweetsSent;
 }
 
 bool TweetScreenNameOccurenceCacheItem::compareScreenNames(const TweetScreenNameOccurenceCacheItem& tweetScreenNameOccurenceCacheItem2) const {
@@ -238,11 +248,20 @@ bool TweetScreenNameOccurenceCacheItem::compareScreenNames(const TweetScreenName
     string screenName2 = tweetScreenNameOccurenceCacheItem2.account.getScreenName();
     transform(screenName1.begin(), screenName1.end(), screenName1.begin(), ::tolower);
     transform(screenName2.begin(), screenName2.end(), screenName2.begin(), ::tolower);
-    return (screenName1 < screenName2) ? true : false;
+    return screenName1 < screenName2;
+}
+
+bool TweetScreenNameOccurenceCacheItem::compareScreenNameIds(const TweetScreenNameOccurenceCacheItem& tweetScreenNameOccurenceCacheItem2) const {
+    return account.getId() < tweetScreenNameOccurenceCacheItem2.account.getId();
 }
 
 bool TweetScreenNameOccurenceCacheItem::operator<(const TweetScreenNameOccurenceCacheItem& tweetScreenNameOccurenceCacheItem2) const {
-    return compareNoTweetsSent(tweetScreenNameOccurenceCacheItem2);
+    return compareScreenNameIds(tweetScreenNameOccurenceCacheItem2);
+}
+
+ostream& operator<<(ostream& os, const TweetScreenNameOccurenceCacheItem& obj) {
+    os << obj.toString();
+    return os;
 }
 
 
@@ -310,7 +329,7 @@ string TweetKeywordOccurenceCacheItem::toString() const {
 }
 
 bool TweetKeywordOccurenceCacheItem::compareNoTweetsSent(const TweetKeywordOccurenceCacheItem& tweetKeywordOccurenceCacheItem2) const {
-    return (noTweetsSent < tweetKeywordOccurenceCacheItem2.noTweetsSent) ? true : false;
+    return noTweetsSent < tweetKeywordOccurenceCacheItem2.noTweetsSent;
 }
 
 bool TweetKeywordOccurenceCacheItem::compareKeywords(const TweetKeywordOccurenceCacheItem& tweetKeywordOccurenceCacheItem2) const {
@@ -318,11 +337,16 @@ bool TweetKeywordOccurenceCacheItem::compareKeywords(const TweetKeywordOccurence
     string keyword2 = tweetKeywordOccurenceCacheItem2.keyword;
     transform(keyword1.begin(), keyword1.end(), keyword1.begin(), ::tolower);
     transform(keyword2.begin(), keyword2.end(), keyword2.begin(), ::tolower);
-    return (keyword1 < keyword2) ? true : false;
+    return keyword1 < keyword2;
 }
 
 bool TweetKeywordOccurenceCacheItem::operator<(const TweetKeywordOccurenceCacheItem& tweetKeywordOccurenceCacheItem2) const {
     return compareNoTweetsSent(tweetKeywordOccurenceCacheItem2);
+}
+
+ostream& operator<<(ostream& os, const TweetKeywordOccurenceCacheItem& obj) {
+    os << obj.toString();
+    return os;
 }
 
 
@@ -366,4 +390,9 @@ void TweetKeywordUsernameMentionedCacheItem::setInfluencedTweet(const Tweet& inf
 
 string TweetKeywordUsernameMentionedCacheItem::toString() const {
     return initialTweet.toString() + "\n" + influencedTweet.toString();
+}
+
+ostream& operator<<(ostream& os, const TweetKeywordUsernameMentionedCacheItem& obj) {
+    os << obj.toString();
+    return os;
 }

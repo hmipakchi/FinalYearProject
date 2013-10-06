@@ -19,7 +19,7 @@ TweetAnalyser TweetAnalyser::operator=(const TweetAnalyser& tc) {
 }
 
 // read in a parsed tweet data file
-vector<Tweet> TweetAnalyser::readParsedTweetDataFromFile(string parsedTweetDataFilename) {
+vector<Tweet> TweetAnalyser::readParsedTweetDataFromFile(const string& parsedTweetDataFilename) const {
     vector<Tweet> parsedTweetData;
     ifstream fInp;
     string idString, screenName, screenNameIdString, timeStamp, content, mentions;
@@ -48,22 +48,15 @@ vector<Tweet> TweetAnalyser::readParsedTweetDataFromFile(string parsedTweetDataF
     return parsedTweetData;
 }
 
-// print to console output data for the tweets specified in input
-void TweetAnalyser::printTweetData(vector<Tweet> tweetData) {
-    for (int i = 0; i < tweetData.size(); i++) {
-        cout << "[" << i << "] -> " << tweetData.at(i).toString() << endl;
-    }
-}
-
 // note: NEED to sort Tweet objects by screenNameId !!!
 // return all distinct screen names with number of tweets sent from each screen name, as well as id's of all tweets sent
-vector<TweetScreenNameOccurenceCacheItem> TweetAnalyser::extractAmountTweetDataForAllScreenNames(const vector<Tweet> tweetData) const {
+vector<TweetScreenNameOccurenceCacheItem> TweetAnalyser::extractAmountTweetDataForAllScreenNames(const vector<Tweet>& tweetData) const {
     int screenNameId;
     int screenNameIdPreviousTweet;
     vector<TweetScreenNameOccurenceCacheItem> tweetScreenNameOccurenceCache;
     vector<Tweet> sortedTweetData = tweetData;
     vector<int> tweetIds;
-    vector<int> screenNameIds;
+    //    vector<int> screenNameIds;
     int noDistinctAccounts = 0;
     sort(sortedTweetData.begin(), sortedTweetData.end());
     for (int i = 0; i < sortedTweetData.size(); i++) {
@@ -71,7 +64,7 @@ vector<TweetScreenNameOccurenceCacheItem> TweetAnalyser::extractAmountTweetDataF
         screenNameId = sortedTweetData.at(i).getAccount().getId();
         // if screen name id is new
         if (screenNameIdPreviousTweet != screenNameId) {
-            screenNameIds.push_back(screenNameId);
+            //            screenNameIds.push_back(screenNameId);
             tweetIds.clear();
             tweetIds.push_back(sortedTweetData.at(i).getId());
             tweetScreenNameOccurenceCache.push_back(TweetScreenNameOccurenceCacheItem(TwitterAccount(sortedTweetData.at(i).getAccount()), 1, tweetIds));
@@ -86,13 +79,13 @@ vector<TweetScreenNameOccurenceCacheItem> TweetAnalyser::extractAmountTweetDataF
         }
     }
     tweetIds.clear();
-    screenNameIds.clear();
+    //    screenNameIds.clear();
     sortedTweetData.clear();
     return tweetScreenNameOccurenceCache;
 }
 
 // return, for each keyword, the number of tweets that were sent that contained that keyword, as well as id's of all tweets sent
-vector<TweetKeywordOccurenceCacheItem> TweetAnalyser::extractAmountTweetDataForKeywords(const vector<Tweet> tweetData, vector<string> keywords) {
+vector<TweetKeywordOccurenceCacheItem> TweetAnalyser::extractAmountTweetDataForKeywords(const vector<Tweet>& tweetData, const vector<string>& keywords) const {
     vector<TweetKeywordOccurenceCacheItem> tweetKeywordOccurenceCache;
     vector<Tweet> keywordsContainedTweetData;
     for (int i = 0; i < keywords.size(); i++) {
@@ -112,7 +105,7 @@ vector<TweetKeywordOccurenceCacheItem> TweetAnalyser::extractAmountTweetDataForK
 }
 
 // return, for each screen name, all tweets sent by the account
-vector<Tweet> TweetAnalyser::extractSpecificScreenNameTweetData(const vector<Tweet> tweetData, vector<string> screenNames) {
+vector<Tweet> TweetAnalyser::extractSpecificScreenNameTweetData(const vector<Tweet>& tweetData, const vector<string>& screenNames) const {
     vector<Tweet> specificScreenNameTweetData;
     // false => case insensitive, true => case sensitive
     bool caseSensitivity = true;
@@ -141,7 +134,7 @@ vector<Tweet> TweetAnalyser::extractSpecificScreenNameTweetData(const vector<Twe
 }
 
 // return, for each screen name id, all tweets sent by the account
-vector<Tweet> TweetAnalyser::extractSpecificScreenNameTweetData(const vector<Tweet> tweetData, vector<int> screenNameIds) {
+vector<Tweet> TweetAnalyser::extractSpecificScreenNameTweetData(const vector<Tweet>& tweetData, const vector<int>& screenNameIds) const {
     vector<Tweet> specificScreenNameTweetData;
     // false => case insensitive, true => case sensitive
     bool tweetSelectionOR = false;
@@ -166,7 +159,7 @@ vector<Tweet> TweetAnalyser::extractSpecificScreenNameTweetData(const vector<Twe
 }
 
 // return, for a combination of the keywords (depending on the option), all tweets containing the combination
-vector<Tweet> TweetAnalyser::extractKeywordsContainedTweetData(const vector<Tweet> tweetData, vector<string> keywords, tweetAnalyserKeywordSearchOption option) {
+vector<Tweet> TweetAnalyser::extractKeywordsContainedTweetData(const vector<Tweet>& tweetData, const vector<string>& keywords, const tweetAnalyserKeywordSearchOption& option) const {
     vector<Tweet> keywordsContainedTweetData;
     // false => case insensitive, true => case sensitive
     bool caseSensitivity = false;
@@ -276,7 +269,7 @@ vector<Tweet> TweetAnalyser::extractKeywordsContainedTweetData(const vector<Twee
 }
 
 // return all tweets corresponding to the ids specified.
-vector<Tweet> TweetAnalyser::extractSpecificIdTweetData(const vector<Tweet> tweetData, vector<int> tweetIds) {
+vector<Tweet> TweetAnalyser::extractSpecificIdTweetData(const vector<Tweet>& tweetData, const vector<int>& tweetIds) const {
     vector<Tweet> specificIdTweetData;
     int id;
     for (int i = 0; i < tweetData.size(); i++) {
@@ -291,7 +284,7 @@ vector<Tweet> TweetAnalyser::extractSpecificIdTweetData(const vector<Tweet> twee
 }
 
 // return tweets that have been @username mentioned by and to users, that have actively tweeted, and messages contains combination of the keywords (depending on the option),
-vector<TweetKeywordUsernameMentionedCacheItem> TweetAnalyser::extractKeywordsContainedUsernameMentionedTweetData(const vector<Tweet> tweetData, vector<string> keywords, tweetAnalyserKeywordSearchOption option) {
+vector<TweetKeywordUsernameMentionedCacheItem> TweetAnalyser::extractKeywordsContainedUsernameMentionedTweetData(const vector<Tweet>& tweetData, const vector<string>& keywords, const tweetAnalyserKeywordSearchOption& option) const {
     vector<TweetKeywordUsernameMentionedCacheItem> keywordsContainedUsernameMentionedTweetData;
     vector<Tweet> keywordsContainedTweetData = extractKeywordsContainedTweetData(tweetData, keywords, option);
     for (int i = 0; i < keywordsContainedTweetData.size(); i++) {
@@ -306,36 +299,39 @@ vector<TweetKeywordUsernameMentionedCacheItem> TweetAnalyser::extractKeywordsCon
                 vector<Tweet> tweetDataSentByMentionedScreenName = extractSpecificScreenNameTweetData(keywordsContainedTweetData, screenNames);
                 int numberTweetsSentByMentionedScreenName = (int) tweetDataSentByMentionedScreenName.size();
                 Tweet initialTweet;
-                if (numberTweetsSentByMentionedScreenName != 0) {
+                if (numberTweetsSentByMentionedScreenName > 0) {
                     initialTweet = tweetDataSentByMentionedScreenName.at(0);
                     // initial tweet should be sent before the influenced tweet
                     if (initialTweet.compareTimeStamps(influencedTweet))
                         keywordsContainedUsernameMentionedTweetData.push_back(TweetKeywordUsernameMentionedCacheItem(initialTweet, influencedTweet));
                 }
                 screenNames.clear();
+                tweetDataSentByMentionedScreenName.clear();
             }
         }
+        mentions.clear();
     }
     keywordsContainedTweetData.clear();
     return keywordsContainedUsernameMentionedTweetData;
 }
 
 // return a list of individual mentions from an input string
-vector<string> TweetAnalyser::extractMentionsAndStoreFromString(string mentions) {
+vector<string> TweetAnalyser::extractMentionsAndStoreFromString(const string& mentions) const {
     vector<string> mentions_v;
-    if (mentions == "") {
+    string mentions_s = mentions;
+    if (mentions_s == "") {
         return mentions_v;
     }
     else {
-        while (mentions != "") {
-            size_t firstMentionScreenNameEndPosition = mentions.find(mentionPostMentionAsString);
+        while (mentions_s != "") {
+            size_t firstMentionScreenNameEndPosition = mentions_s.find(mentionPostMentionAsString);
             if (firstMentionScreenNameEndPosition != string::npos) {
                 // extract and store first mention
                 int firstMentionScreenNameStringLength = (int) firstMentionScreenNameEndPosition;
-                string screenName = mentions.substr(0, firstMentionScreenNameStringLength);
+                string screenName = mentions_s.substr(0, firstMentionScreenNameStringLength);
                 mentions_v.push_back(screenName);
                 // remove first mention and separator from input string
-                mentions.erase(mentions.begin(), mentions.begin()+firstMentionScreenNameStringLength+mentionPostMentionAsString.length());
+                mentions_s.erase(mentions_s.begin(), mentions_s.begin()+firstMentionScreenNameStringLength+mentionPostMentionAsString.length());
             }
         }
         return mentions_v;
@@ -343,8 +339,7 @@ vector<string> TweetAnalyser::extractMentionsAndStoreFromString(string mentions)
 }
 
 // return only the first infections for each twitter account from all tweets sent
-vector<Tweet> TweetAnalyser::extractOnlyFirstInfectionsTweetData(const vector<Tweet> tweetData) {
-    // sort tweets by screenName
+vector<Tweet> TweetAnalyser::extractOnlyFirstInfectionsTweetData(const vector<Tweet>& tweetData) const {
     vector<Tweet> sortedTweetData = tweetData;
     sort(sortedTweetData.begin(), sortedTweetData.end());
     vector<Tweet> onlyFirstInfectionsTweetData;
@@ -361,7 +356,7 @@ vector<Tweet> TweetAnalyser::extractOnlyFirstInfectionsTweetData(const vector<Tw
 }
 
 // generate a list of cascades from tweet data based upon a list of keywords
-vector<Cascade> TweetAnalyser::generateCascades(const vector<Tweet> tweetData, vector<string> keywords) {
+vector<Cascade> TweetAnalyser::generateCascades(const vector<Tweet>& tweetData, const vector<string>& keywords) const {
     vector<Cascade> cascades;
     for (int i = 0; i < keywords.size(); i++) {
         cascades.push_back(generateCascade(tweetData, keywords.at(i)));
@@ -370,7 +365,7 @@ vector<Cascade> TweetAnalyser::generateCascades(const vector<Tweet> tweetData, v
 }
 
 // generate a single cascade from tweet data based upon a keyword
-Cascade TweetAnalyser::generateCascade(const vector<Tweet> tweetData, string keyword) {
+Cascade TweetAnalyser::generateCascade(const vector<Tweet>& tweetData, const string& keyword) const {
     Cascade cascade;
     vector<string> keywords;
     keywords.push_back(keyword);
@@ -385,18 +380,35 @@ Cascade TweetAnalyser::generateCascade(const vector<Tweet> tweetData, string key
 }
 
 // return a list of twitter accounts that sent tweets within the tweet data specified
-vector<TwitterAccount> TweetAnalyser::generateTwitterAccounts(const vector<Tweet> tweetData) {
-    vector<TwitterAccount> accounts;
-    vector<TweetScreenNameOccurenceCacheItem> screenNameOccurenceCache = extractAmountTweetDataForAllScreenNames(tweetData);
-    for (int i = 0; i < screenNameOccurenceCache.size(); i++) {
-        accounts.push_back(TwitterAccount(screenNameOccurenceCache.at(i).getAccount()));
+vector<TwitterAccount> TweetAnalyser::generateTwitterAccounts(const vector<Tweet>& tweetData) const {
+    //    vector<TwitterAccount> accounts;
+    //    vector<TweetScreenNameOccurenceCacheItem> screenNameOccurenceCache = extractAmountTweetDataForAllScreenNames(tweetData);
+    //    for (int i = 0; i < screenNameOccurenceCache.size(); i++) {
+    //        accounts.push_back(TwitterAccount(screenNameOccurenceCache.at(i).getAccount()));
+    //    }
+    //    screenNameOccurenceCache.clear();
+    //    return accounts;
+    int screenNameId;
+    int screenNameIdPreviousTweet;
+    vector<TwitterAccount> twitterAccounts;
+    vector<Tweet> sortedTweetData = tweetData;
+    int noDistinctAccounts = 0;
+    sort(sortedTweetData.begin(), sortedTweetData.end());
+    for (int i = 0; i < sortedTweetData.size(); i++) {
+        screenNameIdPreviousTweet = screenNameId;
+        screenNameId = sortedTweetData.at(i).getAccount().getId();
+        // if screen name id is new
+        if (screenNameIdPreviousTweet != screenNameId) {
+            twitterAccounts.push_back(TwitterAccount(sortedTweetData.at(i).getAccount()));
+            noDistinctAccounts++;
+        }
     }
-    screenNameOccurenceCache.clear();
-    return accounts;
+    sortedTweetData.clear();
+    return twitterAccounts;
 }
 
 // given tweet data and a list of keywords, write all cascades generated to an output file
-void TweetAnalyser::writeCascadesDataToFile(string casacdesDataFilename, const vector<Tweet> tweetData, vector<string> keywords) {
+void TweetAnalyser::writeCascadesDataToFile(const string& casacdesDataFilename, const vector<Tweet>& tweetData, const vector<string>& keywords) const {
     ofstream fOut;
     fOut.open(casacdesDataFilename.c_str(), fstream::out);
     if (fOut.is_open()) {

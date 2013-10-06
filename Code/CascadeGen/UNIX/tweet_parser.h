@@ -14,18 +14,18 @@ public:
     
     TweetParser operator=(const TweetParser& tc);
     
-    vector<Tweet> parseTweetData(string inputTweetDataFilename);
+    vector<Tweet> parseTweetData(const string& inputTweetDataFilename) const ;
     
-    void writeParsedTweetDataToFile(string parsedTweetDataFilename, vector<Tweet> parsedTweetData);
+    void writeParsedTweetDataToFile(const string& parsedTweetDataFilename, const vector<Tweet>& parsedTweetData) const;
     
 private:
-    string getScreenNameForSingleTweet(string tweet) const;
+    string getScreenNameForSingleTweet(const string& tweet) const;
     
-    string getTimeStampForSingleTweet(string tweet) const;
+    string getTimeStampForSingleTweet(const string& tweet) const;
     
-    string getContentForSingleTweet(string tweet) const;
+    string getContentForSingleTweet(const string& tweet) const;
     
-    vector<string> getMentionsForSingleTweet(string tweet) const;
+    vector<string> getMentionsForSingleTweet(const string& tweet) const;
     
     // takes as input a string of mentions, and returns the FIRST mention in the string, also DELETING the mention from input
     string eraseAndReturnFirstMention(string& mentions) const;

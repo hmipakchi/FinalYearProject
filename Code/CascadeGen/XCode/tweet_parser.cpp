@@ -15,7 +15,7 @@ TweetParser TweetParser::operator=(const TweetParser& tc) {
     }
 }
 
-vector<Tweet> TweetParser::parseTweetData(string inputTweetDataFilename) {
+vector<Tweet> TweetParser::parseTweetData(const string& inputTweetDataFilename) const {
     ifstream fInp;
     vector<Tweet> parsedTweetData;
     string tweet;
@@ -74,7 +74,7 @@ vector<Tweet> TweetParser::parseTweetData(string inputTweetDataFilename) {
     }
 }
 
-void TweetParser::writeParsedTweetDataToFile(string parsedTweetDataFilename, vector<Tweet> parsedTweetData) {
+void TweetParser::writeParsedTweetDataToFile(const string& parsedTweetDataFilename, const vector<Tweet>& parsedTweetData) const {
     ofstream fOut;
     fOut.open(parsedTweetDataFilename.c_str(), fstream::out);
     if (fOut.is_open()) {
@@ -95,7 +95,7 @@ void TweetParser::writeParsedTweetDataToFile(string parsedTweetDataFilename, vec
     }
 }
 
-string TweetParser::getScreenNameForSingleTweet(string tweet) const {
+string TweetParser::getScreenNameForSingleTweet(const string& tweet) const {
     size_t tweetProfileSidebarFillColorStringPosition = tweet.find(tweetProfileSidebarFillColorAsString);
     if (tweetProfileSidebarFillColorStringPosition != string::npos) {
         size_t tweetScreenNameStringStartPosition = tweet.find(tweetPreScreenNameAsString,tweetProfileSidebarFillColorStringPosition+1);
@@ -122,7 +122,7 @@ string TweetParser::getScreenNameForSingleTweet(string tweet) const {
     }
 }
 
-string TweetParser::getTimeStampForSingleTweet(string tweet) const {
+string TweetParser::getTimeStampForSingleTweet(const string& tweet) const {
     size_t stringStringStartPosition = tweet.find(tweetPreTimeStampAsString);
     
     if (stringStringStartPosition != string::npos) {
@@ -143,7 +143,7 @@ string TweetParser::getTimeStampForSingleTweet(string tweet) const {
     }
 }
 
-string TweetParser::getContentForSingleTweet(string tweet) const {
+string TweetParser::getContentForSingleTweet(const string& tweet) const {
     size_t tweetContentStringStartPosition = tweet.find(tweetPreContentAsString);
     
     if (tweetContentStringStartPosition != string::npos) {
@@ -164,7 +164,7 @@ string TweetParser::getContentForSingleTweet(string tweet) const {
     }
 }
 
-vector<string> TweetParser::getMentionsForSingleTweet(string tweet) const {
+vector<string> TweetParser::getMentionsForSingleTweet(const string& tweet) const {
     vector<string> mentions_v;
     size_t tweetMentionsStringStartPosition = tweet.find(tweetPreMentionsAsString);
     

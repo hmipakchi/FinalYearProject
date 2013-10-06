@@ -27,6 +27,8 @@ public:
     string getScreenName() const;
     
     string toString() const;
+    
+    friend ostream& operator<<(ostream& os, const TwitterAccount& obj);
 private:
     int id;
     string screenName;
@@ -81,6 +83,8 @@ public:
     
     bool operator<(const Tweet& tweet2) const;
     
+    friend ostream& operator<<(ostream& os, const Tweet& obj);
+    
 private:
     int id;
     TwitterAccount account;
@@ -123,7 +127,11 @@ public:
     
     bool compareScreenNames(const TweetScreenNameOccurenceCacheItem& tweetScreenNameOccurenceCacheItem2) const;
     
+    bool compareScreenNameIds(const TweetScreenNameOccurenceCacheItem& tweetScreenNameOccurenceCacheItem2) const;
+    
     bool operator<(const TweetScreenNameOccurenceCacheItem& tweetScreenNameOccurenceCacheItem2) const;
+    
+    friend ostream& operator<<(ostream& os, const TweetScreenNameOccurenceCacheItem& obj);
     
 private:
     TwitterAccount account;
@@ -166,6 +174,8 @@ public:
     
     bool operator<(const TweetKeywordOccurenceCacheItem& tweetKeywordOccurenceCacheItem2) const;
     
+    friend ostream& operator<<(ostream& os, const TweetKeywordOccurenceCacheItem& obj);
+    
 private:
     string keyword;
     int noTweetsSent;
@@ -194,6 +204,8 @@ public:
     void setInfluencedTweet(const Tweet& influencedTweet);
     
     string toString() const;
+    
+    friend ostream& operator<<(ostream& os, const TweetKeywordUsernameMentionedCacheItem& obj);
     
 private:
     Tweet initialTweet;

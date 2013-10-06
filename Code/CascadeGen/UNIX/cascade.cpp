@@ -70,6 +70,11 @@ double CascadeItem::convertTimeStampToSeconds(const string &timeStamp) const {
     return diff;
 }
 
+ostream& operator<<(ostream& os, const CascadeItem& obj) {
+    os << obj.toString();
+    return os;
+}
+
 
 /* Cascade class methods */
 
@@ -111,4 +116,9 @@ string Cascade::toString() const {
         cascade_s += cascade.at(i).toString() + ";";
     }
     return cascade_s;
+}
+
+ostream& operator<<(ostream& os, const Cascade& obj) {
+    os << obj.toString();
+    return os;
 }

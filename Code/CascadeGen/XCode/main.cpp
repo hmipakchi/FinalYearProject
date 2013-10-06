@@ -33,6 +33,14 @@ int main(int argc, const char * argv[]) {
     keywords.push_back("shelvey");
     keywords.push_back("lfc");
     keywords.push_back("mufc");
+    keywords.push_back("blackberry");
+    keywords.push_back("olympics");
+    keywords.push_back("apple");
+    keywords.push_back("iphone");
+    keywords.push_back("twitter");
+    keywords.push_back("sleep");
+    keywords.push_back("school");
+    keywords.push_back("uni");
     tweetAnalyserKeywordSearchOption option = OR;
     
     vector <string> screenNames;
@@ -63,7 +71,7 @@ int main(int argc, const char * argv[]) {
     } catch (const char* msg) {
         cerr << msg << endl;
     }
-
+    
     /* test functionality: write cascades to file based on input tweets and keywords */
 //    cout << "##########       TESTING CASCADES SECTION         #########" << endl;
 //    for (int i = 0; i < keywords.size(); i++) {
@@ -93,26 +101,26 @@ int main(int argc, const char * argv[]) {
 //    }
 //    cout << "##########         NUMBER OF TWEETS SELECTED: " << twitterKeywordSelectionData.size() << "         #########" << endl;
 //    sort(twitterKeywordSelectionData.begin(), twitterKeywordSelectionData.end());
-//    tweetAnalyser.printTweetData(twitterKeywordSelectionData);
+//    cout << twitterKeywordSelectionData << endl;
 //    twitterKeywordSelectionData.clear();
     
      /* test functionality: return tweet data of tweets sent by certain accounts via screenName check */
-//    vector<Tweet> twitterSpecificScreenNameData = tweetAnalyser.extractSpecificScreenNameTweetData(parsedTweetData, screenNames);
-//    cout << "##########       TESTING SCREENAME SECTION         #########" << endl;
-//    for (int i = 0; i < screenNames.size(); i++) {
-//        if (i == 0 && i != screenNames.size()-1)
-//            cout << "##########      TESTING SCREENAMES: " << screenNames.at(i);
-//        else if (i == 0 && i == screenNames.size()-1)
-//            cout << "##########      TESTING SCREENAMES: " << screenNames.at(i) << "      #########" << endl;
-//        else if (i != 0 && i != screenNames.size()-1)
-//            cout << ", " << screenNames.at(i);
-//        else
-//            cout << ", " << screenNames.at(i) << "      #########" << endl;
-//    }
-//    cout << "##########         NUMBER OF TWEETS SELECTED: " << twitterSpecificScreenNameData.size() << "         #########" << endl;
-//    sort(twitterSpecificScreenNameData.begin(), twitterSpecificScreenNameData.end());
-//    tweetAnalyser.printTweetData(twitterSpecificScreenNameData);
-//    twitterSpecificScreenNameData.clear();
+    vector<Tweet> twitterSpecificScreenNameData = tweetAnalyser.extractSpecificScreenNameTweetData(parsedTweetData, screenNames);
+    cout << "##########       TESTING SCREENAME SECTION         #########" << endl;
+    for (int i = 0; i < screenNames.size(); i++) {
+        if (i == 0 && i != screenNames.size()-1)
+            cout << "##########      TESTING SCREENAMES: " << screenNames.at(i);
+        else if (i == 0 && i == screenNames.size()-1)
+            cout << "##########      TESTING SCREENAMES: " << screenNames.at(i) << "      #########" << endl;
+        else if (i != 0 && i != screenNames.size()-1)
+            cout << ", " << screenNames.at(i);
+        else
+            cout << ", " << screenNames.at(i) << "      #########" << endl;
+    }
+    cout << "##########         NUMBER OF TWEETS SELECTED: " << twitterSpecificScreenNameData.size() << "         #########" << endl;
+    sort(twitterSpecificScreenNameData.begin(), twitterSpecificScreenNameData.end());
+    cout << twitterSpecificScreenNameData << endl;
+    twitterSpecificScreenNameData.clear();
     
     /* test functionality: return tweet data of tweets sent by certain accounts via sreenNameId check */
 //    vector<Tweet> twitterSpecificScreenNameData = tweetAnalyser.extractSpecificScreenNameTweetData(parsedTweetData, screenNameIds);
@@ -128,7 +136,7 @@ int main(int argc, const char * argv[]) {
 //            cout << ", " << screenNameIds.at(i) << "      #########" << endl;
 //    }
 //    cout << "##########         NUMBER OF TWEETS SELECTED: " << twitterSpecificScreenNameData.size() << "         #########" << endl;
-//    tweetAnalyser.printTweetData(twitterSpecificScreenNameData);
+//    cout << twitterSpecificScreenNameData << endl;
 //    twitterSpecificScreenNameData.clear();
     
     /* test functionality: return tweet data of particular tweet Ids */
@@ -146,7 +154,7 @@ int main(int argc, const char * argv[]) {
 //    }
 //    cout << "##########         NUMBER OF TWEETS SELECTED: " << twitterSpecificIdData.size() << "         #########" << endl;
 //    sort(twitterSpecificIdData.begin(), twitterSpecificIdData.end());
-//    tweetAnalyser.printTweetData(twitterSpecificIdData);
+//    cout << twitterSpecificIdData << endl;
 //    twitterSpecificIdData.clear();
     
     /* test functionality: return statistics (number of tweets) sent that contain certain keywords */
@@ -154,20 +162,16 @@ int main(int argc, const char * argv[]) {
 //    cout << "##########       TESTING KEYWORD OCURENCE CACHE SECTION         #########" << endl;
 //    cout << "##########         NUMBER OF KEYWORDS TESTING: " << keywords.size() << "         #########" << endl;
 //    sort(tweetKeywordOccurenceCache.begin(), tweetKeywordOccurenceCache.end());
-//    for (int i = 0; i < tweetKeywordOccurenceCache.size(); i++) {
-//        cout << "[" << i << "] -> " << tweetKeywordOccurenceCache.at(i).toString() << endl;
-//    }
+//    cout << tweetKeywordOccurenceCache << endl;
 //    tweetKeywordOccurenceCache.clear();
     
      /* test functionality: return statistics (number of tweets) sent by all distinct accounts */
-    vector<TweetScreenNameOccurenceCacheItem> tweetScreenNameOccurenceCache = tweetAnalyser.extractAmountTweetDataForAllScreenNames(parsedTweetData);
-    cout << "##########       TESTING SCREENAME OCCURENCE CACHE SECTION         #########" << endl;
-    cout << "##########         NUMBER OF DISTINCT SCERENNAMES: " << tweetScreenNameOccurenceCache.size() << "         #########" << endl;
-    sort(tweetScreenNameOccurenceCache.begin(), tweetScreenNameOccurenceCache.end());
-    for (int i = 0; i < tweetScreenNameOccurenceCache.size(); i++) {
-        cout << "[" << i << "] -> " << tweetScreenNameOccurenceCache.at(i).toString() << endl;
-    }
-    tweetScreenNameOccurenceCache.clear();
+//    vector<TweetScreenNameOccurenceCacheItem> tweetScreenNameOccurenceCache = tweetAnalyser.extractAmountTweetDataForAllScreenNames(parsedTweetData);
+//    cout << "##########       TESTING SCREENAME OCCURENCE CACHE SECTION         #########" << endl;
+//    cout << "##########         NUMBER OF DISTINCT SCERENNAMES: " << tweetScreenNameOccurenceCache.size() << "         #########" << endl;
+//    sort(tweetScreenNameOccurenceCache.begin(), tweetScreenNameOccurenceCache.end());
+//    cout << tweetScreenNameOccurenceCache << endl;
+//    tweetScreenNameOccurenceCache.clear();
     
     /* test functionality: return tweets that have been @username mentioned by and to users, that have actively tweeted, and messages contains combination of the keywords (depending on the option) */
 //    vector<TweetKeywordUsernameMentionedCacheItem> twitterKeywordContainedUsernameMentionedCache = tweetAnalyser.extractKeywordsContainedUsernameMentionedTweetData(parsedTweetData, keywords, option);
@@ -183,9 +187,7 @@ int main(int argc, const char * argv[]) {
 //            cout << ", " << keywords.at(i) << "      #########" << endl;
 //    }
 //    cout << "##########         NUMBER OF TWEETS SELECTED: " << twitterKeywordContainedUsernameMentionedCache.size() << "         #########" << endl;
-//    for (int i = 0; i < twitterKeywordContainedUsernameMentionedCache.size(); i++) {
-//        cout << "[" << i << "] -> " << twitterKeywordContainedUsernameMentionedCache.at(i).toString() << endl;
-//    }
+//    cout << twitterKeywordContainedUsernameMentionedCache << endl;
 //    twitterKeywordContainedUsernameMentionedCache.clear();
     
     parsedTweetData.clear();

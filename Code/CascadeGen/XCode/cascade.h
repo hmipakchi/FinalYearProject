@@ -31,6 +31,8 @@ public:
     
     string toString() const;
     
+    friend ostream& operator<<(ostream& os, const CascadeItem& obj);
+    
 private:
     double convertTimeStampToSeconds(const string& timeStamp) const;
     
@@ -59,6 +61,8 @@ public:
     void addCascadeItem(const CascadeItem& cascadeItem);
     
     string toString() const;
+    
+    friend ostream& operator<<(ostream& os, const Cascade& obj);
     
 private:
     vector<CascadeItem> cascade;
