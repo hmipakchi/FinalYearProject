@@ -78,7 +78,5 @@ function [ indicators, mu ] = testKMeansClustering( data, noClusters )
         
         noIterations = noIterations + 1;
     end
-    
-    display(noIterations);
 end
 
