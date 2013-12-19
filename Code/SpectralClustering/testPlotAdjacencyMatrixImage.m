@@ -3,13 +3,14 @@ clear;
 % definition of the stochastic block model
 
 % number vertices
-n = 100;
+n = 1000;
+
 % number of communities
-q = 4;
+q = 3;
     
 % probability matrix indicating the proability of edge between communities
-pout = 0.5;
-pin = 1.0;
+pout = 0.02;
+pin = 0.04;
 
 cin = floor(pin*n);
 cout = floor(pout*n);
@@ -17,53 +18,91 @@ cout = floor(pout*n);
 affinityMatrix = (pout .* ones(q,q)) + ((pin-pout) .* eye(q,q));
 
 % choose communitiy for each edge (i.e. 1,...,q)
-nodeCommunities = zeros(n, 1);
-numberMembersCommunities = zeros(q,1);
-cumulativeMembersCommunities = zeros(q,1);
+nodeCommunities = zeros(n);
 for i=1:n
-    nodeCommunities(i,1) = mod((i-1), q) + 1;
-    numberMembersCommunities(mod((i-1), q) + 1, 1) = numberMembersCommunities(mod((i-1), q) + 1, 1) + 1;
+    nodeCommunitity = mod((i-1), q) + 1;
+    nodeCommunities(i) = nodeCommunitity;
 end
-for j = 2:q
-    cumulativeMembersCommunities(j,1) = numberMembersCommunities(j-1,1) + cumulativeMembersCommunities(j-1,1);
+
+% evaluate number of nodes per community
+numberNodesPerCommunity = zeros(q,1);
+for i=1:n
+    nodeCommunitity = nodeCommunities(i);
+    numberNodesPerCommunity(nodeCommunitity) = numberNodesPerCommunity(nodeCommunitity) + 1;
+end
+
+% evaluate cumulative number of nodes up to a community
+cumulativeNumberNodesUptoCommunity = zeros(q,1);
+for i=1:q
+    if i >= 2
+        cumulativeNumberNodesUptoCommunity(i) = cumulativeNumberNodesUptoCommunity(i-1) + numberNodesPerCommunity(i-1);
+    end
+end
+
+% evaluate all node members for each community
+communityNodeMemberships = -1.*ones(q,max(numberNodesPerCommunity));
+communityNodeMembershipsIterators = ones(q,1);
+for i=1:n
+    nodeCommunitity = nodeCommunities(i);
+    communityNodeMemberships(nodeCommunitity,communityNodeMembershipsIterators(nodeCommunitity)) = i;
+    communityNodeMembershipsIterators(nodeCommunitity) = communityNodeMembershipsIterators(nodeCommunitity) + 1;
 end
 
 % create adjacency matrix for this stochastic block model
 adjacencyMatrix = zeros(n,n);
 for i=1:n
     for j=1:n
+        % no self edges allowed
         if i ~= j
             flipResult = rand(1);
-            if flipResult <= affinityMatrix(nodeCommunities(i,1),nodeCommunities(j,1))
+            if flipResult <= affinityMatrix(nodeCommunities(i),nodeCommunities(j))
                 adjacencyMatrix(i,j) = 1;
             end
         end
     end
 end
 
+% labelled adjacency matrix for this stochastic block model to demonstrate
+% communities
 labelledAdjacencyMatrix = zeros(n,n);
-orderedIndicesI = zeros(n,1);
-orderedIndicesJ = zeros(n,1);
-for i=1:n
-    for j=1:n
-        nodeICommunity = nodeCommunities(i,1);
-        nodeJCommunity = nodeCommunities(j,1);
-        
-        orderedIndexI = cumulativeMembersCommunities(nodeICommunity,1) + ((i-nodeICommunity)/q) + 1;
-        orderedIndexJ = cumulativeMembersCommunities(nodeJCommunity,1) + ((j-nodeJCommunity)/q) + 1;
-        
-        labelledAdjacencyMatrix(orderedIndexI,orderedIndexJ) = adjacencyMatrix(i,j);
+for c1=1:q
+    for c2=1:q
+        for i=1:numberNodesPerCommunity(c1)
+            for j=1:numberNodesPerCommunity(c2)
+                rowValueAdjMatrix = communityNodeMemberships(c1,i);
+                colValueAdjMatrix = communityNodeMemberships(c2,j);
+                rowValueLabelledAdjMatrix = cumulativeNumberNodesUptoCommunity(c2) + j;
+                colValueLabelledAdjMatrix = cumulativeNumberNodesUptoCommunity(c1) + i;
+                labelledAdjacencyMatrix(rowValueLabelledAdjMatrix,colValueLabelledAdjMatrix) = adjacencyMatrix(rowValueAdjMatrix,colValueAdjMatrix);
+            end
+        end
     end
 end
 
-subplot(1, 2, 1);
-pcolor(adjacencyMatrix);
-colormap([1 1 1; 0 0 0;]);
-axis ij;
-axis square;
+% write Adjacency Matrix to file
+fileID = fopen('data_files/adjacencyMatrix.dat','w');
+for i=n:-1:1
+    for j=1:n
+        if j ~= n
+            fprintf(fileID,'%d ',adjacencyMatrix(i,j));
+        else
+            fprintf(fileID,'%d',adjacencyMatrix(i,j));
+        end
+    end
+    fprintf(fileID,'\n');
+end
+fclose(fileID);
 
-subplot(1, 2, 2);
-pcolor(labelledAdjacencyMatrix);
-colormap([1 1 1; 0 0 0;]);
-axis ij;
-axis square;
+% write Labelled Adjacency Matrix to file
+fileID = fopen('data_files/labelledAdjacencyMatrix.dat','w');
+for i=n:-1:1
+    for j=1:n
+        if j ~= n
+            fprintf(fileID,'%d ',labelledAdjacencyMatrix(i,j));
+        else
+            fprintf(fileID,'%d',labelledAdjacencyMatrix(i,j));
+        end
+    end
+    fprintf(fileID,'\n');
+end
+fclose(fileID);
