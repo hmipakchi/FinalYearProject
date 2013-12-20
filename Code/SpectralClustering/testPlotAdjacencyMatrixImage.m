@@ -80,7 +80,7 @@ for c1=1:q
 end
 
 % write Adjacency Matrix to file
-fileID = fopen('data_files/adjacencyMatrix.dat','w');
+fileID = fopen('data_files/adjacencyMatrices/adjacencyMatrix.dat','w');
 for i=n:-1:1
     for j=1:n
         if j ~= n
@@ -94,7 +94,7 @@ end
 fclose(fileID);
 
 % write Labelled Adjacency Matrix to file
-fileID = fopen('data_files/labelledAdjacencyMatrix.dat','w');
+fileID = fopen('data_files/adjacencyMatrices/labelledAdjacencyMatrix.dat','w');
 for i=n:-1:1
     for j=1:n
         if j ~= n
