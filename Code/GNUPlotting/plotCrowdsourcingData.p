@@ -26,9 +26,12 @@ set ytics nomirror font "sans-serif, 18"
 set style line 1 lc rgb '#0060ad' lt 1 lw 1.5 pt 5 ps 1.5
 
 # style for SV algorithm
-set style line 2 lc rgb '#ff0000' lt 1 lw 1.5 pt 7 ps 1.5
+set style line 2 lc rgb '#ff0000' lt 1 lw 1.5 pt 6 ps 1.5
 
-plot 'crowdSourcingErrors_l.dat' using 1:2 title 'Majority Voting' with linespoints ls 1, 'crowdSourcingErrors_l.dat' using 1:3 title 'Singular Vector' with linespoints ls 2
+# style for IT algorithm
+set style line 3 lc rgb '#60ad60' lt 1 lw 1.5 pt 4 ps 1.5
+
+plot 'crowdSourcingErrors_l.dat' using 1:2 title 'Majority Voting' with linespoints ls 1, 'crowdSourcingErrors_l.dat' using 1:3 title 'Singular Vector' with linespoints ls 2, 'crowdSourcingErrors_l.dat' using 1:4 title 'Iterative Algorithm' with linespoints ls 3
 
 
 ######################################
@@ -58,6 +61,9 @@ set ytics nomirror font "sans-serif, 18"
 set style line 1 lc rgb '#0060ad' lt 1 lw 1.5 pt 5 ps 1.5
 
 # style for SV algorithm
-set style line 2 lc rgb '#ff0000' lt 1 lw 1.5 pt 7 ps 1.5
+set style line 2 lc rgb '#ff0000' lt 1 lw 1.5 pt 6 ps 1.5
 
-plot 'crowdSourcingErrors_q.dat' using 1:2 title 'Majority Voting' with linespoints ls 1, 'crowdSourcingErrors_q.dat' using 1:3 title 'Singular Vector' with linespoints ls 2
+# style for IT algorithm
+set style line 3 lc rgb '#60ad60' lt 1 lw 1.5 pt 4 ps 1.5
+
+plot 'crowdSourcingErrors_q.dat' using 1:2 title 'Majority Voting' with linespoints ls 1, 'crowdSourcingErrors_q.dat' using 1:3 title 'Singular Vector' with linespoints ls 2, 'crowdSourcingErrors_q.dat' using 1:4 title 'Iterative Algorithm' with linespoints ls 3
