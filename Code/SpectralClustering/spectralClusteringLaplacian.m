@@ -1,5 +1,5 @@
 function [ communityAssignments ] = spectralClusteringLaplacian( adjacencyMatrix, k )
-%testLaplacianSpectralClustering: Implements Spectral Clustering based on Laplcian matrix
+%spectralClusteringLaplacian: Implements Spectral Clustering based on Laplcian matrix
 %   Inputs: Adjacency matrix of a graph, number of communities (k)
 %   Outputs: Indicators matrix classfying each node in the graph to a
 %   particular community

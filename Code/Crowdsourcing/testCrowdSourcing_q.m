@@ -37,15 +37,18 @@ for i=1:m
     end
 end
 
-noTrials = 40;
-qUpperBound = 0.40;
+noTrials = 60;
+qUpperBound = 0.30;
 qIncrement = qUpperBound/noTrials;
 
+errorsORACLEestimate = zeros(m, noTrials);
 errorsMVestimate = zeros(m, noTrials);
 errorsSVestimate = zeros(m, noTrials);
 errorsITestimate = zeros(m, noTrials);
+errorsAMPestimate = zeros(m, noTrials);
 
 currentTrialNumber = 1;
+
 for q=0:qIncrement:qUpperBound
     
     display(currentTrialNumber);
@@ -73,6 +76,18 @@ for q=0:qIncrement:qUpperBound
             end
         end
     end
+    
+    % use Oracle scheme
+    tOracleEstimate = oracleAlgorithm(responseMatrix, p);
+
+    % calculate errors for Oracle scheme
+    for i=1:m
+        if t(i) == tOracleEstimate(i)
+            errorsORACLEestimate(i,currentTrialNumber) = 0;
+        else
+            errorsORACLEestimate(i,currentTrialNumber) = 1;
+        end
+    end
 
     % use Majority-Voting (MV) scheme
     tMVEstimate = majorityVotingAlgorithm(responseMatrix);
@@ -87,7 +102,7 @@ for q=0:qIncrement:qUpperBound
     end
     
     % use Singular Vector (SV) scheme
-    tSVEstimate = singularVectorAlgorithm(responseMatrix, 20);
+    tSVEstimate = singularVectorAlgorithm(responseMatrix, 50);
     
     % calculate errors for Singular Vector (SV) scheme
     for i=1:m
@@ -110,6 +125,18 @@ for q=0:qIncrement:qUpperBound
         end
     end
     
+    % use Approximate Message Passing (AMP) scheme
+    tAMPEstimate = AMPAlgorithm(responseMatrix, 50);
+
+    % calculate errors for AMP scheme
+    for i=1:m
+        if t(i) == tAMPEstimate(i)
+            errorsAMPestimate(i,currentTrialNumber) = 0;
+        else
+            errorsAMPestimate(i,currentTrialNumber) = 1;
+        end
+    end
+    
     currentTrialNumber = currentTrialNumber + 1;
 end
 
@@ -119,16 +146,22 @@ title(title_str,'FontSize',16);
 xlabel('Collective quality of the crowd (q)','FontSize',17);
 ylabel('Error','FontSize',16);
 
+errorOracleData = zeros(noTrials,1);
 errorMVData = zeros(noTrials,1);
 errorSVData = zeros(noTrials,1);
 errorITData = zeros(noTrials,1);
+errorAMPData = zeros(noTrials,1);
 
 for i=1:noTrials
     hold on;
 
+    errorOracle = sum(errorsORACLEestimate(:,i)) / m;
     errorMV = sum(errorsMVestimate(:,i)) / m;
     errorSV = sum(errorsSVestimate(:,i)) / m;
     errorIT = sum(errorsITestimate(:,i)) / m;
+    errorAMP = sum(errorsAMPestimate(:,i)) / m;
+    
+    semilogy(i*qUpperBound/noTrials,errorOracle,'Marker','o','MarkerEdgeColor',[1 0 1]);
     
     semilogy(i*qUpperBound/noTrials,errorMV,'Marker','o','MarkerEdgeColor','blue');
     
@@ -139,27 +172,38 @@ for i=1:noTrials
     if errorIT > dumbThreshold
         errorIT = 1 - errorIT;
     end
+    if errorAMP > dumbThreshold
+        errorAMP = 1 - errorAMP;
+    end
 
     semilogy(i*qUpperBound/noTrials,errorSV,'Marker','o','MarkerEdgeColor','red');
     
     semilogy(i*qUpperBound/noTrials,errorIT,'Marker','o','MarkerEdgeColor','green');
+    
+    semilogy(i*qUpperBound/noTrials,errorAMP,'Marker','o','MarkerEdgeColor','black');
 
+    errorOracleData(i) = errorOracle;
     errorMVData(i) = errorMV;
     errorSVData(i) = errorSV;
     errorITData(i) = errorIT;
+    errorAMPData(i) = errorAMP;
 end
 
 % write algorithms errors to file
 fileID = fopen('data_files/crowdsourcing/crowdsourcingErrors_q.dat','w');
 for j=1:noTrials
     fprintf(fileID,'%d ',j*qUpperBound/noTrials);
-    for i=1:3
+    for i=1:5
         if i == 1
-            fprintf(fileID,'%d ',errorMVData(j));
+            fprintf(fileID,'%d ',errorOracleData(j));
         elseif i == 2
+            fprintf(fileID,'%d ',errorMVData(j));
+        elseif i == 3
             fprintf(fileID,'%d ',errorSVData(j));
-        else
+        elseif i == 4
             fprintf(fileID,'%d ',errorITData(j));
+        else
+            fprintf(fileID,'%d ',errorAMPData(j));
         end
     end
     fprintf(fileID,'\n');

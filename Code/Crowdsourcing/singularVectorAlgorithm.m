@@ -7,9 +7,10 @@ function [ svEstimate ] = singularVectorAlgorithm( responseMatrix, noIterations 
     
     u = zeros(m,1);
     v = -1 + 2.*rand(n,1);
+    
     for i=1:noIterations
-        u = responseMatrix*v;
-        v = transpose(responseMatrix)*u;
+        u = responseMatrix * v;
+        v = responseMatrix' * u;
     end
     
     svEstimate = zeros(m,1);
