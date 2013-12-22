@@ -57,6 +57,8 @@ set key font "sans-serif, 18"
 
 set logscale y
 
+set yrange [0.0001:1]
+
 set xlabel "Collective quality of the crowd, q" font "sans-serif, 18"
 set ylabel "Probability of error" font "sans-serif, 18"
 

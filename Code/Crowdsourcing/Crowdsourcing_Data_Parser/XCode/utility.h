@@ -9,7 +9,12 @@
 
 using namespace std;
 
-string convertIntToString(const int& x);
+template <typename T>
+string convertTemplateTypenameToString(const T& x) {
+    stringstream x_ss;
+    x_ss << x;
+    return x_ss.str();
+}
 
 template <typename T>
 ostream& operator<<(ostream& os, const vector<T>& data) {

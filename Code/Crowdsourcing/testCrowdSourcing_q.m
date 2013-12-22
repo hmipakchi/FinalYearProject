@@ -37,7 +37,7 @@ for i=1:m
     end
 end
 
-noTrials = 60;
+noTrials = 45;
 qUpperBound = 0.30;
 qIncrement = qUpperBound/noTrials;
 

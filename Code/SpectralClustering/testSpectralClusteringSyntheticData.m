@@ -52,12 +52,12 @@ for pinValueNo=1:max(size(pinValueVector))
         end
 
         % apply spectral clustering using Laplacian method
-        communityAssignmentsLaplacian = zeros(n,1);
-%         communityAssignmentsLaplacian = spectralClusteringLaplacian(adjacencyMatrix, q);
+%         communityAssignmentsLaplacian = zeros(n,1);
+        communityAssignmentsLaplacian = spectralClusteringLaplacian(adjacencyMatrix, q);
         
         % apply spectral clustering using Modularity method
-        communityAssignmentsModularity = zeros(n,1);
-%         communityAssignmentsModularity = spectralClusteringModularity(adjacencyMatrix, q);
+%         communityAssignmentsModularity = zeros(n,1);
+        communityAssignmentsModularity = spectralClusteringModularity(adjacencyMatrix, q);
 
         % apply spectral clustering using Approximate Message Passing (AMP) method
         % Note: only works for 2 communities -> q = 2 !!!

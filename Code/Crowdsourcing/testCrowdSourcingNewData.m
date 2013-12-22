@@ -7,14 +7,6 @@ fileID = fopen('data_files/crowdsourcing/parsed_data_files/BarzanMozafari_TaskTr
 t = fscanf(fileID, '%*d %d', inf);
 fclose(fileID);
 
-% read the responses from each worker for each task (-1, 0 or 1)
-[m,mTemp] = size(t);
-m_str = int2str(m);
-
-fileID = fopen('data_files/crowdsourcing/parsed_data_files/BarzanMozafari_WorkersTaskResponses.txt','r');
-responseMatrix = fscanf(fileID, '%d', [m,inf])';
-fclose(fileID);
-
 % read the tasks completed by each worker (1, 2, ..., m)
 fileID = fopen('data_files/crowdsourcing/parsed_data_files/BarzanMozafari_WorkersTaskIds.txt','r');
 info = fscanf(fileID, '%d %d', 2);
@@ -42,6 +34,33 @@ end
 
 fclose(fileID);
 
+% read the responses from each worker for each task (-1, 0 or 1)
+m = length(t);
+m_str = int2str(m);
+
+responseMatrixTransposed = zeros(n,m);
+
+fileID = fopen('data_files/crowdsourcing/parsed_data_files/BarzanMozafari_WorkersTaskResponses.txt','r');
+i=1;
+while ~feof(fileID)
+    tline = fgets(fileID);
+    while ischar(tline)
+        rowValues = sscanf(tline,'%d', inf);
+        noRowValues = length(rowValues);
+        for j=1:noRowValues
+            responseMatrixTransposed(i,j) = rowValues(j);
+        end
+        tline = fgets(fileID);
+        i=i+1;
+    end
+end
+
+fclose(fileID);
+
+responseMatrix = responseMatrixTransposed';
+
+% responseMatrix = dlmread('data_files/crowdsourcing/parsed_data_files/BarzanMozafari_WorkersTaskResponses.txt');
+
 % finished reading data !!!
 
 noClasses = 2;
@@ -54,7 +73,7 @@ noJobsPerWorker = zeros(n,1);
 for j=1:n
     cumsum = 0;
     for i=1:m
-        if responseMatrix(j,i) ~= 0
+        if responseMatrix(i,j) ~= 0
             cumsum = cumsum + 1;
         end
     end
@@ -174,19 +193,20 @@ for i=1:noTrials
     errorITData(i) = errorIT;
 end
 
+
 % write algorithms errors to file
-fileID = fopen('data_files/crowdsourcing/crowdsourcingErrors_q.dat','w');
-for j=1:noTrials
-    fprintf(fileID,'%d ',j*qUpperBound/noTrials);
-    for i=1:3
-        if i == 1
-            fprintf(fileID,'%d ',errorMVData(j));
-        elseif i == 2
-            fprintf(fileID,'%d ',errorSVData(j));
-        else
-            fprintf(fileID,'%d ',errorITData(j));
-        end
-    end
-    fprintf(fileID,'\n');
-end
-fclose(fileID);
+% fileID = fopen('data_files/crowdsourcing/crowdsourcingErrors_NewData.dat','w');
+% for j=1:noTrials
+%     fprintf(fileID,'%d ',j*qUpperBound/noTrials);
+%     for i=1:3
+%         if i == 1
+%             fprintf(fileID,'%d ',errorMVData(j));
+%         elseif i == 2
+%             fprintf(fileID,'%d ',errorSVData(j));
+%         else
+%             fprintf(fileID,'%d ',errorITData(j));
+%         end
+%     end
+%     fprintf(fileID,'\n');
+% end
+% fclose(fileID);

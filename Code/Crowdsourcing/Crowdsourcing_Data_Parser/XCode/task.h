@@ -5,36 +5,85 @@
 
 /* Task class */
 
+template <class T>
 class Task {
 public:
-    Task();
+    Task() : taskId(T()), taskIdConverted(0), trueValue(0), response(0) {}
     
-    ~Task();
+    ~Task() {}
     
-    Task(const Task& tc);
+    Task(const Task<T>& tc) : taskId(tc.taskId), taskIdConverted(tc.taskIdConverted), trueValue(tc.trueValue), response(tc.response) {}
     
-    Task(const int& taskId, const int& trueValue, const int& response);
+    Task(const T& taskId, const int& trueValue, const int& response) {
+        this->taskId = taskId;
+        this->trueValue = trueValue;
+        this->response = response;
+    }
     
-    Task operator=(const Task& tc);
+    Task(const T& taskId, const int& taskIdConverted, const int& trueValue, const int& response) {
+        this->taskId = taskId;
+        this->taskIdConverted = taskIdConverted;
+        this->trueValue = trueValue;
+        this->response = response;
+    }
     
-    void setTaskId(const int& taskId);
+    Task<T> operator=(const Task<T>& tc) {
+        if (this == &tc) {
+            return *this;
+        }
+        else {
+            taskId = tc.taskId;
+            taskIdConverted = tc.taskIdConverted;
+            trueValue = tc.trueValue;
+            response = tc.response;
+            return *this;
+        }
+    }
     
-    int getTaskId() const;
+    void setTaskId(const T& taskId) {
+        this->taskId = taskId;
+    }
     
-    void setTrueValue(const int& trueValue);
+    T getTaskId() const {
+        return taskId;
+    }
     
-    int getTrueValue() const;
+    void setTaskIdConverted (const int& taskIdConverted) {
+        this->taskIdConverted = taskIdConverted;
+    }
     
-    void setResponse(const int& response);
+    int getTaskIdConverted() const {
+        return taskIdConverted;
+    }
     
-    int getResponse() const;
+    void setTrueValue(const int& trueValue) {
+        this->trueValue = trueValue;
+    }
     
-    string toString() const;
+    int getTrueValue() const {
+        return trueValue;
+    }
     
-    friend ostream& operator<<(ostream& os, const Task& obj);
+    void setResponse(const int& response) {
+        this->response = response;
+    }
+    
+    int getResponse() const {
+        return response;
+    }
+    
+    string toString() const {
+        return convertTemplateTypenameToString(taskId) + "," + convertTemplateTypenameToString(trueValue) + "," + convertTemplateTypenameToString(response);
+    }
+    
+    friend ostream& operator<<(ostream& os, const Task<T>& obj) {
+        os << obj.toString();
+        return os;
+    }
     
 private:
-    int taskId;
+    T taskId;
+    int taskIdConverted;
     int trueValue;
     int response;
 };

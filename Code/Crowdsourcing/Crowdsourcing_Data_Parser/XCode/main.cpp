@@ -11,20 +11,35 @@
 
 int main(int argc, const char * argv[])
 {
-    DataParser dataParser;
+    // first template type: TaskId type
+    // second template type: WorkerId type
+    DataParser<int, string> dataParser;
+
+    string evaluationFilename = "BarzanMozafari/BarzanMozafari_Evaluation.txt";
+    string labelsFilename = "BarzanMozafari/BarzanMozafari_Labels.txt";
+    string taskTrueValuesFilename = "BarzanMozafari/BarzanMozafari_TaskTrueValues.txt";
+    string workersTaskResponsesFilename = "BarzanMozafari/BarzanMozafari_WorkersTaskResponses.txt";
+    string workersTaskIdsFilename = "BarzanMozafari/BarzanMozafari_WorkersTaskIds.txt";
     
-    string evaluationFilename = "BarzanMozafari_Evaluation.txt";
-    string labelsFilename = "BarzanMozafari_Labels.txt";
-    string taskTrueValuesFilename = "BarzanMozafari_TaskTrueValues.txt";
-    string workersTaskResponsesFilename = "BarzanMozafari_WorkersTaskResponses.txt";
-    string workersTaskIdsFilename = "BarzanMozafari_WorkersTaskIds.txt";
+//    string evaluationFilename = "HITspam_Crowdflower/HITspam_Crowdflower_Evaluation.txt";
+//    string labelsFilename = "HITspam_Crowdflower/HITspam_Crowdflower_Labels.txt";
+//    string taskTrueValuesFilename = "HITspam_Crowdflower/HITspam_Crowdflower_TaskTrueValues.txt";
+//    string workersTaskResponsesFilename = "HITspam_Crowdflower/HITspam_Crowdflower_WorkersTaskResponses.txt";
+//    string workersTaskIdsFilename = "HITspam_Crowdflower/HITspam_Crowdflower_WorkersTaskIds.txt";
     
+//    string evaluationFilename = "HITspam_MTurk/HITspam_MTurk_Evaluation.txt";
+//    string labelsFilename = "HITspam_MTurk/HITspam_MTurk_Labels.txt";
+//    string taskTrueValuesFilename = "HITspam_MTurk/HITspam_MTurk_TaskTrueValues.txt";
+//    string workersTaskResponsesFilename = "HITspam_MTurk/HITspam_MTurk_WorkersTaskResponses.txt";
+//    string workersTaskIdsFilename = "HITspam_MTurk/HITspam_MTurk_WorkersTaskIds.txt";
+
+
     try {
         dataParser.writeTaskTrueValuesToFile(taskTrueValuesFilename, evaluationFilename);
     } catch (const char* msg) {
         cerr << msg << endl;
     }
-    
+
     try {
         dataParser.writeWorkerTaskResponsesToFile(workersTaskResponsesFilename, evaluationFilename, labelsFilename);
     } catch (const char* msg) {
