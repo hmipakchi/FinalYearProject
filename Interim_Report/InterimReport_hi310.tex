@@ -1,0 +1,162 @@
+% Example LaTeX document for GP111 - note % sign indicates a comment
+\documentclass[11pt]{article}
+
+%----------------------------------------------------------------------------------------
+%	PACKAGES
+%----------------------------------------------------------------------------------------
+
+\usepackage{cite}
+\usepackage{graphicx}
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage{amssymb, amsmath}
+\usepackage{hyperref}
+\usepackage[hypcap]{caption}
+
+%----------------------------------------------------------------------------------------
+%	PAGE & LINKS SETUP
+%----------------------------------------------------------------------------------------
+
+% Default margins are too wide all the way around. I reset them here
+\setlength{\topmargin}{-.5in}
+\setlength{\textheight}{9in}
+\setlength{\oddsidemargin}{.125in}
+\setlength{\textwidth}{6.25in}
+
+\graphicspath{ {./images/} }
+
+\hypersetup{
+    bookmarks=true, % show bookmarks bar?
+    unicode=false, % non-Latin characters in Acrobat’s bookmarks
+    pdftoolbar=true, % show Acrobat’s toolbar?
+    pdfmenubar=true, % show Acrobat’s menu?
+    pdffitwindow=false, % window fit to page when opened
+    pdfstartview={FitH}, % fits the width of the page to the window
+    pdftitle={LaTeX test}, % title
+    pdfauthor={Hesam Ipakchi}, % author
+    pdfsubject={LaTeX test}, % subject of the document
+    pdfcreator={Hesam Ipakchi}, % creator of the document
+    pdfproducer={Hesam Ipakchi}, % producer of the document
+    pdfkeywords={Hesam Ipakchi}, % list of keywords
+    pdfnewwindow=true, % links in new window
+    colorlinks=true, % false: boxed links; true: colored links
+    linkcolor=red, % color of internal links (change box color with linkbordercolor)
+    citecolor=blue, % color of links to bibliography
+    filecolor=black, % color of file links
+    urlcolor=blue  % color of external links
+}
+
+%----------------------------------------------------------------------------------------
+%	BEGIN DOCUMENT
+%----------------------------------------------------------------------------------------
+
+\begin{document}
+
+% Consider all references (including those not cited) for biliography
+\nocite{*}
+
+%----------------------------------------------------------------------------------------
+%	TITLE PAGE
+%----------------------------------------------------------------------------------------
+
+\title{\textbf{Final Year Project: Interim Report}}
+\author{Hesam Ipakchi\\Imperial College London}
+\date{\today}
+\maketitle
+
+%----------------------------------------------------------------------------------------
+%	CONTENTS PAGE
+%----------------------------------------------------------------------------------------
+
+% Add table of contents on new page
+\newpage
+\thispagestyle{plain}
+\mbox{}
+\tableofcontents
+
+%----------------------------------------------------------------------------------------
+%	FIGURES PAGE
+%----------------------------------------------------------------------------------------
+
+% Add list of figures on new page
+\newpage
+\thispagestyle{plain}
+\mbox{}
+\listoffigures
+
+%----------------------------------------------------------------------------------------
+%	INTRODUCTION
+%----------------------------------------------------------------------------------------
+
+\newpage
+\thispagestyle{plain}
+\mbox{}
+\section {Introduction}
+\label{sec:introduction}
+
+Networks have been studied extensively to model many interesting complex systems, including the Internet, social networks and biological networks~\cite{New06a,DKM+13}. Any network consists of \textit{nodes} which represent items of interest, and \textit{edges} which represent the connectivity between pairs of nodes. For example, considering social networks, nodes are the users and the edges correspond to interactions between the users. An interesting feature many networks exhibit is \textit{community structure}, which involves the natrual dividing of nodes into groups, called \textit{communities}, where there are denser connections within a group, and sparser connections between different groups~\cite{New06a,DKM+13,For10,New06b}. This particular type of community structure is also known as \textit{assortative}~\cite{DKM+13}. For instance, social networks contain communities corresponding to real-life communities consisting of the members, such as friendship or family circles. The aim of developing algorithms for detecting communities within networks motivates the problem known as community detection.
+
+In order to provide a theoretical setting to test and compare different community detection algorithms, generative models of random graphs are very useful, and one such commonly used model is the \textit{stochastic block model}~\cite{DKM+13}. We will investigate several community detection algorithms, and will use the stochastic block model in order to analyse and reason about them.
+
+The underlying ingredients of the community detection algorithms have other interesting applications also, with one being in the problem of task allocation of crowdsourcing systems. Crowdsourcing systems involve tasks being allocated electronically and then executed by several workers, known collectively as a crowd, where the workers' responses are used to approximate the solution of the task~\cite{KOS13,EHR12}. The workers are humans who are paid by the system for their responses, and these systems have been shown to be effective in solving problems such as image classification, character recognition and recommendation~\cite{KOS13}. Clearly, we wish to use the crowdsourcing system to gain accurate solutions to tasks, but also want to reduce the total cost paid out for labour, thus designing algorithms for task allocation and inference that are budget-optimal is very useful.
+
+We will investigate different algorithms used for task allocation and inference and use the same theoretical model and setup considered by~\cite{KOS13} to compare and contrast.
+
+This report is organised as follows. In section~\ref{sec:projectSpecification} we will state clearly the project deliverables. In section~\ref{sec:background}, we will outline all the necessary background required to understand the problems studied in the project. In section~\ref{sec:implementationPlan}, we will provide a detailed breakdown of work that has been already done and remaining work that is to be done during the rest of the project. Finally, in section~\ref{sec:evaluationPlan}, we will detail how the success of the project may be measured.
+
+%----------------------------------------------------------------------------------------
+%	PROJECT SPECIFICATION
+%----------------------------------------------------------------------------------------
+
+\newpage
+\thispagestyle{plain}
+\mbox{}
+\section {Project Specification}
+\label{sec:projectSpecification}
+
+%----------------------------------------------------------------------------------------
+%	BACKGROUND
+%----------------------------------------------------------------------------------------
+
+\newpage
+\thispagestyle{plain}
+\mbox{}
+\section {Background}
+\label{sec:background}
+
+%----------------------------------------------------------------------------------------
+%	IMPLEMENTATION PLAN
+%----------------------------------------------------------------------------------------
+
+\newpage
+\thispagestyle{plain}
+\mbox{}
+\section {Implementation Plan}
+\label{sec:implementationPlan}
+
+%----------------------------------------------------------------------------------------
+%	EVALUATION PLAN
+%----------------------------------------------------------------------------------------
+
+\newpage
+\thispagestyle{plain}
+\mbox{}
+\section {Evaluation Plan}
+\label{sec:evaluationPlan}
+
+%----------------------------------------------------------------------------------------
+%	BIBLIOGRAPHY
+%----------------------------------------------------------------------------------------
+
+% Add complete bibliography on new page
+\newpage
+\thispagestyle{plain}
+\mbox{}
+\bibliographystyle{hieeetr.bst}
+\bibliography{interimReportBibliography}
+
+%----------------------------------------------------------------------------------------
+%	END DOCUMENT
+%----------------------------------------------------------------------------------------
+
+\end{document} 
