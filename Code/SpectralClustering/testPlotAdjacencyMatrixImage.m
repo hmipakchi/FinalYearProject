@@ -9,8 +9,8 @@ n = 1000;
 q = 3;
     
 % probability matrix indicating the proability of edge between communities
-pout = 0.02;
-pin = 0.04;
+pout = 0.3;
+pin = 0.7;
 
 cin = floor(pin*n);
 cout = floor(pout*n);
@@ -105,4 +105,32 @@ for i=n:-1:1
     end
     fprintf(fileID,'\n');
 end
+fclose(fileID);
+
+% write Adjacency Matrix to gexf file
+fileID = fopen('data_files/adjacencyMatrices/exampleGraphStochasticBlockModel.png.gexf','w');
+fprintf(fileID,'<gexf version="1.1"><meta><creator>Hesam Ipakchi</creator></meta><graph defaultedgetype="directed" idtype="string" type="static">');
+
+fprintf(fileID,'<nodes count="%d">',n);
+for i=1:n
+    fprintf(fileID,'<node id="%d" label="%d"/>',i,i);
+end
+fprintf(fileID,'</nodes>');
+
+nodeDegrees = sum(adjacencyMatrix);
+totalNoEdges = sum(nodeDegrees);
+fprintf(fileID,'<edges count="%d">',totalNoEdges);
+edgesCount = 1;
+for i=1:n
+    for j=1:n
+        if adjacencyMatrix(i,j) == 1
+            fprintf(fileID,'<edge id="%d" source="%d" target="%d"/>',edgesCount,i,j);
+            edgesCount = edgesCount + 1;
+        end
+    end
+end
+fprintf(fileID,'</edges>');
+
+fprintf(fileID,'</graph>');fprintf(fileID,'</gexf>');
+
 fclose(fileID);
