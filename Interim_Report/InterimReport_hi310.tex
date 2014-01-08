@@ -11,6 +11,7 @@
 \usepackage{amssymb}
 \usepackage{mathtools}
 \usepackage{amsmath}
+\usepackage{isomath}
 \usepackage{hyperref}
 \usepackage[hypcap]{caption}
 
@@ -132,6 +133,17 @@ This report is organised as follows. In section~\ref{sec:projectSpecification} w
 \section {Project Specification}
 \label{sec:projectSpecification}
 
+In the following section we will summarise and detail the project deliverables. Firstly, though, a high-level overview of the skills involved in the project include gaining knowledge of mathematical concepts in graph theory, linear algebra and probability to understand common mathematical framework of real-world problems in community detection and crowdsourcing; the ability to analyse random algorithms in a rigorous and technical sense as well as implement them and run simulations through generation of synthetic data (specific to the framework) to draw conclusions regarding performance in order to provide sensible recommendations for solving the specific problem in the real-world setting. Concise project deliverables are summarised below.
+\begin{itemize}
+	\item \textbf{Understand and analyse different community detection algorithms.}
+
+	We investigate the problem of community detection in graphs, as described in section \ref{sec:background;subsec:communityDetection}, and analyse different algorithms as solutions. These include spectral clustering approaches using \textsl{Laplacian} and \textsl{Modularity} matrices as well as message passing algorithms such as \textsl{belief propagation} and \textsl{approximate message passing}. We shall use the stochastic block model to generate random graphs that we treat as input to all these algorithms, in order to compare them, both through mathematical analysis and simulations on synthetic data.
+
+	\item \textbf{Understand crowdsourcing systems and analyse budget-optimal algorithms.}
+
+	We investigate crowdsourcing systems, as described in section \ref{sec:background;subsec:crowdsourcingSystems}, and analyse algorithms which aim to optimise cost of such systems whilst providing an accurate estimate to the ground-truth solution. This includes a naive algorithm such as majority voting, spectral algorithm such as singluar vector estimation and an iterative message passing algorithm proposed by Karger et al.~\cite{KOS13}. We aim to use the framework previously studied by~\cite{KOS13} as a setting to apply mathematical analysis to compare the algorithms as well as one to generate synthetic data to run simulations.
+\end{itemize}
+
 %----------------------------------------------------------------------------------------
 %	BACKGROUND
 %----------------------------------------------------------------------------------------
@@ -142,72 +154,166 @@ This report is organised as follows. In section~\ref{sec:projectSpecification} w
 \section {Background}
 \label{sec:background}
 
-In the following section we will describe all the technical background required to understand the settings of the algorithms we investigate for the project. Initially, we will highlight some basic results in graph theory, which the reader may already be familiar with. Then, we will outline the problem of community detection and  a common model used to generate random graphs with community structure to be used as a testing playground for algorithms. Following this, we will discuss, in detail, crowdsourcing systems.
+In the following section we will describe all the technical background required to understand the settings of the problems we investigate for the project. Initially, we will highlight some basic results in graph theory, which the reader may already be familiar with. Then, we will outline the problem of community detection and present a common model used to generate random graphs with community structure to be used as a testing playground for algorithms. Following this, we will discuss, in detail, crowdsourcing systems.
 
 %---   Basics Section   ---
 \subsection{Basics}
 \label{sec:background;subsec:basics}
 
+We assume the reader is familiar with basic concepts in linear algebra such as matrix multiplication, eigenvectors and eigenvalues of matrices. Rather, here, we will cover some basic tools within spectral graph theory using definitions from~\cite{For10,New06a, Spi12, Spi07}. Spectral graph theory which is the study of graphs through the eigenvalues and eigenvectors of matrices associated with the graphs~\cite{Spi12}. We begin by defining notions about graphs.
+\begin{definition}
+\label{def:graph}
+	A graph $\mathcal{G}$ is a pair of sets (V,E), where V is a set of vertices or nodes and $E \subset V^{2}$, the set of unordered pairs of elements of V. The elements of E are called edges or links.
+\end{definition}
+We will assume, without loss of generality, that $V = \{1,\dots,n\}$.
+\begin{definition}
+\label{def:subGraph}
+	A graph $\mathcal{G}^{\prime} = (V^{\prime},E^{\prime})$ is a subgraph of $\mathcal{G} = (V,E)$ if $V^{\prime} \subset V$ and $E^{\prime} \subset E$. If $\mathcal{G}^{\prime}$ contains all edges of $\mathcal{G}$ that join vertices of $V^{\prime}$, one says that the subgraph $\mathcal{G}^{\prime}$ is induced or spanned by $V^{\prime}$.
+\end{definition}
+\begin{definition}
+\label{def:cuts}
+	A partition of the vertex set V in two subsets S and $V-S$ is called a cut. The cut size is the number of edges of $\mathcal{G}$ joining vertices of S with vertices of $V-S$.
+\end{definition}
+\begin{definition}
+\label{def:neighbourhoodNode}
+	Two vertices are adjacent or neighbours if they are connected by an edge. The set of neighbours of a vertex $\upsilon$ is called neighbourhood, and denoted by $\Gamma(\upsilon)$.
+\end{definition}
+\begin{definition}
+\label{def:degreeNode}
+	The degree $d_{\upsilon}$ of a vertex $\upsilon$ is the number of its neighbours, $\left\vert{\Gamma(\upsilon)}\right\vert$.
+\end{definition}
+
+There is a very close connection between graphs and matrices, since the whole information about the topology of a graph can be entailed in matrix form, called the \textsl{adjacency matrix}.
+\begin{definition}
+	\label{def:adjacencyMatrix}
+	The adjacency matrix, $\mathbfit{A} \in \{0,1\}^{n \times n}$ of a graph $\mathcal{G} = (V,E)$, is a $n\times n$ matrix whose element $A_{ij}$ equals 1 if there exists an edge joining vertices i and j in $\mathcal{G}$, and zero otherwise.
+\end{definition}
+From definition \ref{def:adjacencyMatrix} it follows that elements of the adjacency matrix, $\mathbf{A}$, can be written as
+\begin{equation*}
+	A_{ij} =
+	\begin{cases}
+		0 & \text{if } (i,j) \not\in E\\
+		1 & \text{if } (i,j) \in E.
+	\end{cases}
+\end{equation*}
+Note that the sum of elements of the $i$-th row of the adjacency matrix yields the degree of node $i$ of the graph, $d_{i} = \sum\limits_{j} A_{ij}$. See Figure \ref{fig:exampleGraphSmall} for an example of a graph with seven vertices and eleven edges.
+
+%---   UNCOMMENT: Figure of a graph with seven vertices and eleven edges   ---
+%\begin{figure}
+	%\centering
+	%\includegraphics[width=0.4\linewidth]{exampleGraphSmall.png}
+	%\caption[Example of a graph with seven vertices and eleven edges]{\label{fig:exampleGraphSmall} A visualisation of a graph with seven vertices and eleven edges. Nodes are coloured blue and edges are coloured red.}
+%\end{figure}
+
+There are other matrices that have also been studied extensively in spectral graph theory, including the Laplacian which is applied in topics such as graph partitioning, synchronisation and graph connectivity~\cite{For10}.
+\begin{definition}
+\label{def:degreeMatrix}
+	The degree matrix, $\mathbfit{D}$ of a graph $\mathcal{G} = (V,E)$, is a $n \times n$ diagonal matrix whose element $D_{ii}$ equals the degree of vertex $i$.
+\end{definition}
+From definition \ref{def:degreeMatrix} it follows that elements of the degree matrix, $\mathbf{D}$, can be written as
+\begin{equation*}
+	 D_{ij} =
+	\begin{cases}
+		d_{i} & \text{if } i = j\\
+		0 & otherwise.
+	\end{cases}
+\end{equation*}
+\begin{definition}
+\label{def:unnormalisedLaplacianMatrix}
+	The matrix $\mathbfit{L} = \mathbfit{D}  - \mathbfit{A} $ is called the unnormalised Laplacian matrix.
+\end{definition}
+From definition \ref{def:unnormalisedLaplacianMatrix} it follows that elements of the unnormalised Laplacian matrix of a graph $\mathcal{G} = (V,E)$, $\mathbf{L}$, can be written as
+\begin{equation*}
+	L_{ij} =
+	\begin{cases}
+		d_{i} & \text{if } i = j\\
+		-1 & \text{if } i \neq j \text{ and }  (i,j) \in E\\
+		0 & otherwise.
+	\end{cases}
+\end{equation*}
+\begin{definition}
+\label{def:normalisedLaplacianMatrix}
+	The matrix $\mathbfit{L_{norm}} = \mathbfit{I}  - \mathbfit{D}^{-1/2}\mathbfit{A}\mathbfit{D}^{-1/2}$ is called the normalised Laplacian matrix, where $\mathbfit{I}$ is the identity matrix.
+\end{definition}
+Note that from definitions \ref{def:unnormalisedLaplacianMatrix} and \ref{def:normalisedLaplacianMatrix}, the normalised Laplacian matrix can also be written as $\mathbfit{L_{norm}} = \mathbfit{D}^{-1/2}\mathbfit{L}\mathbfit{D}^{-1/2}$.
+
+An important property of adjacency and Laplacian matrices is their spectra, which we will use, later in the project, to motivate and develop a spectral clustering algorithm for community detection.
+\begin{definition}
+\label{def:spectrum}
+	The spectrum of a graph $\mathcal{G}$ is the set of eigenvalues of its adjacency matrix, $\mathbfit{A}$.
+\end{definition}
+\begin{definition}
+\label{def:spectralRadius}
+	Let $\lambda_{1},\dots,\lambda_{n}$ be the eigenvalues of a matrix $\mathbfit{M} \in \mathbb{R}^{n \times n}$. The spectral radius is defined as $\rho(\mathbfit{M}) = \max\limits_{i} \vert\lambda_{i}\vert$.
+\end{definition}
+
+
 %---   Community Detection Section   ---
 \subsection{Community Detection}
 \label{sec:background;subsec:communityDetection}
 
-An intuitive notion of communities within graphs involves the assignment of nodes to communities such that there are denser connections between nodes belonging to the same community, and sparser connections between nodes belonging to different communities. If a graph exhibits this property, it is said to contain assortative community structure. The aim of community detection algorithms is to estimate or recover the node assignments. The algorithms need to be efficient due to the large (and ever-increasing) size of graphs in real-world networks, so we require computationally complexity to not be worse than nearly linear in the number of edges in the graph (approximately $O(n^{2}\log n)$ where \textsl{n} represents the number of nodes in the graph).
+An intuitive notion of communities within graphs involves the assignment of nodes to communities such that there are denser connections between nodes belonging to the same community, and sparser connections between nodes belonging to different communities. If a graph exhibits this property, it is said to contain assortative community structure~\cite{New06a,DKM+13,For10,New06b}. For instance, within social networks where nodes are users and edges between nodes represent interactions between the users, community structure within the graph corresponds to real-life communities consisting of the users. The aim of community detection algorithms is to estimate or recover the node assignments. The algorithms need to be efficient due to the large size of graphs in real-world networks, so we require the computationally complexity to not be worse than nearly linear in the number of edges in the graph (approximately $O(n^{2}\log n)$ where \textsl{n} represents the number of nodes in the graph).
 
-In order to help provide a setting where different algorithms may be compared, we wish to study particular models which generate random graphs which the algorithms operate over. One popular model is called the stochastic block model, and we define it similarily to the version considered by Decellle et al.~\cite{DKM+13}. We then consider an interesting observation of phase transitions within graphs generated by the stochastic block model. 
+In order to help provide a setting where different algorithms may be compared, we wish to study particular models which generate random graphs. One popular model is called the stochastic block model, and we define it similarily to the version considered by Decellle et al.~\cite{DKM+13}. We then consider an interesting phase transition within graphs generated by the stochastic block model.
 
 %---   Stochastic Block Model Sub-Section   ---
 \subsubsection{Stochastic Block Model}
 \label{sec:background;subsec:communityDetection;subsubsec:stochasticBlockModel}
 
 Let each node have a label indicating which community it belongs to, and associate the graph with a vector of such labels as defined below.
-
 \begin{definition}
 \label{def:nodeLabel}
-Given a graph, G, with N nodes and k communities, let $\sigma_{i} \in \{1,\dots,k\}$ for i = 1,\dots,N be the label of node i.
+	Given a graph, $\mathcal{G}$, with n nodes and k communities, let $\sigma_{i} \in \{1,\dots,k\}$ for i = 1,\dots,n be the label of node i.
 \end{definition}
-
 \begin{definition}
 \label{def:nodeAssignments}
-Given a graph, G, with N nodes and k communities, let $\Sigma = [\sigma_{1},\dots,\sigma_{N}]^{T}$ be the node assignments of G, where $\sigma_{i}$ is the label of node i.
+	Given a graph, $\mathcal{G}$, with n nodes and k communities, let $\mathbfit{\sigma} = [\sigma_{1},\dots,\sigma_{n}]^{T}$ be the node assignments of $\mathcal{G}$, where $\sigma_{i}$ is the label of node i.
 \end{definition}
- 
-The stochastic block model has parameters: \textsl{N} (number of nodes), \textsl{k} (number of communities), \textsl{$p_{in}$} and \textsl{$p_{out}$} (probability of an edge occuring between two nodes from the same and different communities, respectively). We proceed to generate a random graph, \textsl{G}, on \textsl{N} nodes, \textsl{k} communities and node assignments, \textsl{$\Sigma = [\sigma_{1},\dots,\sigma_{N}]^{T}$}, with the adjacency matrix of the graph, \textsl{$A = (A_{ij})$} defined as
+The stochastic block model has parameters: \textsl{n}, \textsl{k}, \textsl{$p_{in}$} and \textsl{$p_{out}$}. \textsl{n} represents the number of nodes, \textsl{k} represents the number of communities, \textsl{$p_{in}$} represents the probability of an edge occurring between two nodes belonging to the same community and \textsl{$p_{out}$} represents the probability of an edge occurring between two nodes belonging to the different communities. Since we are focused on assortative community structure, we consider the case where $p_{in} > p_{out}$. We proceed to generate a random graph, \textsl{G}, on \textsl{n} nodes, \textsl{k} communities and node assignments, \textsl{$\mathbfit{\sigma} = [\sigma_{1},\dots,\sigma_{n}]^{T}$}, with the adjacency matrix of the graph, $\mathbf{A}$ whose elements $(A_{ij})$ are defined as
 \begin{equation*}
- A_{ij} =
-  \begin{cases}
-   0 & \text{if } i = j\\
-   X & \text{if } i \neq j,
-  \end{cases}
+	A_{ij} =
+	\begin{cases}
+		 0 & \text{if } i = j\\
+		X & \text{if } i \neq j,
+	\end{cases}
 \end{equation*}
 where $X \sim Be(p_{ij})$ and \textsl{$p_{ij}$} is defined as
 \begin{equation*}
- p_{ij} =
-  \begin{cases}
-   p_{in} & \text{if } \sigma_{i} = \sigma_{j}\\
-   p_{out} & \text{if } \sigma_{i} \neq \sigma_{j}.
-  \end{cases}
+	p_{ij} =
+	\begin{cases}
+		p_{in} & \text{if } \sigma_{i} = \sigma_{j}\\
+		p_{out} & \text{if } \sigma_{i} \neq \sigma_{j}.
+	\end{cases}
 \end{equation*}
-In order to generate graphs with assortative structure, we consider the case where $p_{in} > p_{out}$. Typically, community detection within dense graphs (those with a dense adjancency matrix) is straightforward~\cite{DKM+13}, thus we are interested in sparse graphs (those with a sparse adjancency matrix) where $p_{in}$, $p_{out} = O(1/N)$. Since we are considering the sparse regime, it is more convenient to work with $c_{in} = Np_{in}$ and $c_{out} = Np_{out}$.
+Typically, community detection within dense graphs (those with a dense adjancency matrix) is straightforward~\cite{DKM+13}, thus we are interested in sparse graphs (those with a sparse adjancency matrix) where $p_{in}$, $p_{out} = O(1/n)$. Since we are considering the sparse regime, it is more convenient to work with $c_{in} = Np_{in}$ and $c_{out} = Np_{out}$.
 
-An example of a random graph generated by the stochastic block model is shown in Figure \ref{fig:unlabelledAdjacencyMatrixPlot}. We labelled nodes using $\sigma_{i} = 1 + (i \bmod{k})$ for $i = 1,\dots,N$ and generated the graph with with $N = 1000$, $k = 3$, $p_{in} = 0.7$, $p_{out} = 0.3$. The adjacency matrix of this graph is plotted with a pixel shaded red if the element in the adjacency matrix, corresponding to the location of the pixel, is '1', while a pixel is shaded white if the element is '0'. Since we know the ground truth labelling of nodes, we can, without loss of generality, reorder the rows and columns of the adjacency matrix, such that it consists of blocks of edges associated with the node community memberships. This is plotted in Figure \ref{fig:labelledAdjacencyMatrixPlot}. Note that since $k = 3$, there are $3 \times 3 = 9$ blocks, where the blocks are denser along the main diagonal since these correspond to edges between nodes belonging to the same community and $p_{in} > p_{out}$.
+An example of a random graph generated by the stochastic block model is shown in Figure \ref{fig:unlabelledAdjacencyMatrixPlot}. We labelled nodes using $\sigma_{i} = 1 + (i \bmod{k})$ for $i = 1,\dots,n$ and generated the graph with with $n = 1000$, $k = 3$, $p_{in} = 0.7$, $p_{out} = 0.3$. The adjacency matrix of this graph is plotted with a pixel shaded red if the element in the adjacency matrix, corresponding to the location of the pixel, equals 1, while a pixel is shaded white if the element equals 0. Since we know the ground truth labelling of nodes, we can, without loss of generality, reorder the rows and columns of the adjacency matrix, such that it consists of blocks of edges associated with the node community memberships. This is plotted in Figure \ref{fig:labelledAdjacencyMatrixPlot}. Note that since $k = 3$, there are $3 \times 3 = 9$ blocks, where the blocks are denser along the main diagonal since these correspond to edges between nodes belonging to the same community and $p_{in} > p_{out}$.
 
 %---   UNCOMMENT: Figure of adjacency matrix of random graph generated by stochastic block model   ---
-%\begin{figure}[helllo]
-%\centering
-%\begin{subfigure}{.5\textwidth}
-%	\centering
-%	\includegraphics[width=0.8\linewidth]{adjacencyMatrix_dense.png}
-%	\caption{}
-%	\label{fig:unlabelledAdjacencyMatrixPlot}
-%\end{subfigure}%
-%\begin{subfigure}{.5\textwidth}
-%	\centering
-%	\includegraphics[width=0.8\linewidth]{labelledAdjacencyMatrix_dense.png}
-%	\caption{}
-%	\label{fig:labelledAdjacencyMatrixPlot}
+%\begin{figure}
+	%\centering
+	%\begin{subfigure}{.5\textwidth}
+	%	\centering
+	%	\includegraphics[width=0.8\linewidth]{adjacencyMatrix_dense.png}
+	%	\caption{}
+	%	\label{fig:unlabelledAdjacencyMatrixPlot}
+	%\end{subfigure}%
+	%\begin{subfigure}{.5\textwidth}
+	%	\centering
+	%	\includegraphics[width=0.8\linewidth]{labelledAdjacencyMatrix_dense.png}
+	%	\caption{}
+	%	\label{fig:labelledAdjacencyMatrixPlot}
 %\end{subfigure}
-%\caption[Plots of adjacency matrix of graph generated by stocahstic block model]{\label{adjacencyMatricesPlots} A set of plots for labelled, (a), and unlabelled, (b), adjacency matrices for random graph generated by stochastic block model in the dense regime. The graphs were generated with $N = 1000$, $k = 3$, $p_{in} = 0.7$, $p_{out} = 0.3$.}
+%\caption[Plots of adjacency matrix of graph generated by stocahstic block model]{\label{fig:adjacencyMatricesPlots} A set of plots for unlabelled, (a), and labelled, (b), adjacency matrices for random graph generated by stochastic block model in the dense regime. The graphs were generated with $n = 1000$, $k = 3$, $p_{in} = 0.7$, $p_{out} = 0.3$.}
+%\end{figure}
+
+See Figure \ref{fig:exampleGraphStochasticBlockModel} for a visualisation of an instance of a random graph generated by the stochastic block model with $n = 240$, $k = 3$, $p_{in} = 0.2$, $p_{out} = 0.01$. Notice that, in this case, there are the same number of nodes (80) within each community.
+
+%---   UNCOMMENT: Figure of a graph generated by stochastic block model   ---
+%\begin{figure}
+	%\centering
+	%\includegraphics[width=0.6\linewidth]{exampleGraphStochasticBlockModel.png}
+	%\caption[Visualisation of a graph generated by the stochastic block model]{\label{fig:exampleGraphStochasticBlockModel} A visualisation of an instance of a random graph generated by the stochastic block model with $n = 240$, $k = 3$, $p_{in} = 0.2$, $p_{out} = 0.01$. Nodes are coloured blue and edges are coloured grey.}
 %\end{figure}
 
 %---   Phase Transitions Sub-Section   ---
@@ -217,12 +323,12 @@ An example of a random graph generated by the stochastic block model is shown in
 Decelle et al.~\cite{DKM+11} conjectured a phase transition for sparse graphs generated from the stochasic block model, using non-rigorous ideas from statistical physics~\cite{MNS12}. Nadakuditi et al.~\cite{NN12} used methods from random matrix theory to present an asymptotic analysis of spectra of random graphs to also demonstrate the presence of a phase transition. Essentially, we can distinguish between a \textsl{detectable} phase where it is possible to learn node assignments in a way that is correlated with the ground-truth node assignemnts of the graph, and an \textsl{undetectable} phase, where learning is impossible. Following the argument of~\cite{NN12}, which we will not explain, one finds a transition occurring at the point
 \begin{equation}
 \label{eq:phaseTransitionK}
- c_{in} - c_{out} = \sqrt{k[c_{in} + (k-1)c_{out}]}.
+	c_{in} - c_{out} = \sqrt{k[c_{in} + (k-1)c_{out}]}.
 \end{equation}
 In particular, consider, from now on, the case where $k = 2$, so we find a transition at
 \begin{equation}
 \label{eq:phaseTransitionK}
- c_{in} - c_{out} = \sqrt{2(c_{in} + c_{out})}.
+	c_{in} - c_{out} = \sqrt{2(c_{in} + c_{out})}.
 \end{equation}
 Mossel, Neeman and Sly~\cite{MNS12} proved the undetectable phase region of the conjecture, that is to say, it is impossible to meaningfully recover the node assignments when $ c_{in} - c_{out} < \sqrt{2(c_{in} + c_{out})}$. Massouli\'e~\cite{Mas13} and then, independently using a different proof, Mossel et al.~\cite{MNS13b} proved the detectable phase region of the conjecture, meaning it is possible to recover node assignments positively correlated with the ground-truth when $ c_{in} - c_{out} > \sqrt{2(c_{in} + c_{out})}$. The techniques used to prove these results are beyond the scope of the project, however these reuslts provide a very important limit on the ability of algorithms to detect communities. In particular, this motivates the development of algorithms which can efficiently (in nearly linear time) detect communities, in the sparse regime, up to the limit.
 
