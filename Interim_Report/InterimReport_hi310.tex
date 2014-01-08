@@ -1,5 +1,4 @@
-% Example LaTeX document for GP111 - note % sign indicates a comment
-\documentclass[11pt]{article}
+\documentclass[12pt]{article}
 
 %----------------------------------------------------------------------------------------
 %	PACKAGES
@@ -9,7 +8,9 @@
 \usepackage{graphicx}
 \usepackage{caption}
 \usepackage{subcaption}
-\usepackage{amssymb, amsmath}
+\usepackage{amssymb}
+\usepackage{mathtools}
+\usepackage{amsmath}
 \usepackage{hyperref}
 \usepackage[hypcap]{caption}
 
@@ -23,8 +24,10 @@
 \setlength{\oddsidemargin}{.125in}
 \setlength{\textwidth}{6.25in}
 
+% Graphics folder path
 \graphicspath{ {./images/} }
 
+% Hyperlinks setup
 \hypersetup{
     bookmarks=true, % show bookmarks bar?
     unicode=false, % non-Latin characters in Acrobat’s bookmarks
@@ -45,6 +48,21 @@
     filecolor=black, % color of file links
     urlcolor=blue  % color of external links
 }
+
+%----------------------------------------------------------------------------------------
+%	DEFINITIONS OF EQUATION, THEOREM ETC.
+%----------------------------------------------------------------------------------------
+
+% Use these for equations, theorems, lemmas, proofs, etc.
+\numberwithin{equation}{section}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{claim}[theorem]{Claim}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{exercise}[theorem]{Exercise}
+\newenvironment{proof}{{\bf Proof:}}{\hfill\rule{2mm}{2mm}}
 
 %----------------------------------------------------------------------------------------
 %	BEGIN DOCUMENT
@@ -100,7 +118,7 @@ In order to provide a theoretical setting to test and compare different communit
 
 The underlying ingredients of the community detection algorithms have other interesting applications also, with one being in the problem of task allocation of crowdsourcing systems. Crowdsourcing systems involve tasks being allocated electronically and then executed by several workers, known collectively as a crowd, where the workers' responses are used to approximate the solution of the task~\cite{KOS13,EHR12}. The workers are humans who are paid by the system for their responses, and these systems have been shown to be effective in solving problems such as image classification, character recognition and recommendation~\cite{KOS13}. Clearly, we wish to use the crowdsourcing system to gain accurate solutions to tasks, but also want to reduce the total cost paid out for labour, thus designing algorithms for task allocation and inference that are budget-optimal is very useful.
 
-We will investigate different algorithms used for task allocation and inference and use the same theoretical model and setup considered by~\cite{KOS13} to compare and contrast.
+We will investigate different algorithms used for task allocation and inference and use the same theoretical approach and setup considered by Karger et al.~\cite{KOS13} to compare and contrast.
 
 This report is organised as follows. In section~\ref{sec:projectSpecification} we will state clearly the project deliverables. In section~\ref{sec:background}, we will outline all the necessary background required to understand the problems studied in the project. In section~\ref{sec:implementationPlan}, we will provide a detailed breakdown of work that has been already done and remaining work that is to be done during the rest of the project. Finally, in section~\ref{sec:evaluationPlan}, we will detail how the success of the project may be measured.
 
@@ -123,6 +141,94 @@ This report is organised as follows. In section~\ref{sec:projectSpecification} w
 \mbox{}
 \section {Background}
 \label{sec:background}
+
+In the following section we will describe all the technical background required to understand the settings of the algorithms we investigate for the project. Initially, we will highlight some basic results in graph theory, which the reader may already be familiar with. Then, we will outline the problem of community detection and  a common model used to generate random graphs with community structure to be used as a testing playground for algorithms. Following this, we will discuss, in detail, crowdsourcing systems.
+
+%---   Basics Section   ---
+\subsection{Basics}
+\label{sec:background;subsec:basics}
+
+%---   Community Detection Section   ---
+\subsection{Community Detection}
+\label{sec:background;subsec:communityDetection}
+
+An intuitive notion of communities within graphs involves the assignment of nodes to communities such that there are denser connections between nodes belonging to the same community, and sparser connections between nodes belonging to different communities. If a graph exhibits this property, it is said to contain assortative community structure. The aim of community detection algorithms is to estimate or recover the node assignments. The algorithms need to be efficient due to the large (and ever-increasing) size of graphs in real-world networks, so we require computationally complexity to not be worse than nearly linear in the number of edges in the graph (approximately $O(n^{2}\log n)$ where \textsl{n} represents the number of nodes in the graph).
+
+In order to help provide a setting where different algorithms may be compared, we wish to study particular models which generate random graphs which the algorithms operate over. One popular model is called the stochastic block model, and we define it similarily to the version considered by Decellle et al.~\cite{DKM+13}. We then consider an interesting observation of phase transitions within graphs generated by the stochastic block model. 
+
+%---   Stochastic Block Model Sub-Section   ---
+\subsubsection{Stochastic Block Model}
+\label{sec:background;subsec:communityDetection;subsubsec:stochasticBlockModel}
+
+Let each node have a label indicating which community it belongs to, and associate the graph with a vector of such labels as defined below.
+
+\begin{definition}
+\label{def:nodeLabel}
+Given a graph, G, with N nodes and k communities, let $\sigma_{i} \in \{1,\dots,k\}$ for i = 1,\dots,N be the label of node i.
+\end{definition}
+
+\begin{definition}
+\label{def:nodeAssignments}
+Given a graph, G, with N nodes and k communities, let $\Sigma = [\sigma_{1},\dots,\sigma_{N}]^{T}$ be the node assignments of G, where $\sigma_{i}$ is the label of node i.
+\end{definition}
+ 
+The stochastic block model has parameters: \textsl{N} (number of nodes), \textsl{k} (number of communities), \textsl{$p_{in}$} and \textsl{$p_{out}$} (probability of an edge occuring between two nodes from the same and different communities, respectively). We proceed to generate a random graph, \textsl{G}, on \textsl{N} nodes, \textsl{k} communities and node assignments, \textsl{$\Sigma = [\sigma_{1},\dots,\sigma_{N}]^{T}$}, with the adjacency matrix of the graph, \textsl{$A = (A_{ij})$} defined as
+\begin{equation*}
+ A_{ij} =
+  \begin{cases}
+   0 & \text{if } i = j\\
+   X & \text{if } i \neq j,
+  \end{cases}
+\end{equation*}
+where $X \sim Be(p_{ij})$ and \textsl{$p_{ij}$} is defined as
+\begin{equation*}
+ p_{ij} =
+  \begin{cases}
+   p_{in} & \text{if } \sigma_{i} = \sigma_{j}\\
+   p_{out} & \text{if } \sigma_{i} \neq \sigma_{j}.
+  \end{cases}
+\end{equation*}
+In order to generate graphs with assortative structure, we consider the case where $p_{in} > p_{out}$. Typically, community detection within dense graphs (those with a dense adjancency matrix) is straightforward~\cite{DKM+13}, thus we are interested in sparse graphs (those with a sparse adjancency matrix) where $p_{in}$, $p_{out} = O(1/N)$. Since we are considering the sparse regime, it is more convenient to work with $c_{in} = Np_{in}$ and $c_{out} = Np_{out}$.
+
+An example of a random graph generated by the stochastic block model is shown in Figure \ref{fig:unlabelledAdjacencyMatrixPlot}. We labelled nodes using $\sigma_{i} = 1 + (i \bmod{k})$ for $i = 1,\dots,N$ and generated the graph with with $N = 1000$, $k = 3$, $p_{in} = 0.7$, $p_{out} = 0.3$. The adjacency matrix of this graph is plotted with a pixel shaded red if the element in the adjacency matrix, corresponding to the location of the pixel, is '1', while a pixel is shaded white if the element is '0'. Since we know the ground truth labelling of nodes, we can, without loss of generality, reorder the rows and columns of the adjacency matrix, such that it consists of blocks of edges associated with the node community memberships. This is plotted in Figure \ref{fig:labelledAdjacencyMatrixPlot}. Note that since $k = 3$, there are $3 \times 3 = 9$ blocks, where the blocks are denser along the main diagonal since these correspond to edges between nodes belonging to the same community and $p_{in} > p_{out}$.
+
+%---   UNCOMMENT: Figure of adjacency matrix of random graph generated by stochastic block model   ---
+%\begin{figure}[helllo]
+%\centering
+%\begin{subfigure}{.5\textwidth}
+%	\centering
+%	\includegraphics[width=0.8\linewidth]{adjacencyMatrix_dense.png}
+%	\caption{}
+%	\label{fig:unlabelledAdjacencyMatrixPlot}
+%\end{subfigure}%
+%\begin{subfigure}{.5\textwidth}
+%	\centering
+%	\includegraphics[width=0.8\linewidth]{labelledAdjacencyMatrix_dense.png}
+%	\caption{}
+%	\label{fig:labelledAdjacencyMatrixPlot}
+%\end{subfigure}
+%\caption[Plots of adjacency matrix of graph generated by stocahstic block model]{\label{adjacencyMatricesPlots} A set of plots for labelled, (a), and unlabelled, (b), adjacency matrices for random graph generated by stochastic block model in the dense regime. The graphs were generated with $N = 1000$, $k = 3$, $p_{in} = 0.7$, $p_{out} = 0.3$.}
+%\end{figure}
+
+%---   Phase Transitions Sub-Section   ---
+\subsubsection{Phase Transitions}
+\label{sec:background;subsec:communityDetection;subsubsec:phaseTransitions}
+
+Decelle et al.~\cite{DKM+11} conjectured a phase transition for sparse graphs generated from the stochasic block model, using non-rigorous ideas from statistical physics~\cite{MNS12}. Nadakuditi et al.~\cite{NN12} used methods from random matrix theory to present an asymptotic analysis of spectra of random graphs to also demonstrate the presence of a phase transition. Essentially, we can distinguish between a \textsl{detectable} phase where it is possible to learn node assignments in a way that is correlated with the ground-truth node assignemnts of the graph, and an \textsl{undetectable} phase, where learning is impossible. Following the argument of~\cite{NN12}, which we will not explain, one finds a transition occurring at the point
+\begin{equation}
+\label{eq:phaseTransitionK}
+ c_{in} - c_{out} = \sqrt{k[c_{in} + (k-1)c_{out}]}.
+\end{equation}
+In particular, consider, from now on, the case where $k = 2$, so we find a transition at
+\begin{equation}
+\label{eq:phaseTransitionK}
+ c_{in} - c_{out} = \sqrt{2(c_{in} + c_{out})}.
+\end{equation}
+Mossel, Neeman and Sly~\cite{MNS12} proved the undetectable phase region of the conjecture, that is to say, it is impossible to meaningfully recover the node assignments when $ c_{in} - c_{out} < \sqrt{2(c_{in} + c_{out})}$. Massouli\'e~\cite{Mas13} and then, independently using a different proof, Mossel et al.~\cite{MNS13b} proved the detectable phase region of the conjecture, meaning it is possible to recover node assignments positively correlated with the ground-truth when $ c_{in} - c_{out} > \sqrt{2(c_{in} + c_{out})}$. The techniques used to prove these results are beyond the scope of the project, however these reuslts provide a very important limit on the ability of algorithms to detect communities. In particular, this motivates the development of algorithms which can efficiently (in nearly linear time) detect communities, in the sparse regime, up to the limit.
+
+%---   Crowdsourcing Systems Section   ---
+\subsection{Crowdsourcing Systems}
+\label{sec:background;subsec:crowdsourcingSystems}
 
 %----------------------------------------------------------------------------------------
 %	IMPLEMENTATION PLAN
