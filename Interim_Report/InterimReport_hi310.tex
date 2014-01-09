@@ -50,6 +50,9 @@
     urlcolor=blue  % color of external links
 }
 
+% Subreferences Setup
+\captionsetup{subrefformat=parens}
+
 %----------------------------------------------------------------------------------------
 %	DEFINITIONS OF EQUATION, THEOREM ETC.
 %----------------------------------------------------------------------------------------
@@ -113,13 +116,13 @@
 \section {Introduction}
 \label{sec:introduction}
 
-Networks have been studied extensively to model many interesting complex systems, including the Internet, social networks and biological networks~\cite{New06a,DKM+13}. Any network consists of \textit{nodes} which represent items of interest, and \textit{edges} which represent the connectivity between pairs of nodes. For example, considering social networks, nodes are the users and the edges correspond to interactions between the users. An interesting feature many networks exhibit is \textit{community structure}, which involves the natrual dividing of nodes into groups, called \textit{communities}, where there are denser connections within a group, and sparser connections between different groups~\cite{New06a,DKM+13,For10,New06b}. This particular type of community structure is also known as \textit{assortative}~\cite{DKM+13}. For instance, social networks contain communities corresponding to real-life communities consisting of the members, such as friendship or family circles. The aim of developing algorithms for detecting communities within networks motivates the problem known as community detection.
+Networks have been studied extensively to model many interesting complex systems, including the Internet, social networks and biological networks \cite{New06a,DKM+13}. Any network consists of \textit{nodes} which represent items of interest, and \textit{edges} which represent the connectivity between pairs of nodes. For example, considering social networks, nodes are the users and the edges correspond to interactions between the users. An interesting feature many networks exhibit is \textit{community structure}, which involves the natrual dividing of nodes into groups, called \textit{communities}, where there are denser connections within a group, and sparser connections between different groups \cite{New06a,DKM+13,For10,New06b}. This particular type of community structure is also known as \textit{assortative} \cite{DKM+13}. For instance, social networks contain communities corresponding to real-life communities consisting of the members, such as friendship or family circles. The aim of developing algorithms for detecting communities within networks is motivated to solve the problem known as \textsl{community detection}.
 
-In order to provide a theoretical setting to test and compare different community detection algorithms, generative models of random graphs are very useful, and one such commonly used model is the \textit{stochastic block model}~\cite{DKM+13}. We will investigate several community detection algorithms, and will use the stochastic block model in order to analyse and reason about them.
+In order to provide a theoretical setting to test and compare different community detection algorithms, generative models of random graphs are very useful, and one such commonly used model is the \textit{stochastic block model} \cite{DKM+13}. We will investigate several community detection algorithms, and will use the stochastic block model in order to analyse and reason about them.
 
-The underlying ingredients of the community detection algorithms have other interesting applications also, with one being in the problem of task allocation of crowdsourcing systems. Crowdsourcing systems involve tasks being allocated electronically and then executed by several workers, known collectively as a crowd, where the workers' responses are used to approximate the solution of the task~\cite{KOS13,EHR12}. The workers are humans who are paid by the system for their responses, and these systems have been shown to be effective in solving problems such as image classification, character recognition and recommendation~\cite{KOS13}. Clearly, we wish to use the crowdsourcing system to gain accurate solutions to tasks, but also want to reduce the total cost paid out for labour, thus designing algorithms for task allocation and inference that are budget-optimal is very useful.
+The underlying ingredients of the community detection algorithms have other interesting applications also, with one being in the problem of task allocation and inference within crowdsourcing systems. Crowdsourcing systems involve tasks being allocated and then completed by several workers, known collectively as a crowd, where the worker's responses are used to approximate the solution of the task~\cite{KOS13,EHR12}. The workers are humans who are paid by the system for their responses, and these systems have been shown to be effective in solving problems such as image classification, character recognition and recommendation~\cite{KOS13}. Clearly, we wish to use the crowdsourcing system to gain accurate solutions to tasks, but also want to reduce the total cost paid out for labour, thus designing algorithms for inference that are budget-optimal is very useful.
 
-We will investigate different algorithms used for task allocation and inference and use the same theoretical approach and setup considered by Karger et al.~\cite{KOS13} to compare and contrast.
+We will investigate different algorithms used for task allocation and inference and use the same theoretical approach and setup considered by Karger et al. \cite{KOS13} to compare and contrast between them.
 
 This report is organised as follows. In section~\ref{sec:projectSpecification} we will state clearly the project deliverables. In section~\ref{sec:background}, we will outline all the necessary background required to understand the problems studied in the project. In section~\ref{sec:implementationPlan}, we will provide a detailed breakdown of work that has been already done and remaining work that is to be done during the rest of the project. Finally, in section~\ref{sec:evaluationPlan}, we will detail how the success of the project may be measured.
 
@@ -133,7 +136,11 @@ This report is organised as follows. In section~\ref{sec:projectSpecification} w
 \section {Project Specification}
 \label{sec:projectSpecification}
 
-In the following section we will summarise and detail the project deliverables. Firstly, though, a high-level overview of the skills involved in the project include gaining knowledge of mathematical concepts in graph theory, linear algebra and probability to understand common mathematical framework of real-world problems in community detection and crowdsourcing; the ability to analyse random algorithms in a rigorous and technical sense as well as implement them and run simulations through generation of synthetic data (specific to the framework) to draw conclusions regarding performance in order to provide sensible recommendations for solving the specific problem in the real-world setting. Concise project deliverables are summarised below.
+In the following section we will provide a high-level overview of the tasks involved and skills gained during the project in addition to summarising the project deliverables.
+
+A high-level overview overview of the tasks involved during the project include gaining knowledge of mathematical concepts in graph theory, linear algebra and probability in order to understand common mathematical frameworks of real-world problems in community detection and crowdsourcing; the ability to analyse random algorithms (in a technical sense) as well as implement them and run simulations through the generation of synthetic data (specific to the framework) in order to draw conclusions regarding performance. this enables the provision of sensible recommendations for solving the specific problem in a real-world setting.
+
+Succinct project deliverables are detailed below.
 \begin{itemize}
 	\item \textbf{Understand and analyse different community detection algorithms.}
 
@@ -141,7 +148,7 @@ In the following section we will summarise and detail the project deliverables. 
 
 	\item \textbf{Understand crowdsourcing systems and analyse budget-optimal algorithms.}
 
-	We investigate crowdsourcing systems, as described in section \ref{sec:background;subsec:crowdsourcingSystems}, and analyse algorithms which aim to optimise cost of such systems whilst providing an accurate estimate to the ground-truth solution. This includes a naive algorithm such as majority voting, spectral algorithm such as singluar vector estimation and an iterative message passing algorithm proposed by Karger et al.~\cite{KOS13}. We aim to use the framework previously studied by~\cite{KOS13} as a setting to apply mathematical analysis to compare the algorithms as well as one to generate synthetic data to run simulations.
+	We investigate crowdsourcing systems, as described in section \ref{sec:background;subsec:crowdsourcingSystems}, and analyse algorithms which aim to optimise cost of such systems whilst providing an accurate estimate to the ground-truth solution. This includes a naive algorithm such as majority voting, spectral algorithm such as singluar vector estimation and an iterative message passing algorithm proposed by Karger et al. \cite{KOS13}. We aim to use the framework previously studied by~\cite{KOS13} as a setting to apply mathematical analysis to compare the algorithms as well as one to generate synthetic data to run simulations.
 \end{itemize}
 
 %----------------------------------------------------------------------------------------
@@ -156,16 +163,22 @@ In the following section we will summarise and detail the project deliverables. 
 
 In the following section we will describe all the technical background required to understand the settings of the problems we investigate for the project. Initially, we will highlight some basic results in graph theory, which the reader may already be familiar with. Then, we will outline the problem of community detection and present a common model used to generate random graphs with community structure to be used as a testing playground for algorithms. Following this, we will discuss, in detail, crowdsourcing systems.
 
+%---------------------
 %---   Basics Section   ---
+%---------------------
 \subsection{Basics}
 \label{sec:background;subsec:basics}
 
-We assume the reader is familiar with basic concepts in linear algebra such as matrix multiplication, eigenvectors and eigenvalues of matrices. Rather, here, we will cover some basic tools within spectral graph theory using definitions from~\cite{For10,New06a, Spi12, Spi07}. Spectral graph theory which is the study of graphs through the eigenvalues and eigenvectors of matrices associated with the graphs~\cite{Spi12}. We begin by defining notions about graphs.
+We assume the reader is familiar with some basic concepts in linear algebra such as matrix multiplication, eigenvectors and eigenvalues of matrices. Rather, here, we will cover some basic tools within spectral graph theory using definitions from~\cite{For10,New06a, Spi12, Spi07}. Spectral graph theory which is the study of graphs through the eigenvalues and eigenvectors of matrices associated with the graphs~\cite{Spi12}. We begin by defining some basic notions about graphs.
 \begin{definition}
 \label{def:graph}
 	A graph $\mathcal{G}$ is a pair of sets (V,E), where V is a set of vertices or nodes and $E \subset V^{2}$, the set of unordered pairs of elements of V. The elements of E are called edges or links.
 \end{definition}
-We will assume, without loss of generality, that $V = \{1,\dots,n\}$.
+\begin{definition}
+\label{def:undirectedGraph}
+	A graph $\mathcal{G} = (V,E)$ is called undirected if for all $v,w \in V$: $(v,w) \in E \iff (w,v) \in E$. Otherwise, $\mathcal{G}$ is called directed.
+\end{definition}
+We will assume, without loss of generality, that $V = \{1,\dots,n\}$. See Figure \ref{fig:exampleGraphSmall} for an example of an undirected graph with seven vertices and eleven edges.
 \begin{definition}
 \label{def:subGraph}
 	A graph $\mathcal{G}^{\prime} = (V^{\prime},E^{\prime})$ is a subgraph of $\mathcal{G} = (V,E)$ if $V^{\prime} \subset V$ and $E^{\prime} \subset E$. If $\mathcal{G}^{\prime}$ contains all edges of $\mathcal{G}$ that join vertices of $V^{\prime}$, one says that the subgraph $\mathcal{G}^{\prime}$ is induced or spanned by $V^{\prime}$.
@@ -176,12 +189,36 @@ We will assume, without loss of generality, that $V = \{1,\dots,n\}$.
 \end{definition}
 \begin{definition}
 \label{def:neighbourhoodNode}
-	Two vertices are adjacent or neighbours if they are connected by an edge. The set of neighbours of a vertex $\upsilon$ is called neighbourhood, and denoted by $\Gamma(\upsilon)$.
+	Two vertices are adjacent or neighbours if they are connected by an edge. The set of neighbours of a vertex $v$ is called neighbourhood, and denoted by $\Gamma(v)$.
 \end{definition}
 \begin{definition}
 \label{def:degreeNode}
-	The degree $d_{\upsilon}$ of a vertex $\upsilon$ is the number of its neighbours, $\left\vert{\Gamma(\upsilon)}\right\vert$.
+	The degree $d_{v}$ of a vertex $v$ is the number of its neighbours, $\left\vert{\Gamma(v)}\right\vert$.
 \end{definition}
+\begin{definition}
+\label{def:bipartiteGraph}
+	A bipartite graph, $\mathcal{G} = (V,E)$, is a graph whose vertices can be decomposed into two disjoint sets such that no two vertices within the same set are adjacent.
+\end{definition}
+We will be interested in using certain graphs is the models, such as bipartite graphs. An example of an undirected bipartite graph with nine vertices and eight edges is shown in Figure \ref{fig:exampleGraphBipartite}.
+
+
+%---   UNCOMMENT: Figure of a example graphs   ---
+%\begin{figure}
+%\centering
+%	\begin{subfigure}{.5\textwidth}
+%		\centering
+%		\includegraphics[width=0.8\linewidth]{exampleGraphSmall.png}
+%		\caption{}
+%		\label{fig:exampleGraphSmall}
+%	\end{subfigure}%
+%	\begin{subfigure}{.5\textwidth}
+%		\centering
+%		\includegraphics[width=0.8\linewidth]{exampleGraphBipartite.png}
+%		\caption{}
+%		\label{fig:exampleGraphBipartite}
+%	\end{subfigure}
+%	\caption[Visualisations of example graphs]{\label{fig:exampleGraphs} A set of visualisations of graphs. In \subref{fig:exampleGraphSmall}, a graph, with seven nodes (blue) and eleven edges (grey), is shown. In \subref{fig:exampleGraphBipartite}, a bipartite graph, with nine nodes (elements of disjoint sets are coloured black and red denoting membership) and eight edges (grey), is shown.}
+%\end{figure}
 
 There is a very close connection between graphs and matrices, since the whole information about the topology of a graph can be entailed in matrix form, called the \textsl{adjacency matrix}.
 \begin{definition}
@@ -193,17 +230,10 @@ From definition \ref{def:adjacencyMatrix} it follows that elements of the adjace
 	A_{ij} =
 	\begin{cases}
 		0 & \text{if } (i,j) \not\in E\\
-		1 & \text{if } (i,j) \in E.
+		1 & \text{otherwise}.
 	\end{cases}
 \end{equation*}
-Note that the sum of elements of the $i$-th row of the adjacency matrix yields the degree of node $i$ of the graph, $d_{i} = \sum\limits_{j} A_{ij}$. See Figure \ref{fig:exampleGraphSmall} for an example of a graph with seven vertices and eleven edges.
-
-%---   UNCOMMENT: Figure of a graph with seven vertices and eleven edges   ---
-%\begin{figure}
-	%\centering
-	%\includegraphics[width=0.4\linewidth]{exampleGraphSmall.png}
-	%\caption[Example of a graph with seven vertices and eleven edges]{\label{fig:exampleGraphSmall} A visualisation of a graph with seven vertices and eleven edges. Nodes are coloured blue and edges are coloured red.}
-%\end{figure}
+Note that the sum of elements of the $i$-th row of the adjacency matrix yields the degree of node $i$ of the graph, $d_{i} = \sum\limits_{j} A_{ij}$. Also, the adjacency matrix is symmetric if the graph is undirected.
 
 There are other matrices that have also been studied extensively in spectral graph theory, including the Laplacian which is applied in topics such as graph partitioning, synchronisation and graph connectivity~\cite{For10}.
 \begin{definition}
@@ -215,7 +245,7 @@ From definition \ref{def:degreeMatrix} it follows that elements of the degree ma
 	 D_{ij} =
 	\begin{cases}
 		d_{i} & \text{if } i = j\\
-		0 & otherwise.
+		0 & \text{otherwise}.
 	\end{cases}
 \end{equation*}
 \begin{definition}
@@ -228,42 +258,45 @@ From definition \ref{def:unnormalisedLaplacianMatrix} it follows that elements o
 	\begin{cases}
 		d_{i} & \text{if } i = j\\
 		-1 & \text{if } i \neq j \text{ and }  (i,j) \in E\\
-		0 & otherwise.
+		0 & \text{otherwise}.
 	\end{cases}
 \end{equation*}
 \begin{definition}
 \label{def:normalisedLaplacianMatrix}
-	The matrix $\mathbfit{L_{norm}} = \mathbfit{I}  - \mathbfit{D}^{-1/2}\mathbfit{A}\mathbfit{D}^{-1/2}$ is called the normalised Laplacian matrix, where $\mathbfit{I}$ is the identity matrix.
+	The matrix $\mathbfit{L_{norm}} = \mathbfit{I}  - \mathbfit{D}^{-1/2}\mathbfit{A}\mathbfit{D}^{-1/2}$ is called the normalised Laplacian matrix, where $\mathbfit{I}$ is the $n \times n$ identity matrix.
 \end{definition}
 Note that from definitions \ref{def:unnormalisedLaplacianMatrix} and \ref{def:normalisedLaplacianMatrix}, the normalised Laplacian matrix can also be written as $\mathbfit{L_{norm}} = \mathbfit{D}^{-1/2}\mathbfit{L}\mathbfit{D}^{-1/2}$.
 
 An important property of adjacency and Laplacian matrices is their spectra, which we will use, later in the project, to motivate and develop a spectral clustering algorithm for community detection.
 \begin{definition}
 \label{def:spectrum}
-	The spectrum of a graph $\mathcal{G}$ is the set of eigenvalues of its adjacency matrix, $\mathbfit{A}$.
+	The spectrum of a graph $\mathcal{G}$ is the set of eigenvalues of its adjacency matrix, $\{\lambda_{1},\dots,\lambda_{n}\}$.
 \end{definition}
 \begin{definition}
 \label{def:spectralRadius}
 	Let $\lambda_{1},\dots,\lambda_{n}$ be the eigenvalues of a matrix $\mathbfit{M} \in \mathbb{R}^{n \times n}$. The spectral radius is defined as $\rho(\mathbfit{M}) = \max\limits_{i} \vert\lambda_{i}\vert$.
 \end{definition}
 
-
-%---   Community Detection Section   ---
+%-----------------------------------
+%---   Community Detection Section   ----
+%-----------------------------------
 \subsection{Community Detection}
 \label{sec:background;subsec:communityDetection}
 
 An intuitive notion of communities within graphs involves the assignment of nodes to communities such that there are denser connections between nodes belonging to the same community, and sparser connections between nodes belonging to different communities. If a graph exhibits this property, it is said to contain assortative community structure~\cite{New06a,DKM+13,For10,New06b}. For instance, within social networks where nodes are users and edges between nodes represent interactions between the users, community structure within the graph corresponds to real-life communities consisting of the users. The aim of community detection algorithms is to estimate or recover the node assignments. The algorithms need to be efficient due to the large size of graphs in real-world networks, so we require the computationally complexity to not be worse than nearly linear in the number of edges in the graph (approximately $O(n^{2}\log n)$ where \textsl{n} represents the number of nodes in the graph).
 
-In order to help provide a setting where different algorithms may be compared, we wish to study particular models which generate random graphs. One popular model is called the stochastic block model, and we define it similarily to the version considered by Decellle et al.~\cite{DKM+13}. We then consider an interesting phase transition within graphs generated by the stochastic block model.
+In order to help provide a setting where different algorithms may be compared, we wish to study particular models which generate random graphs. One popular model is called the stochastic block model, and we define it similarily to the version considered by Decellle et al. \cite{DKM+13}. We then consider an interesting phase transition within graphs generated by the stochastic block model.
 
+%---------------------------------------
 %---   Stochastic Block Model Sub-Section   ---
+%---------------------------------------
 \subsubsection{Stochastic Block Model}
 \label{sec:background;subsec:communityDetection;subsubsec:stochasticBlockModel}
 
-Let each node have a label indicating which community it belongs to, and associate the graph with a vector of such labels as defined below.
+Assign to each node a label indicating which community it belongs to, and associate the graph with a vector of such labels as defined below.
 \begin{definition}
 \label{def:nodeLabel}
-	Given a graph, $\mathcal{G}$, with n nodes and k communities, let $\sigma_{i} \in \{1,\dots,k\}$ for i = 1,\dots,n be the label of node i.
+	Given a graph, $\mathcal{G}$, with n nodes and k communities, let $\sigma_{i} \in \{1,\dots,k\}$ be the label of node i, for i = 1,\dots,n.
 \end{definition}
 \begin{definition}
 \label{def:nodeAssignments}
@@ -273,8 +306,8 @@ The stochastic block model has parameters: \textsl{n}, \textsl{k}, \textsl{$p_{i
 \begin{equation*}
 	A_{ij} =
 	\begin{cases}
-		 0 & \text{if } i = j\\
-		X & \text{if } i \neq j,
+		0 & \text{if } i = j\\
+		X & \text{otherwise},
 	\end{cases}
 \end{equation*}
 where $X \sim Be(p_{ij})$ and \textsl{$p_{ij}$} is defined as
@@ -282,45 +315,47 @@ where $X \sim Be(p_{ij})$ and \textsl{$p_{ij}$} is defined as
 	p_{ij} =
 	\begin{cases}
 		p_{in} & \text{if } \sigma_{i} = \sigma_{j}\\
-		p_{out} & \text{if } \sigma_{i} \neq \sigma_{j}.
+		p_{out} & \text{otherwise}.
 	\end{cases}
 \end{equation*}
-Typically, community detection within dense graphs (those with a dense adjancency matrix) is straightforward~\cite{DKM+13}, thus we are interested in sparse graphs (those with a sparse adjancency matrix) where $p_{in}$, $p_{out} = O(1/n)$. Since we are considering the sparse regime, it is more convenient to work with $c_{in} = Np_{in}$ and $c_{out} = Np_{out}$.
+Typically, community detection within dense graphs (those with a dense adjacency matrix) is straightforward~\cite{DKM+13}, thus we are interested in sparse graphs (those with a sparse adjacency matrix) where $p_{in}$, $p_{out} = O(1/n)$. Since we are considering the sparse regime, it is more convenient to work with $c_{in} = np_{in}$ and $c_{out} = np_{out}$.
 
-An example of a random graph generated by the stochastic block model is shown in Figure \ref{fig:unlabelledAdjacencyMatrixPlot}. We labelled nodes using $\sigma_{i} = 1 + (i \bmod{k})$ for $i = 1,\dots,n$ and generated the graph with with $n = 1000$, $k = 3$, $p_{in} = 0.7$, $p_{out} = 0.3$. The adjacency matrix of this graph is plotted with a pixel shaded red if the element in the adjacency matrix, corresponding to the location of the pixel, equals 1, while a pixel is shaded white if the element equals 0. Since we know the ground truth labelling of nodes, we can, without loss of generality, reorder the rows and columns of the adjacency matrix, such that it consists of blocks of edges associated with the node community memberships. This is plotted in Figure \ref{fig:labelledAdjacencyMatrixPlot}. Note that since $k = 3$, there are $3 \times 3 = 9$ blocks, where the blocks are denser along the main diagonal since these correspond to edges between nodes belonging to the same community and $p_{in} > p_{out}$.
+An example of a random graph generated by the stochastic block model is shown in Figure \ref{fig:unlabelledAdjacencyMatrixPlot}. We labelled nodes using $\sigma_{i} = 1 + (i \bmod{k})$ for $i = 1,\dots,n$ and generated the graph with $n = 1000$, $k = 3$, $p_{in} = 0.7$, $p_{out} = 0.3$. The adjacency matrix of this graph is plotted with a pixel shaded red if the element in the adjacency matrix, corresponding to the location of the pixel, equals 1, while a pixel is shaded white if the element equals 0. Since we know the ground truth labelling of nodes, we can, without loss of generality, reorder the rows and columns of the adjacency matrix, such that it consists of blocks of nodes associated with the node community memberships. This is plotted in Figure \ref{fig:labelledAdjacencyMatrixPlot}. Note that since $k = 3$, there are $3 \times 3 = 9$ blocks, where the blocks are denser along the main diagonal since these correspond to edges between nodes belonging to the same community and $p_{in} > p_{out}$.
 
 %---   UNCOMMENT: Figure of adjacency matrix of random graph generated by stochastic block model   ---
 %\begin{figure}
-	%\centering
-	%\begin{subfigure}{.5\textwidth}
-	%	\centering
-	%	\includegraphics[width=0.8\linewidth]{adjacencyMatrix_dense.png}
-	%	\caption{}
-	%	\label{fig:unlabelledAdjacencyMatrixPlot}
-	%\end{subfigure}%
-	%\begin{subfigure}{.5\textwidth}
-	%	\centering
-	%	\includegraphics[width=0.8\linewidth]{labelledAdjacencyMatrix_dense.png}
-	%	\caption{}
-	%	\label{fig:labelledAdjacencyMatrixPlot}
+%	\centering
+%	\begin{subfigure}{.5\textwidth}
+%		\centering
+%		\includegraphics[width=0.8\linewidth]{adjacencyMatrix_dense.png}
+%		\caption{}
+%		\label{fig:unlabelledAdjacencyMatrixPlot}
+%	\end{subfigure}%
+%	\begin{subfigure}{.5\textwidth}
+%		\centering
+%		\includegraphics[width=0.8\linewidth]{labelledAdjacencyMatrix_dense.png}
+%		\caption{}
+%		\label{fig:labelledAdjacencyMatrixPlot}
 %\end{subfigure}
-%\caption[Plots of adjacency matrix of graph generated by stocahstic block model]{\label{fig:adjacencyMatricesPlots} A set of plots for unlabelled, (a), and labelled, (b), adjacency matrices for random graph generated by stochastic block model in the dense regime. The graphs were generated with $n = 1000$, $k = 3$, $p_{in} = 0.7$, $p_{out} = 0.3$.}
+%\caption[Plots of adjacency matrix of graph generated by stocahstic block model]{\label{fig:adjacencyMatricesPlots} A set of plots for unlabelled, \subref{fig:unlabelledAdjacencyMatrixPlot}, and labelled, \subref{fig:labelledAdjacencyMatrixPlot}, adjacency matrices for random graph generated by stochastic block model in the dense regime. The graphs were generated with $n = 1000$, $k = 3$, $p_{in} = 0.7$ and $p_{out} = 0.3$.}
 %\end{figure}
 
 See Figure \ref{fig:exampleGraphStochasticBlockModel} for a visualisation of an instance of a random graph generated by the stochastic block model with $n = 240$, $k = 3$, $p_{in} = 0.2$, $p_{out} = 0.01$. Notice that, in this case, there are the same number of nodes (80) within each community.
 
 %---   UNCOMMENT: Figure of a graph generated by stochastic block model   ---
 %\begin{figure}
-	%\centering
-	%\includegraphics[width=0.6\linewidth]{exampleGraphStochasticBlockModel.png}
-	%\caption[Visualisation of a graph generated by the stochastic block model]{\label{fig:exampleGraphStochasticBlockModel} A visualisation of an instance of a random graph generated by the stochastic block model with $n = 240$, $k = 3$, $p_{in} = 0.2$, $p_{out} = 0.01$. Nodes are coloured blue and edges are coloured grey.}
+%	\centering
+%	\includegraphics[width=0.6\linewidth]{exampleGraphStochasticBlockModel.png}
+%	\caption[Visualisation of a graph generated by the stochastic block model]{\label{fig:exampleGraphStochasticBlockModel} A visualisation of an instance of a random graph generated by the stochastic block model with $n = 240$, $k = 3$, $p_{in} = 0.2$ and $p_{out} = 0.01$.}
 %\end{figure}
 
+%-----------------------------------
 %---   Phase Transitions Sub-Section   ---
+%-----------------------------------
 \subsubsection{Phase Transitions}
 \label{sec:background;subsec:communityDetection;subsubsec:phaseTransitions}
 
-Decelle et al.~\cite{DKM+11} conjectured a phase transition for sparse graphs generated from the stochasic block model, using non-rigorous ideas from statistical physics~\cite{MNS12}. Nadakuditi et al.~\cite{NN12} used methods from random matrix theory to present an asymptotic analysis of spectra of random graphs to also demonstrate the presence of a phase transition. Essentially, we can distinguish between a \textsl{detectable} phase where it is possible to learn node assignments in a way that is correlated with the ground-truth node assignemnts of the graph, and an \textsl{undetectable} phase, where learning is impossible. Following the argument of~\cite{NN12}, which we will not explain, one finds a transition occurring at the point
+Decelle et al. \cite{DKM+11} conjectured a phase transition for sparse graphs generated from the stochasic block model, using non-rigorous ideas from statistical physics \cite{MNS12}. Nadakuditi et al. \cite{NN12} used methods from random matrix theory to present an asymptotic analysis of spectra of random graphs to also demonstrate the presence of a phase transition. Essentially, we can distinguish between a \textsl{detectable} phase where it is possible to learn node assignments in a way that is correlated with the ground-truth node assignemnts of the graph, and an \textsl{undetectable} phase, where learning is impossible. Following the argument of~\cite{NN12}, which we will not explain, one finds a transition occurring at the point
 \begin{equation}
 \label{eq:phaseTransitionK}
 	c_{in} - c_{out} = \sqrt{k[c_{in} + (k-1)c_{out}]}.
@@ -330,11 +365,60 @@ In particular, consider, from now on, the case where $k = 2$, so we find a trans
 \label{eq:phaseTransitionK}
 	c_{in} - c_{out} = \sqrt{2(c_{in} + c_{out})}.
 \end{equation}
-Mossel, Neeman and Sly~\cite{MNS12} proved the undetectable phase region of the conjecture, that is to say, it is impossible to meaningfully recover the node assignments when $ c_{in} - c_{out} < \sqrt{2(c_{in} + c_{out})}$. Massouli\'e~\cite{Mas13} and then, independently using a different proof, Mossel et al.~\cite{MNS13b} proved the detectable phase region of the conjecture, meaning it is possible to recover node assignments positively correlated with the ground-truth when $ c_{in} - c_{out} > \sqrt{2(c_{in} + c_{out})}$. The techniques used to prove these results are beyond the scope of the project, however these reuslts provide a very important limit on the ability of algorithms to detect communities. In particular, this motivates the development of algorithms which can efficiently (in nearly linear time) detect communities, in the sparse regime, up to the limit.
+Mossel, Neeman and Sly \cite{MNS12} proved the undetectable phase region of the conjecture, that is to say, it is impossible to meaningfully recover the node assignments when $ c_{in} - c_{out} < \sqrt{2(c_{in} + c_{out})}$. Massouli\'e \cite{Mas13} and then, independently using a different proof, Mossel et al. \cite{MNS13b} proved the detectable phase region of the conjecture, meaning it is possible to recover node assignments positively correlated with the ground-truth when $ c_{in} - c_{out} > \sqrt{2(c_{in} + c_{out})}$. The techniques used to prove these results are beyond the scope of the project, however these reuslts provide a very important limit on the ability of algorithms to detect communities. In particular, this motivates the development of algorithms which can efficiently (in nearly linear time) detect communities, in the sparse regime, up to the limit.
 
+%------------------------------------
 %---   Crowdsourcing Systems Section   ---
+%------------------------------------
 \subsection{Crowdsourcing Systems}
 \label{sec:background;subsec:crowdsourcingSystems}
+
+In this section we will first describe crowdsourcing systems and then introduce the probabilistic model used by Karger et al \cite{KOS13}.
+
+%-------------------------------
+%---   Preliminaries Sub-Section   ---
+%-------------------------------
+\subsubsection{Preliminaries}
+\label{sec:background;subsec:crowdsourcingSystems;subsubsec:preliminaries}
+
+Crowdsourcing systems, such as Amazon Mechanical Turk (http://www.mturk.com), aim to solve taks using human-powered problem solving, where humans, which we will call workers (collectively known as the crowd), are paid a small fee for their response to the task~\cite{KOS13,EHR12}. The aim of crowdsourcing algorithms is to interpret the worker's responses to infere the solution of the task. Many platforms including Amazon Mechanical Turk have a large, anonymous, crowd as a workforce so it is difficult to leverage the fee paid on correct responses since tasks may be subjective and true answers not known~\cite{KOS13}. Therefore, most crowdsourcing systems introduce redundancy by asking for the solution to each task from several workers and aggregating the results by giving each worker's response the same weighting~\cite{KOS13}.
+
+The problem of assigning tasks to workers (i.e. deciding which set of tasks each worker should complete) is called \textsl{task allocation}. Even though workers are not identifiable and their reliability (ability to complete tasks correctly) is not known, we aim to develop an algorithm that can estimate worker's reliabilities in order to apply appropriate weighting to worker's reponses to get a more accurate estimate of the task solution. The problem of estimating the solution to a task from the set of worker's responses is called \textsl{inference}. In particular, we will be interested in binary tasks, where there are two possible solutions to a task. An example of such a problem is image classification where we have a set of images, where each one can be classfied into two possible states~\cite{KOS13}.
+
+%------------------------------------
+%---   Probabilistic Model Sub-Section   ---
+%------------------------------------
+\subsubsection{Probabilistic Model}
+\label{sec:background;subsec:crowdsourcingSystems;subsubsec:probabilisticModel}
+
+There are a set of $m$ binary tasks with unobserved solutions, $\mathbfit{t} \in \{-1,1\}^{m}$, where the solution to the $i$-th task is $t_{i} \in \{-1,1\}$. Assume we need $n$ workers in the crowd, of whom we allocate tasks to. Referring to task allocation, denote $T_{j} \subseteq \{1,\dots,m\}$ as the set of tasks assigned to the $j$-th worker, with a limit of $r$ tasks that can be assigned to an individual to avoid overloading a worker, meaning $\left\vert{T_{j}}\right\vert \le r \text{ for } j=1,\dots,n$. Let us denote the reliability (probability of completing a task correctly) of the $j$-th worker by $p_{j} \in [0,1]$, with the crowd reliability characterised as $\mathbf{p} = [p_{1},\dots,p_{n}]^{T}$. Note that the reliability of each worker is the same no matter which task is being attempted, so here we do not consider any notion of diffculty of tasks. The matrix of worker's responses is called the \textsl{response matrix}, $\mathbf{R} \in \{-1,0,1\}^{m \times n}$, and is defined by
+\begin{equation*}
+	R_{ij} =
+	\begin{cases}
+		0 & \text{if } i \not \in T_{j}\\
+		t_{i} & \text{with probability }  p_{j} \text{ if } i \in T_{j}\\
+		-t_{i} & \text{otherwise}.
+	\end{cases}
+\end{equation*}
+
+We assume the worker's reliabilities are independent and identically distributed random variables as defined by the \textsl{spammer-hammer model} and a `collective quality' parameter denoted by $q$,
+\begin{equation*}
+	p_{j} =
+	\begin{cases}
+		1/2 & \text{with probability } 1-q\\
+		1 & \text{otherwise}.
+	\end{cases}
+\end{equation*}
+This model assumes the crowd consists of only two types of workers, a `hammer' or a `spammer'. A hammer completes all tasks with the correct answers, so can be thought of as perfectly reliable workers. A spammer completes tasks by giving random answers, essentially flipping a fair coin and using the result as their answer.  Moreover, since the distribution of $\mathbf{p}$ charcaterises the crowd, we can define the `collective quality' parameter by
+\begin{equation*}
+	q \equiv \mathbb{E}[(2\mathbf{p}-1)^{2}].
+\end{equation*}
+Note that the parameter in the spammer-hammer model is consistent with this definition of $q$.
+Clearly, using this model with larger values of $q$ increases the portion of hammers and thus the intelligence of the crowd. We will be interested how the error rate of different algorithms vary as we alter the value of $q$.
+
+In addition, we would like to incorporate a notion of cost, where we pay for each worker's response. Let us assume each task gets allocated $\ell$ times, where we can increase $\ell$ if we have more budget. Recall that we have $m$ tasks and must find an estimate solution for all of them, and that each worker completes $r$ tasks in order to not overload any one worker. Using this, we can easily determine the number of workers we require, $n = m\ell/r$. Intuitively, we expect the error rate to decrease as we increase $\ell$, since we have a larger budget, so we will look at the error rates of different algorithms vary as we alter $\ell$.
+
+Furthermore, we can associate the task allocation scheme and the response matrix with a bipartite graph (recall definition \ref{def:bipartiteGraph}), as follows. Consider a bipartite graph, $\mathcal{G} = (V,E)$, with $m$ `task' nodes and $n$ `worker' nodes, where we can decompose $V=\{1,\dots,m+n\}$ into two disjoint sets, $V_{t}$ and $V_{w}$ (i.e. $V = V_{t} \cup V_{w}$ and $V_{t} \cap V_{w} = \emptyset$), where $\left\vert{V_{t}}\right\vert = m$, $\left\vert{V_{w}}\right\vert = n$, $V_{t}$ consists only of task nodes and $V_{w}$ consists only of worker nodes. Then we can place an edge within this graph whenever the $i$-th task is assigned to the $j$-th worker, with a weight on the edge equal to the worker's response, essentially the corresponding entry of the response matrix, $R_{ij}$. A task allocation scheme is, therefore, just a method of placing edges within $\mathcal{G}$ in accordance with the constrained degrees of task and worker nodes. Specifically, we require the degree of task nodes to be $\ell$ (i.e. $d_{i} = \ell \text{ for all } i \in V_{t}$) and the degree of worker nodes to be $r$ (i.e. $d_{j} = r \text{ for all } j \in V_{w}$). Karger et al. \cite{KOS13} proposed random construction, known as the \textsl{configuration model}, as a task allocation scheme.
 
 %----------------------------------------------------------------------------------------
 %	IMPLEMENTATION PLAN
@@ -371,4 +455,4 @@ Mossel, Neeman and Sly~\cite{MNS12} proved the undetectable phase region of the 
 %	END DOCUMENT
 %----------------------------------------------------------------------------------------
 
-\end{document} 
+\end{document}
