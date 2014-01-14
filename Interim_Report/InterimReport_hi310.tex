@@ -28,7 +28,7 @@
 % Graphics folder path
 \graphicspath{ {./images/} }
 
-% Hyperlinks setup
+% Hyperlinks and URL setup
 \hypersetup{
     bookmarks=true, % show bookmarks bar?
     unicode=false, % non-Latin characters in Acrobat’s bookmarks
@@ -36,19 +36,20 @@
     pdfmenubar=true, % show Acrobat’s menu?
     pdffitwindow=false, % window fit to page when opened
     pdfstartview={FitH}, % fits the width of the page to the window
-    pdftitle={LaTeX test}, % title
+    pdftitle={Final Year Project: Interim Report}, % title
     pdfauthor={Hesam Ipakchi}, % author
-    pdfsubject={LaTeX test}, % subject of the document
+    pdfsubject={Final Year Project: Interim Report}, % subject of the document
     pdfcreator={Hesam Ipakchi}, % creator of the document
     pdfproducer={Hesam Ipakchi}, % producer of the document
-    pdfkeywords={Hesam Ipakchi}, % list of keywords
+    pdfkeywords={Hesam Ipakchi, Interim Report}, % list of keywords
     pdfnewwindow=true, % links in new window
     colorlinks=true, % false: boxed links; true: colored links
     linkcolor=red, % color of internal links (change box color with linkbordercolor)
     citecolor=blue, % color of links to bibliography
-    filecolor=black, % color of file links
-    urlcolor=blue  % color of external links
+    filecolor=magenta, % color of file links
+    urlcolor=cyan  % color of external links
 }
+\urlstyle{same}
 
 % Subreferences Setup
 \captionsetup{subrefformat=parens}
@@ -116,9 +117,9 @@
 \section {Introduction}
 \label{sec:introduction}
 
-Networks have been studied extensively to model many interesting complex systems, including the Internet, social networks and biological networks \cite{New06a,DKM+13}. Any network consists of \textit{nodes} which represent items of interest, and \textit{edges} which represent the connectivity between pairs of nodes. For example, considering social networks, nodes are the users and the edges correspond to interactions between the users. An interesting feature many networks exhibit is \textit{community structure}, which involves the natrual dividing of nodes into groups, called \textit{communities}, where there are denser connections within a group, and sparser connections between different groups \cite{New06a,DKM+13,For10,New06b}. This particular type of community structure is also known as \textit{assortative} \cite{DKM+13}. For instance, social networks contain communities corresponding to real-life communities consisting of the members, such as friendship or family circles. The aim of developing algorithms for detecting communities within networks is motivated to solve the problem known as \textsl{community detection}.
+Networks have been studied extensively to model many interesting complex systems, including the Internet, social networks and biological networks \cite{New06a,DKM+13}. Any network consists of \textit{nodes} which represent items of interest, and \textit{edges} which represent the connectivity between pairs of nodes. For example, considering social networks, nodes are the users and the edges correspond to interactions between the users. An interesting feature many networks exhibit is \textit{community structure}, which involves the natrual dividing of nodes into groups, called \textit{communities}, where there are denser connections within a group, and sparser connections between different groups \cite{New06a,DKM+13,For10,New06b}. This particular type of community structure is also known as \textit{assortative} \cite{DKM+13}. For instance, social networks contain communities corresponding to real-life communities consisting of the members, such as friendship or family circles. The aim of developing algorithms for detecting communities within networks is motivated to solve the problem known as \textit{community detection}.
 
-In order to provide a theoretical setting to test and compare different community detection algorithms, generative models of random graphs are very useful, and one such commonly used model is the \textit{stochastic block model} \cite{DKM+13}. We will investigate several community detection algorithms, and will use the stochastic block model in order to analyse and reason about them.
+In order to provide a theoretical setting to test and compare different community detection algorithms, generative models of random graphs are very useful, and one such commonly used model is the \textit{stochastic block model} \cite{DKM+13,NN12}. We will investigate several community detection algorithms, and will use the stochastic block model in order to analyse and reason about them.
 
 The underlying ingredients of the community detection algorithms have other interesting applications also, with one being in the problem of task allocation and inference within crowdsourcing systems. Crowdsourcing systems involve tasks being allocated and then completed by several workers, known collectively as a crowd, where the worker's responses are used to approximate the solution of the task~\cite{KOS13,EHR12}. The workers are humans who are paid by the system for their responses, and these systems have been shown to be effective in solving problems such as image classification, character recognition and recommendation~\cite{KOS13}. Clearly, we wish to use the crowdsourcing system to gain accurate solutions to tasks, but also want to reduce the total cost paid out for labour, thus designing algorithms for inference that are budget-optimal is very useful.
 
@@ -138,17 +139,22 @@ This report is organised as follows. In section~\ref{sec:projectSpecification} w
 
 In the following section we will provide a high-level overview of the tasks involved and skills gained during the project in addition to summarising the project deliverables.
 
-A high-level overview overview of the tasks involved during the project include gaining knowledge of mathematical concepts in graph theory, linear algebra and probability in order to understand common mathematical frameworks of real-world problems in community detection and crowdsourcing; the ability to analyse random algorithms (in a technical sense) as well as implement them and run simulations through the generation of synthetic data (specific to the framework) in order to draw conclusions regarding performance. this enables the provision of sensible recommendations for solving the specific problem in a real-world setting.
+A high-level overview overview of the tasks involved during the project include gaining knowledge of mathematical concepts in graph theory, linear algebra and probability in order to understand common mathematical frameworks of problems such as community detection and crowdsourcing; the ability to analyse random algorithms (in a technical sense) as well as implement them and run simulations through the generation of synthetic data (specific to the framework) in order to draw conclusions regarding performance. This, alongside testing within a real-world setting, enables the provision of sensible recommendations for solving the specific problem.
 
-Succinct project deliverables are given below.
+Succinct project deliverables, alongside detailed explanations, are given below.
 \begin{itemize}
 	\item \textbf{Understand and analyse different community detection algorithms.}
 
-	We investigate the problem of community detection in graphs, as described in section \ref{sec:background;subsec:communityDetection}, and analyse different algorithms as solutions. These include spectral clustering approaches using \textsl{Laplacian} and \textsl{Modularity} matrices as well as message passing algorithms such as \textsl{belief propagation} and \textsl{approximate message passing}. We shall use the stochastic block model to generate random graphs that we treat as input to all these algorithms, in order to compare them, both through mathematical analysis and simulations on synthetic data.
+	We investigate the problem of community detection in graphs, as described in section \ref{sec:background;subsec:communityDetection}, and analyse different algorithms. These include spectral clustering approaches using \textit{Laplacian} and \textit{Modularity} matrices as well as message passing algorithms such as \textit{belief propagation} and \textit{approximate message passing}. We shall use the stochastic block model to generate random graphs that we treat as input to all these algorithms, in order to compare them, both through mathematical analysis and simulations on synthetic data. In particular, we wish to alter the parameters of the generative model to represent different cases in which we can investigate the different behaviour of the algorithms. 
 
 	\item \textbf{Understand crowdsourcing systems and analyse budget-optimal algorithms.}
 
-	We investigate crowdsourcing systems, as described in section \ref{sec:background;subsec:crowdsourcingSystems}, and analyse algorithms which aim to optimise cost of such systems whilst providing an accurate estimate to the ground-truth solution. This includes a naive algorithm such as majority voting, spectral algorithm such as singluar vector estimation and an iterative message passing algorithm proposed by Karger et al. \cite{KOS13}. We aim to use the framework previously studied by~\cite{KOS13} as a setting to apply mathematical analysis to compare the algorithms as well as one to generate synthetic data to run simulations.
+	We investigate crowdsourcing systems, as described in section \ref{sec:background;subsec:crowdsourcingSystems}, and analyse algorithms which aim to optimise cost of such systems whilst providing an accurate estimate to the ground-truth solution. This includes a naive algorithm such as \textit{majority voting}, a spectral algorithm such as \textit{singluar vector estimation} and an iterative message passing algorithm proposed by Karger et al. \cite{KOS13}. We aim to use the framework previously studied by~\cite{KOS13} as a setting to apply mathematical analysis to compare the algorithms as well as one to generate synthetic data to run simulations.
+
+	\item \textbf{Investigate behaviour of different community detection algorithms using real-world data.}
+
+	We aim to apply several algorithms to real-world data in the form of an Amazon product co-purchasing network made available by Yang and Leskovec \cite{YL12}. By applying the algorithms to this dataset, we can get a better appreciation of the behaviour of algorithms in real-world settings. By only considering synthetic data we cannot fully understand how useful these algorithms are since there is the issue of how representative the synthetic data generated by the model is of real-world networks. This is not a simple extension, 
+however, as there are many challenges associated with testing on these datasets, such as handling very large graphs (potentially millions of nodes and edges).
 \end{itemize}
 
 %----------------------------------------------------------------------------------------
@@ -221,7 +227,7 @@ An example of an undirected bipartite graph with nine vertices and eight edges i
 %	\caption[Visualisations of example graphs]{\label{fig:exampleGraphs} A set of visualisations of graphs. In \subref{fig:exampleGraphSmall}, a graph, with seven nodes (blue) and eleven edges (grey), is shown. In \subref{fig:exampleGraphBipartite}, a bipartite graph, with nine nodes (elements of disjoint sets are coloured black and red denoting membership) and eight edges (grey), is shown.}
 %\end{figure}
 
-There is a very close connection between graphs and matrices, since the whole information about the topology of a graph can be entailed in matrix form, called the \textsl{adjacency matrix}.
+There is a very close connection between graphs and matrices, since the whole information about the topology of a graph can be entailed in matrix form, called the \textit{adjacency matrix}.
 \begin{definition}
 	\label{def:adjacencyMatrix}
 	The adjacency matrix, $\mathbfit{A} \in \{0,1\}^{n \times n}$ of a graph $\mathcal{G} = (V,E)$, is a $n\times n$ matrix whose element $A_{ij}$ equals 1 if there exists an edge joining vertices i and j in $\mathcal{G}$, and zero otherwise.
@@ -286,7 +292,7 @@ An important property of adjacency and Laplacian matrices is their spectra, whic
 
 An intuitive notion of communities within graphs involves the assignment of nodes to communities such that there are denser connections between nodes belonging to the same community, and sparser connections between nodes belonging to different communities. If a graph exhibits this property, it is said to contain assortative community structure~\cite{New06a,DKM+13,For10,New06b}. For instance, within social networks where nodes are users and edges between nodes represent interactions between the users, community structure within the graph corresponds to real-life communities consisting of the users. The aim of community detection algorithms is to estimate or recover the node assignments. The algorithms need to be efficient due to the large size of graphs in real-world networks, so we require the computationally complexity to not be worse than nearly linear in the number of edges in the graph (approximately $O(n^{2}\log n)$ where $n$ represents the number of nodes in the graph).
 
-In order to help provide a setting where different algorithms may be compared, we wish to study particular models which generate random graphs. One popular model is called the stochastic block model. Many special cases of this model have been studied, but we define it using the version considered by Decellle et al. \cite{DKM+13} and Nadakuditi et al. \cite{NN12}, also known as the \textsl{planted partition model}. We then consider an interesting phase transition within graphs generated by the stochastic block model.
+In order to help provide a setting where different algorithms may be compared, we wish to study particular models which generate random graphs. One popular model is called the stochastic block model. Many special cases of this model have been studied, but we define it using the version considered by Decellle et al. \cite{DKM+13} and Nadakuditi et al. \cite{NN12}, also known as the \textit{planted partition model}. We then consider an interesting phase transition within graphs generated by the stochastic block model.
 
 %---------------------------------------
 %---   Stochastic Block Model Sub-Section   ---
@@ -294,7 +300,7 @@ In order to help provide a setting where different algorithms may be compared, w
 \subsubsection{Stochastic Block Model}
 \label{sec:background;subsec:communityDetection;subsubsec:stochasticBlockModel}
 
-The stochastic block model has parameters: $n$, $k$, $p_{in}$ and $p_{out}$. $n$ represents the number of nodes, \textsl{k} represents the number of communities, $p_{in}$ represents the probability of an edge occurring between two nodes belonging to the same community and $p_{out}$ represents the probability of an edge occurring between two nodes belonging to the different communities. Since we are focused on assortative community structure, we consider the case where $p_{in} > p_{out}$. Assign, to each node of the graph, a label indicating which community the node belongs to, so let $\sigma_{i} \in \{1,\dots,k\}$ be the label of node $i$, for $i = 1,\dots,n$. Also, let $\mathbfit{\sigma} = [\sigma_{1},\dots,\sigma_{n}]^{T}$ be the node assignments of the graph, where $\sigma_{i}$ is the label of node $i$. We proceed to generate a random graph, $\mathcal{G}$, on $n$ nodes, $k$ communities and node assignments, $\mathbfit{\sigma} = [\sigma_{1},\dots,\sigma_{n}]^{T}$, with the adjacency matrix of the graph, $\mathbf{A}$ whose elements $(A_{ij})$ are defined as
+The stochastic block model has parameters: $n$, $k$, $p_{in}$ and $p_{out}$. $n$ represents the number of nodes, $k$ represents the number of communities, $p_{in}$ represents the probability of an edge occurring between two nodes belonging to the same community and $p_{out}$ represents the probability of an edge occurring between two nodes belonging to the different communities. Since we are focused on assortative community structure, we consider the case where $p_{in} > p_{out}$. Assign, to each node of the graph, a label indicating which community the node belongs to, so let $\sigma_{i} \in \{1,\dots,k\}$ be the label of node $i$, for $i = 1,\dots,n$. Also, let $\mathbfit{\sigma} = [\sigma_{1},\dots,\sigma_{n}]^{T}$ be the node assignments of the graph, where $\sigma_{i}$ is the label of node $i$. We proceed to generate a random graph, $\mathcal{G}$, on $n$ nodes, $k$ communities and node assignments, $\mathbfit{\sigma} = [\sigma_{1},\dots,\sigma_{n}]^{T}$, with the adjacency matrix of the graph, $\mathbf{A}$ whose elements $(A_{ij})$ are defined as
 \begin{equation*}
 	A_{ij} =
 	\begin{cases}
@@ -302,7 +308,7 @@ The stochastic block model has parameters: $n$, $k$, $p_{in}$ and $p_{out}$. $n$
 		X & \text{otherwise},
 	\end{cases}
 \end{equation*}
-where $X \sim Be(p_{ij})$ and \textsl{$p_{ij}$} is defined as
+where $X \sim Be(p_{ij})$ and {$p_{ij}$} is defined as
 \begin{equation*}
 	p_{ij} =
 	\begin{cases}
@@ -347,7 +353,7 @@ See Figure \ref{fig:exampleGraphStochasticBlockModel} for a visualisation of an 
 \subsubsection{Phase Transitions}
 \label{sec:background;subsec:communityDetection;subsubsec:phaseTransitions}
 
-Decelle et al. \cite{DKM+11} conjectured a phase transition for sparse graphs generated from the stochasic block model, using non-rigorous ideas from statistical physics \cite{MNS12}. Nadakuditi et al. \cite{NN12} used methods from random matrix theory to present an asymptotic analysis of spectra of random graphs to also demonstrate the presence of a phase transition. Essentially, we can distinguish between a \textsl{detectable} phase where it is possible to learn node assignments in a way that is correlated with the ground-truth node assignemnts of the graph, and an \textsl{undetectable} phase, where learning is impossible. Consider a graph, generated by the stochastic block model as described in section \ref{sec:background;subsec:communityDetection;subsubsec:stochasticBlockModel}, and following the argument of~\cite{NN12}, which we will not explain, one finds a transition occurring at the point
+Decelle et al. \cite{DKM+11} conjectured a phase transition for sparse graphs generated from the stochasic block model, using non-rigorous ideas from statistical physics \cite{MNS12}. Nadakuditi et al. \cite{NN12} used methods from random matrix theory to present an asymptotic analysis of spectra of random graphs to also demonstrate the presence of a phase transition. Essentially, we can distinguish between a \textit{detectable} phase where it is possible to learn node assignments in a way that is correlated with the ground-truth node assignemnts of the graph, and an \textit{undetectable} phase, where learning is impossible. Consider a graph, generated by the stochastic block model as described in section \ref{sec:background;subsec:communityDetection;subsubsec:stochasticBlockModel}, and following the argument of~\cite{NN12}, which we will not explain, one finds a transition occurring at the point
 \begin{equation}
 \label{eq:phaseTransitionK}
 	c_{in} - c_{out} = \sqrt{k[c_{in} + (k-1)c_{out}]}.
@@ -358,6 +364,14 @@ In particular, consider, from now on, the case where $k = 2$, so we find a trans
 	c_{in} - c_{out} = \sqrt{2(c_{in} + c_{out})}.
 \end{equation}
 Mossel, Neeman and Sly \cite{MNS12} proved the undetectable phase region of the conjecture, that is to say, it is impossible to meaningfully recover the node assignments when $ c_{in} - c_{out} < \sqrt{2(c_{in} + c_{out})}$. Massouli\'e \cite{Mas13} and then, independently using a different proof, Mossel et al. \cite{MNS13b} proved the detectable phase region of the conjecture, meaning it is possible to recover node assignments positively correlated with the ground-truth when $ c_{in} - c_{out} > \sqrt{2(c_{in} + c_{out})}$. The techniques used to prove these results are beyond the scope of the project, however these reuslts provide a very important limit on the ability of algorithms to detect communities. In particular, this motivates the development of algorithms which can efficiently (in nearly linear time) detect communities, in the sparse regime, up to the limit.
+
+%------------------------------------------
+%---   Application to Real-world Data Sub-Section   ---
+%------------------------------------------
+\subsubsection{Application to real-world data}
+\label{sec:background;subsec:communityDetection;subsubsec:applicationToRealWorldData}
+
+We will apply the community detection algorithms to real-world data in the form of an Amazon product co-purchasing network made available by Yang and Leskovec \cite{YL12}. The data is available to download from \url{http://snap.stanford.edu/data/com-Amazon.html}, and as explained on the site, the network was collected by crawling the Amazon website, and creating an undirected graph with nodes representing products and edges present between node $i$ and $j$ if product $i$ is frequently co-purchased with product $j$. They regard each connected component in a product category as separate ground-truh community, and provide the top 5,000 communities with `highest quality' as described in \cite{YL12}. 
 
 %------------------------------------
 %---   Crowdsourcing Systems Section   ---
@@ -375,7 +389,7 @@ In this section we will first describe crowdsourcing systems and then introduce 
 
 Crowdsourcing systems, such as Amazon Mechanical Turk (http://www.mturk.com), aim to solve taks using human-powered problem solving, where humans, which we will call workers (collectively known as the crowd), are paid a small fee for their response to the task~\cite{KOS13,EHR12}. The aim of crowdsourcing algorithms is to interpret the worker's responses to infere the solution of the task. Many platforms including Amazon Mechanical Turk have a large, anonymous, crowd as a workforce so it is difficult to leverage the fee paid on correct responses since tasks may be subjective and true answers not known~\cite{KOS13}. Therefore, most crowdsourcing systems introduce redundancy by asking for the solution to each task from several workers and aggregating the results by giving each worker's response the same weighting~\cite{KOS13}.
 
-The problem of assigning tasks to workers (i.e. deciding which set of tasks each worker should complete) is called \textsl{task allocation}. Even though workers are not identifiable and their reliability (ability to complete tasks correctly) is not known, we aim to develop an algorithm that can estimate worker's reliabilities in order to apply appropriate weighting to worker's reponses to get a more accurate estimate of the task solution. The problem of estimating the solution to a task from the set of worker's responses is called \textsl{inference}. In particular, we will be interested in binary tasks, where there are two possible solutions to a task. An example of such a problem is image classification where we have a set of images, where each one can be classfied into two possible states~\cite{KOS13}.
+The problem of assigning tasks to workers (i.e. deciding which set of tasks each worker should complete) is called \textit{task allocation}. Even though workers are not identifiable and their reliability (ability to complete tasks correctly) is not known, we aim to develop an algorithm that can estimate worker's reliabilities in order to apply appropriate weighting to worker's reponses to get a more accurate estimate of the task solution. The problem of estimating the solution to a task from the set of worker's responses is called \textit{inference}. In particular, we will be interested in binary tasks, where there are two possible solutions to a task. An example of such a problem is image classification where we have a set of images, where each one can be classfied into two possible states~\cite{KOS13}.
 
 %------------------------------------
 %---   Probabilistic Model Sub-Section   ---
@@ -383,7 +397,7 @@ The problem of assigning tasks to workers (i.e. deciding which set of tasks each
 \subsubsection{Probabilistic Model}
 \label{sec:background;subsec:crowdsourcingSystems;subsubsec:probabilisticModel}
 
-There are a set of $m$ binary tasks with unobserved solutions, $\mathbfit{t} \in \{-1,1\}^{m}$, where the solution to the $i$-th task is $t_{i} \in \{-1,1\}$. Assume we need $n$ workers in the crowd, of whom we allocate tasks to. Referring to task allocation, denote $T_{j} \subseteq \{1,\dots,m\}$ as the set of tasks assigned to the $j$-th worker, with a limit of $r$ tasks that can be assigned to an individual to avoid overloading a worker, meaning $\left\vert{T_{j}}\right\vert \le r \text{ for } j=1,\dots,n$. Let us denote the reliability (probability of completing a task correctly) of the $j$-th worker by $p_{j} \in [0,1]$, with the crowd reliability characterised as $\mathbf{p} = [p_{1},\dots,p_{n}]^{T}$. Note that the reliability of each worker is the same no matter which task is being attempted, so here we do not consider any notion of diffculty of tasks. The matrix of worker's responses is called the \textsl{response matrix}, $\mathbf{R} \in \{-1,0,1\}^{m \times n}$, and is defined by
+There are a set of $m$ binary tasks with unobserved solutions, $\mathbfit{t} \in \{-1,1\}^{m}$, where the solution to the $i$-th task is $t_{i} \in \{-1,1\}$. Assume we need $n$ workers in the crowd, of whom we allocate tasks to. Referring to task allocation, denote $T_{j} \subseteq \{1,\dots,m\}$ as the set of tasks assigned to the $j$-th worker, with a limit of $r$ tasks that can be assigned to an individual to avoid overloading a worker, meaning $\left\vert{T_{j}}\right\vert \le r \text{ for } j=1,\dots,n$. Let us denote the reliability (probability of completing a task correctly) of the $j$-th worker by $p_{j} \in [0,1]$, with the crowd reliability characterised as $\mathbf{p} = [p_{1},\dots,p_{n}]^{T}$. Note that the reliability of each worker is the same no matter which task is being attempted, so here we do not consider any notion of diffculty of tasks. The matrix of worker's responses is called the \textit{response matrix}, $\mathbf{R} \in \{-1,0,1\}^{m \times n}$, and is defined by
 \begin{equation*}
 	R_{ij} =
 	\begin{cases}
@@ -393,7 +407,7 @@ There are a set of $m$ binary tasks with unobserved solutions, $\mathbfit{t} \in
 	\end{cases}
 \end{equation*}
 
-We assume the worker's reliabilities are independent and identically distributed random variables as defined by the \textsl{spammer-hammer model} and a `collective quality' parameter denoted by $q$,
+We assume the worker's reliabilities are independent and identically distributed random variables as defined by the \textit{spammer-hammer model} and a `collective quality' parameter denoted by $q$,
 \begin{equation*}
 	p_{j} =
 	\begin{cases}
@@ -410,7 +424,7 @@ Clearly, using this model with larger values of $q$ increases the portion of ham
 
 In addition, we would like to incorporate a notion of cost, where we pay for each worker's response. Let us assume each task gets allocated $\ell$ times, where we can increase $\ell$ if we have more budget. Recall that we have $m$ tasks and must estimate a solution for all of them, and that each worker completes $r$ tasks in order to not overload any one worker. Using this, we can easily determine the number of workers we require, $n = m\ell/r$. Note that, intuitively, we expect the error rate to decrease as we increase $\ell$, since we have a larger budget, but we will look at the error rates of different algorithms vary as we alter $\ell$.
 
-Furthermore, we can associate the task allocation scheme and the response matrix with a bipartite graph (recall definition \ref{def:bipartiteGraph}), as follows. Consider a bipartite graph, $\mathcal{G} = (V,E)$, with $m$ `task' nodes and $n$ `worker' nodes, where we can decompose $V=\{1,\dots,m+n\}$ into two disjoint sets, $V_{t}$ and $V_{w}$, where $\left\vert{V_{t}}\right\vert = m$, $\left\vert{V_{w}}\right\vert = n$, $V_{t}$ consists only of task nodes and $V_{w}$ consists only of worker nodes. Then we can place an edge within this graph whenever the $i$-th task is assigned to the $j$-th worker, with a weight on the edge equal to the worker's response, essentially the corresponding entry of the response matrix, $R_{ij}$. A task allocation scheme is, therefore, just a method of placing edges within $\mathcal{G}$ in accordance with the constrained degrees of task and worker nodes. Specifically, we require the degree of task nodes to be $\ell$ (i.e. $d_{i} = \ell \text{ for all } i \in V_{t}$) and the degree of worker nodes to be $r$ (i.e. $d_{j} = r \text{ for all } j \in V_{w}$). Karger et al. \cite{KOS13} proposed random construction, known as the \textsl{configuration model}, as a task allocation scheme. We will thus use the configuration model as a task allocation scheme and investigate the performance of different inference algorithms.
+Furthermore, we can associate the task allocation scheme and the response matrix with a bipartite graph (recall definition \ref{def:bipartiteGraph}), as follows. Consider a bipartite graph, $\mathcal{G} = (V,E)$, with $m$ `task' nodes and $n$ `worker' nodes, where we can decompose $V=\{1,\dots,m+n\}$ into two disjoint sets, $V_{t}$ and $V_{w}$, where $\left\vert{V_{t}}\right\vert = m$, $\left\vert{V_{w}}\right\vert = n$, $V_{t}$ consists only of task nodes and $V_{w}$ consists only of worker nodes. Then we can place an edge within this graph whenever the $i$-th task is assigned to the $j$-th worker, with a weight on the edge equal to the worker's response, essentially the corresponding entry of the response matrix, $R_{ij}$. A task allocation scheme is, therefore, just a method of placing edges within $\mathcal{G}$ in accordance with the constrained degrees of task and worker nodes. Specifically, we require the degree of task nodes to be $\ell$ (i.e. $d_{i} = \ell \text{ for all } i \in V_{t}$) and the degree of worker nodes to be $r$ (i.e. $d_{j} = r \text{ for all } j \in V_{w}$). Karger et al. \cite{KOS13} proposed random construction, known as the \textit{configuration model}, as a task allocation scheme. We will thus use the configuration model as a task allocation scheme and investigate the performance of different inference algorithms.
 
 %----------------------------------------------------------------------------------------
 %	IMPLEMENTATION PLAN
@@ -421,6 +435,57 @@ Furthermore, we can associate the task allocation scheme and the response matrix
 \mbox{}
 \section {Implementation Plan}
 \label{sec:implementationPlan}
+
+In this section we will outline the work that is to be done in the remainder of the project as well as the work that has already been completed. We provide a set of milestones and additionally an estimated timescale when the work should be completed. Moreover, we discuss fallback positions in case any piece of work can not be achieved as planned.
+
+Details of the work that has been done so far is given below.
+\begin{itemize}
+	\item \textbf{Research, understand and implement community detection algorithms.}
+
+	\textit{Status: Completed.}	
+
+	We have spent several months researching the problem of community detection in graphs. Firstly, we analysed the problem specifications, essentially the literature summarised in section \ref{sec:background;subsec:communityDetection}. Then we proceeded to survey different community detection algorithms, including spectral clustering (using Laplacian and Modularity matrices) and message passing (such as belief propagation and approximate message passing). We have also implemented some of these methods (spectral clustering so far) and applied them to synthetic data generated by the stochastic block model, using MATLAB and C++ implementations.
+
+	\item \textbf{Research, understand and implement crowdsourcing algorithms.}
+
+	\textit{Status: Completed.}
+
+	Recently, we turned our attention to the crowdsourcing problem. Starting by surveying the relevant literature explaining the problem, as summarised in section \ref{sec:background;subsec:crowdsourcingSystems}, we proceeded to implement the basic setting and algorithms such as majority voting, singular vector and iterative message passing.
+\end{itemize}
+
+Details of work that is to be done in the remainder of the project is given below.
+\begin{itemize}
+	\item \textbf{Finish implementing message passing algorithms for community detection.}
+
+	\textit{Status: Estimated completion date of March 2014.}	
+
+	We need to finish implementing the message passing community detection algorithms, so that we can apply them to the synthetic data and compare.
+
+	\item \textbf{Comprehensive analysis and comparison of community detection algorithms using synthetic data.}
+
+	\textit{Status: Estimated completion date of May 2014.}	
+
+	We aim to utilise our implementations of these algorithms in order to test them among different synthetic data settings (by altering paramters of model such as sparsity, number of communities and size of communities). The results of these tests, coupled with the mathematical analysis within the generative model, will allow us to thoroughly compare the algorithms and provide recommendations (i.e. which algorithm we believe will perform best) for specific problem settings.
+
+	\item \textbf{Consider more complex models for crowdsourcing systems.}
+
+	\textit{Status: Estimated completion date of May 2014.}	
+
+	We wish to investigate more complex models for crowdsourcing systems, such as a more general worker distribution, and their effects on the algorithms we have studied. We will seek mathematical justifications as well as evidence from applications to synthetic data, implemented from the new model.
+
+	\item \textbf{Apply community detection algorithms to real-world data.}
+
+	\textit{Status: Estimated completion date of June 2014.}	
+
+	We wish to apply some of the community detection algorithms we have studied to the Amazon product co-purchasing network mentioned in section \ref{sec:background;subsec:communityDetection;subsubsec:applicationToRealWorldData}. This involves parsing the data taken into a suitable format using the Stanford Network Analysis Platform (SNAP) C++ library. It is available from \url{http://snap.stanford.edu/snap/index.html}, and we will use it to represent the large network and implement suitable (in terms of complexity) algorithms.
+\end{itemize}
+
+Details of fall back options in case any of the planned milestones can not be achieved is summarised below.
+\begin{itemize}
+	\item \textbf{Apply community detection algorithms to partial real-world networks.}
+
+	The difficulty in apply algorithms to the real-world dataset revolves around the size of the graphs considered. For example, the Amazon co-purchasing network has 334,683 nodes and 925,872 edges. Storing and operating on this data requires far more attention and care than small graphs (below 1000 nodes for instance) that we considered for our synthetic data application. In case we cannot operate on the whole network, we may use techniques such as \textit{dimensionality reduction} to reduce the network size, whilst aiming to keep most of the information, hopefully keeping the results relevant.
+\end{itemize}
 
 %----------------------------------------------------------------------------------------
 %	EVALUATION PLAN
