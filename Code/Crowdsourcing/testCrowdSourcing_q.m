@@ -46,10 +46,12 @@ errorsMVestimate = zeros(m, noTrials);
 errorsSVestimate = zeros(m, noTrials);
 errorsITestimate = zeros(m, noTrials);
 errorsAMPestimate = zeros(m, noTrials);
+errorsDDKR1estimate = zeros(m, noTrials);
+errorsDDKR2estimate = zeros(m, noTrials);
 
 currentTrialNumber = 1;
 
-for q=0:qIncrement:qUpperBound
+for q=0:qIncrement:(qUpperBound-qIncrement)
     
     display(currentTrialNumber);
     
@@ -137,6 +139,30 @@ for q=0:qIncrement:qUpperBound
         end
     end
     
+    % use DDKR algorithm 1 scheme
+    tDDKR1Estimate = DDKRAlgorithm1(responseMatrix);
+
+    % calculate errors for DDKR algorithm 1 scheme
+    for i=1:m
+        if t(i) == tDDKR1Estimate(i)
+            errorsDDKR1estimate(i,currentTrialNumber) = 0;
+        else
+            errorsDDKR1estimate(i,currentTrialNumber) = 1;
+        end
+    end
+    
+    % use DDKR algorithm 2 scheme
+    tDDKR2Estimate = DDKRAlgorithm2(responseMatrix);
+
+    % calculate errors for DDKR algorithm 2 scheme
+    for i=1:m
+        if t(i) == tDDKR2Estimate(i)
+            errorsDDKR2estimate(i,currentTrialNumber) = 0;
+        else
+            errorsDDKR2estimate(i,currentTrialNumber) = 1;
+        end
+    end
+    
     currentTrialNumber = currentTrialNumber + 1;
 end
 
@@ -151,6 +177,8 @@ errorMVData = zeros(noTrials,1);
 errorSVData = zeros(noTrials,1);
 errorITData = zeros(noTrials,1);
 errorAMPData = zeros(noTrials,1);
+errorDDKR1Data = zeros(noTrials,1);
+errorDDKR2Data = zeros(noTrials,1);
 
 for i=1:noTrials
     hold on;
@@ -160,8 +188,10 @@ for i=1:noTrials
     errorSV = sum(errorsSVestimate(:,i)) / m;
     errorIT = sum(errorsITestimate(:,i)) / m;
     errorAMP = sum(errorsAMPestimate(:,i)) / m;
+    errorDDKR1 = sum(errorsDDKR1estimate(:,i)) / m;
+    errorDDKR2 = sum(errorsDDKR2estimate(:,i)) / m;
     
-    semilogy(i*qUpperBound/noTrials,errorOracle,'Marker','o','MarkerEdgeColor',[1 0 1]);
+    semilogy(i*qUpperBound/noTrials,errorOracle,'Marker','o','MarkerEdgeColor','magenta');
     
     semilogy(i*qUpperBound/noTrials,errorMV,'Marker','o','MarkerEdgeColor','blue');
     
@@ -175,25 +205,37 @@ for i=1:noTrials
     if errorAMP > dumbThreshold
         errorAMP = 1 - errorAMP;
     end
+    if errorDDKR1 > dumbThreshold
+        errorDDKR1 = 1 - errorDDKR1;
+    end
+    if errorDDKR2 > dumbThreshold
+        errorDDKR2 = 1 - errorDDKR2;
+    end
 
     semilogy(i*qUpperBound/noTrials,errorSV,'Marker','o','MarkerEdgeColor','red');
     
     semilogy(i*qUpperBound/noTrials,errorIT,'Marker','o','MarkerEdgeColor','green');
     
     semilogy(i*qUpperBound/noTrials,errorAMP,'Marker','o','MarkerEdgeColor','black');
+    
+    semilogy(i*qUpperBound/noTrials,errorDDKR1,'Marker','o','MarkerEdgeColor','cyan');
+    
+    semilogy(i*qUpperBound/noTrials,errorDDKR2,'Marker','o','MarkerEdgeColor','yellow');
 
     errorOracleData(i) = errorOracle;
     errorMVData(i) = errorMV;
     errorSVData(i) = errorSV;
     errorITData(i) = errorIT;
     errorAMPData(i) = errorAMP;
+    errorDDKR1Data(i) = errorDDKR1;
+    errorDDKR2Data(i) = errorDDKR2;
 end
 
-% write algorithms errors to file
+write algorithms errors to file
 fileID = fopen('data_files/crowdsourcing/crowdsourcingErrors_q.dat','w');
 for j=1:noTrials
     fprintf(fileID,'%d ',j*qUpperBound/noTrials);
-    for i=1:5
+    for i=1:7
         if i == 1
             fprintf(fileID,'%d ',errorOracleData(j));
         elseif i == 2
@@ -202,8 +244,12 @@ for j=1:noTrials
             fprintf(fileID,'%d ',errorSVData(j));
         elseif i == 4
             fprintf(fileID,'%d ',errorITData(j));
-        else
+        elseif i == 5
             fprintf(fileID,'%d ',errorAMPData(j));
+        elseif i == 6
+            fprintf(fileID,'%d ',errorDDKR1Data(j));
+        else
+            fprintf(fileID,'%d ',errorDDKR2Data(j));
         end
     end
     fprintf(fileID,'\n');
