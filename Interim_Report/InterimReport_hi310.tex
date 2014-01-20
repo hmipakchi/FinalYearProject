@@ -71,6 +71,12 @@
 \newenvironment{proof}{{\bf Proof:}}{\hfill\rule{2mm}{2mm}}
 
 %----------------------------------------------------------------------------------------
+%	DEFINITIONS OF NEW COMMANDS
+%----------------------------------------------------------------------------------------
+
+\newcommand*\mean[1]{\langle#1\rangle}
+
+%----------------------------------------------------------------------------------------
 %	BEGIN DOCUMENT
 %----------------------------------------------------------------------------------------
 
@@ -129,13 +135,13 @@
 \section {Introduction}
 \label{sec:introduction}
 
-Networks have been studied extensively to model many interesting complex systems, including the Internet, social networks, financial netowrks and biological networks \cite{New06a,DKM+13,MG13}. Any network consists of \textit{nodes} which represent items of interest, and \textit{edges} which represent the connectivity between pairs of nodes. For example, considering social networks, nodes are the users and the edges correspond to interactions between the users. An interesting feature many networks exhibit is \textit{community structure}, which involves the natrual dividing of nodes into groups, called \textit{communities}, where there are denser connections within a group, and sparser connections between different groups \cite{New06a,DKM+13,For10,New06b}. This particular type of community structure is also known as \textit{assortative} \cite{DKM+13}. For instance, social networks contain communities corresponding to real-life communities consisting of the members, such as friendship or family circles. The aim of developing algorithms for detecting communities within networks is motivated to solve the problem known as \textit{community detection}.
+Networks have been studied extensively to model many interesting complex systems, including the Internet, social networks, financial networks and biological networks \cite{New06a,DKM+13,MG13}. Any network consists of \textit{nodes} which represent items of interest, and \textit{edges} which represent the connectivity between pairs of nodes. For example, considering social networks, nodes are the users and the edges correspond to interactions between the users. An interesting feature many networks exhibit is \textit{community structure}, which involves the natrual dividing of nodes into groups, called \textit{communities}, where there are denser connections within a group, and sparser connections between different groups \cite{New06a,DKM+13,For10,New06b}. This particular type of community structure is also known as \textit{assortative} \cite{DKM+13}. For instance, social networks contain communities corresponding to real-life communities consisting of the members, such as friendship or family circles. The problem of detecting communities within networks is known as \textit{community detection}, and we aim to develop algorithms as a solution.
 
 In order to provide a theoretical setting to test and compare different community detection algorithms, generative models of random graphs are very useful, and one such commonly used model is the \textit{stochastic block model} \cite{DKM+13,NN12}. We will investigate several community detection algorithms, and will use the stochastic block model in order to analyse and reason about them.
 
-The underlying ingredients of the community detection algorithms have other interesting applications also, with one being in the problem of \textit{task allocation} and \textit{inference} within crowdsourcing systems. Crowdsourcing systems involve items being rated by several users, known collectively as a crowd, where the user's responses are used to approximate the true rating of the item \cite{KOS13,EHR12}. The users are humans who are paid by the system for their ratings, and these systems have been shown to be effective in solving problems such as image classification, character recognition and recommendation \cite{KOS13}. Clearly, we wish to use the crowdsourcing system to gain accurate solutions to tasks, but also want to reduce the total cost paid out for labour, thus designing algorithms for inference that are budget-optimal is very useful.
+The underlying ingredients of the community detection algorithms have other interesting applications also, with one being in the problem of \textit{task allocation} and \textit{inference} within crowdsourcing systems. Crowdsourcing systems involve items being rated by several users, known collectively as a crowd, where the user's responses are used to approximate the true rating of the item \cite{KOS13,EHR12}. The users are humans who are paid by the system for their ratings, and these systems have been shown to be effective in solving problems such as image classification, character recognition and recommendation \cite{KOS13}. We wish to use the crowdsourcing system to gain accurate ratings, but also want to reduce the total cost paid out for labour, thus designing algorithms for inference that are budget-optimal is very useful.
 
-We will investigate different algorithms and use the theoretical approach and setup considered by Karger et al.\cite{KOS13} and Dalvi et al. \cite{DDK+13} to compare and contrast between them.
+We will investigate different crowdsourcing algorithms and use the theoretical approach and setup considered by Karger et al.\cite{KOS13} and Dalvi et al. \cite{DDK+13} to compare and contrast between them.
 
 This report is organised as follows. In section \ref{sec:projectSpecification} we will state clearly the project deliverables. In section \ref{sec:background}, we will outline all the necessary background required to understand the problems studied in the project. In section \ref{sec:implementationPlan}, we will provide a detailed breakdown of work that has been already done and remaining work that is to be done during the rest of the project. Finally, in section \ref{sec:evaluationPlan}, we will detail how the success of the project may be measured.
 
@@ -157,15 +163,15 @@ Succinct project deliverables, alongside detailed explanations, are given below.
 \begin{itemize}
 	\item \textbf{Understand and analyse different community detection algorithms.}
 
-	We investigate the problem of community detection in graphs, as described in section \ref{sec:background;subsec:communityDetection}, and analyse different algorithms. These include spectral clustering approaches using \textit{Laplacian} and \textit{Modularity} matrices as well as message passing algorithms such as \textit{belief propagation} and \textit{approximate message passing}. We shall use the stochastic block model to generate random graphs that we treat as input to all these algorithms, in order to compare them, both through mathematical analysis and simulations on synthetic data. In particular, we wish to alter the parameters of the generative model to represent different cases in which we can investigate the different behaviour of the algorithms. 
+	We investigate the problem of community detection in graphs, as described in section \ref{subsec:communityDetection}, and analyse different algorithms. These include spectral clustering approaches using \textit{Laplacian} \cite{Spi07,Spi12} and \textit{Modularity} \cite{New06a,New06b} matrices as well as message passing algorithms such as \textit{belief propagation} \cite{DKM+13} and \textit{approximate message passing} \cite{BM11}. We shall use the stochastic block model to generate random graphs that we treat as input to all these algorithms in order to compare them. In particular, we wish to alter the parameters of the generative model to represent different cases in which we can understand the different behaviour of the algorithms. This represents testing using synthetic data.
 
 	\item \textbf{Understand crowdsourcing systems and analyse budget-optimal algorithms.}
 
-	We investigate crowdsourcing systems, as described in section \ref{sec:background;subsec:crowdsourcingSystems}, and analyse algorithms which aim to optimise cost of such systems whilst providing an accurate estimate to the ground-truth solution. This includes a naive algorithm such as \textit{majority voting}, a spectral algorithm such as \textit{singluar vector estimation} and an iterative message passing algorithm proposed by Karger et al. \cite{KOS13}. We aim to use the framework previously studied by \cite{KOS13} as a setting to apply mathematical analysis to compare the algorithms as well as one to generate synthetic data to run simulations.
+	We investigate crowdsourcing systems, as described in section \ref{subsec:crowdsourcingSystems}, and analyse algorithms which aim to optimise cost of such systems whilst providing an accurate estimate to the ground-truth solution. This includes a naive algorithm such as \textit{majority voting}, and algorithms proposed by Karger et al. \cite{KOS13}, Dalvi et al. \cite{DDK+13} and Ghosh et al. \cite{GKM11}. We aim to use the framework previously studied by \cite{KOS13,DDK+13} as a setting to compare the algorithms by generating synthetic data to run simulations.
 
 	\item \textbf{Investigate behaviour of different community detection algorithms using real-world data.}
 
-	We aim to apply community detection algorithms to real-world data, for example, in the form of an Amazon product co-purchasing network made available by Yang and Leskovec \cite{YL12}. By applying the algorithms to a dataset, we can get a better appreciation of the behaviour of algorithms in real-world settings. By only considering synthetic data we cannot fully understand how useful these algorithms are since there exists an the issue of how representative the synthetic data generated by the model is of real-world networks.
+	We aim to apply community detection algorithms to real-world data, for example, in the form of an Amazon product co-purchasing network made available by Yang and Leskovec \cite{YL12}, or a financial network made available by Onnela et al. \cite{OFR+12}. By applying the algorithms to a dataset, we can get a better appreciation of the behaviour of algorithms in real-world settings.
 \end{itemize}
 
 %----------------------------------------------------------------------------------------
@@ -178,15 +184,15 @@ Succinct project deliverables, alongside detailed explanations, are given below.
 \section {Background}
 \label{sec:background}
 
-In the following section we will describe all the technical background required to understand the settings of the problems we investigate for the project. Initially, we will highlight some basic results in graph theory, which the reader may already be familiar with. Then, we will outline the problem of community detection and present a common model used to generate random graphs with community structure to be used as a testing playground for algorithms. Following this, we will discuss, in detail, crowdsourcing systems.
+In the following section we will describe all the technical background required to understand the settings of the problems we investigate for the project. Initially, we will highlight some basic results in graph theory, which the reader may already be familiar with. Then, we will outline the problem of community detection and present a common model used to generate random graphs with community structure to be used as a testing playground for algorithms. Following this, we will discuss crowdsourcing systems and provide information regarding the real-world networks which we wish to consider.
 
 %---------------------
 %---   Basics Section   ---
 %---------------------
 \subsection{Basics}
-\label{sec:background;subsec:basics}
+\label{subsec:backgroundBasics}
 
-We assume the reader is familiar with some basic concepts in linear algebra such as matrix multiplication, eigenvectors and eigenvalues of matrices. Rather, here, we will cover some basic tools within spectral graph theory using definitions from \cite{For10,New06a, Spi12, Spi07}. Spectral graph theory which is the study of graphs through the eigenvalues and eigenvectors of matrices associated with the graphs \cite{Spi12}. We begin by defining some basic notions about graphs.
+We assume the reader is familiar with some basic concepts in linear algebra such as matrix multiplication, eigenvectors and eigenvalues of matrices. Rather, we will cover some basic tools within spectral graph theory using definitions from \cite{For10,New06a, Spi12, Spi07}. Spectral graph theory which is the study of graphs through the eigenvalues and eigenvectors of matrices associated with the graphs \cite{Spi12}. We begin by defining some basic notions about graphs.
 \begin{definition}
 \label{def:graph}
 	A graph $\mathcal{G}$ is a pair of sets (V,E), where V is a set of vertices or nodes and $E \subset V^{2}$, the set of unordered pairs of elements of V. The elements of E are called edges or links.
@@ -194,6 +200,10 @@ We assume the reader is familiar with some basic concepts in linear algebra such
 \begin{definition}
 \label{def:undirectedGraph}
 	A graph $\mathcal{G} = (V,E)$ is called undirected if for all $v,w \in V$: $(v,w) \in E \iff (w,v) \in E$. Otherwise, $\mathcal{G}$ is called directed.
+\end{definition}
+\begin{definition}
+\label{def:weightedGraph}
+	A weighted graph is a graph where a number (weight) is assigned to each edge.
 \end{definition}
 We will assume, without loss of generality, that $V = \{1,\dots,n\}$. See Figure \ref{fig:exampleGraphSmall} for an example of an undirected graph with seven vertices and eleven edges.
 \begin{definition}
@@ -299,7 +309,7 @@ An important property of adjacency and Laplacian matrices is their spectra, whic
 %---   Community Detection Section   ----
 %-----------------------------------
 \subsection{Community Detection}
-\label{sec:background;subsec:communityDetection}
+\label{subsec:communityDetection}
 
 An intuitive notion of communities within graphs involves the assignment of nodes to communities such that there are denser connections between nodes belonging to the same community, and sparser connections between nodes belonging to different communities. If a graph exhibits this property, it is said to contain assortative community structure \cite{New06a,DKM+13,For10,New06b}. For instance, within social networks where nodes are users and edges between nodes represent interactions between the users, community structure within the graph corresponds to real-life communities consisting of the users. The aim of community detection algorithms is to estimate or recover the node assignments. The algorithms need to be efficient due to the large size of graphs in real-world networks, so we require the computationally complexity to not be worse than nearly linear in the number of edges in the graph (approximately $O(n^{2}\log n)$ where $n$ represents the number of nodes in the graph).
 
@@ -309,7 +319,7 @@ In order to help provide a setting where different algorithms may be compared, w
 %---   Stochastic Block Model Sub-Section   ---
 %---------------------------------------
 \subsubsection{Stochastic Block Model}
-\label{sec:background;subsec:communityDetection;subsubsec:stochasticBlockModel}
+\label{subsubsec:stochasticBlockModel}
 
 The stochastic block model has parameters: $n$, $k$, $p_{in}$ and $p_{out}$. $n$ represents the number of nodes, $k$ represents the number of communities, $p_{in}$ represents the probability of an edge occurring between two nodes belonging to the same community and $p_{out}$ represents the probability of an edge occurring between two nodes belonging to the different communities. Since we are focused on assortative community structure, we consider the case where $p_{in} > p_{out}$. We then assign, to each node of the graph, a label indicating which community the node belongs to; so let $\sigma_{i} \in \{1,\dots,k\}$ be the label of node $i$, for $i = 1,\dots,n$. Also, let $\mathbfit{\sigma} = [\sigma_{1},\dots,\sigma_{n}]^{T}$ be the node assignments of the graph. We proceed to generate a random graph, $\mathcal{G}$, on $n$ nodes, $k$ communities and node assignments, $\mathbfit{\sigma} = [\sigma_{1},\dots,\sigma_{n}]^{T}$, with the adjacency matrix of the graph, $\mathbf{A}$ whose elements $(A_{ij})$ are defined as
 \begin{equation*}
@@ -327,7 +337,7 @@ where $X \sim Be(p_{ij})$ and {$p_{ij}$} is defined as
 		p_{out} & \text{otherwise}.
 	\end{cases}
 \end{equation*}
-Note that this formulation matches the intuition we have described.
+This formulation matches the intuition of assortative community structure, that the connectivity between two nodes depends solely on the community memeberships of the two nodes; specificallly there is a greater probability of an edge occurring between nodes belonging to the same community than with belonging to different communities. Note, also, that we do not allow loops in the model.
 
 Typically, community detection within dense graphs (those with a dense adjacency matrix) is straightforward \cite{DKM+13}, thus we are especially interested in community detection within sparse graphs (those with a sparse adjacency matrix) where $p_{in}$, $p_{out} = O(1/n)$. When we consider the sparse regime, it will be more convenient to work with $c_{in} = np_{in}$ and $c_{out} = np_{out}$.
 
@@ -364,33 +374,83 @@ See Figure \ref{fig:exampleGraphStochasticBlockModel} for a visualisation of an 
 %---   Phase Transitions Sub-Section   ---
 %-----------------------------------
 \subsubsection{Phase Transitions}
-\label{sec:background;subsec:communityDetection;subsubsec:phaseTransitions}
+\label{subsubsec:phaseTransitions}
 
-Decelle et al. \cite{DKM+11} conjectured a phase transition for sparse graphs generated from the stochasic block model, using non-rigorous ideas from statistical physics \cite{MNS12}. Nadakuditi et al. \cite{NN12} used methods from random matrix theory to present an asymptotic analysis of spectra of random graphs to also demonstrate the presence of a phase transition. Essentially, we can distinguish between a \textit{detectable} phase where it is possible to learn node assignments in a way that is correlated with the ground-truth node assignemnts of the graph, and an \textit{undetectable} phase, where learning is impossible. Consider a graph, generated by the stochastic block model as described in section \ref{sec:background;subsec:communityDetection;subsubsec:stochasticBlockModel}, and following the argument of \cite{NN12}, which we will not explain, one finds a transition occurring at the point
+Decelle et al. \cite{DKM+11} conjectured a phase transition for sparse graphs generated from the stochasic block model, using non-rigorous ideas from statistical physics \cite{MNS12}. Nadakuditi et al. \cite{NN12} used methods from random matrix theory to present an asymptotic analysis of spectra of random graphs to also demonstrate the presence of a phase transition. Essentially, we can distinguish between a \textit{detectable} phase where it is possible to learn node assignments in a way that is correlated with the ground-truth node assignemnts of the graph, and an \textit{undetectable} phase, where learning is impossible. Consider a graph, generated by the stochastic block model as described in section \ref{subsubsec:stochasticBlockModel}, and following the argument of \cite{NN12}, which we will not explain, one finds a transition occurring at the point
 \begin{equation}
 \label{eq:phaseTransitionK}
-	c_{in} - c_{out} = \sqrt{k[c_{in} + (k-1)c_{out}]}.
+	c_{in} - c_{out} = \sqrt{k(c_{in} + (k-1)c_{out})}.
 \end{equation}
-In particular, consider, the case where $k = 2$, so we find a transition at
+In particular, let us consider the case where $k = 2$, so we find a transition at
 \begin{equation}
 \label{eq:phaseTransitionK=2}
 	c_{in} - c_{out} = \sqrt{2(c_{in} + c_{out})}.
 \end{equation}
 Mossel, Neeman and Sly \cite{MNS12} proved the undetectable phase region of the conjecture given by equation \ref{eq:phaseTransitionK=2} (that is to say, it is impossible to meaningfully recover the node assignments when $ c_{in} - c_{out} < \sqrt{2(c_{in} + c_{out})}$. Massouli\'e \cite{Mas13} and then, independently using a different proof, Mossel et al. \cite{MNS13b} proved the detectable phase region of the conjecture, meaning it is possible to recover node assignments positively correlated with the ground-truth when $ c_{in} - c_{out} > \sqrt{2(c_{in} + c_{out})}$. The techniques used to prove these results are beyond the scope of the project, however these reuslts provide a very important limit on the ability of algorithms to detect communities. In particular, this motivates the development of algorithms which can efficiently (in nearly linear time) detect communities, in the sparse regime, up to the limit.
 
-%------------------------------------------
+%----------------------------------------------
 %---   Application to Real-world Data Sub-Section   ---
-%------------------------------------------
+%----------------------------------------------
 \subsubsection{Application to real-world data}
-\label{sec:background;subsec:communityDetection;subsubsec:applicationToRealWorldData}
+\label{subsubsec:communityDetectionApplicationToRealWorldData}
 
-We will apply the community detection algorithms to real-world data in the form of an Amazon product co-purchasing network made available by Yang and Leskovec \cite{YL12}. The data is available to download from \url{http://snap.stanford.edu/data/com-Amazon.html}, and as explained on the site, the network was collected by crawling the Amazon website, and creating an undirected graph with nodes representing products and edges present between node $i$ and $j$ if product $i$ is frequently co-purchased with product $j$. They regard each connected component in a product category as separate ground-truh community, and provide the top 5,000 communities with `highest quality' as described in \cite{YL12}. 
+We will apply the community detection algorithms to real-world data. One example is an Amazon product co-purchasing network made available by Yang and Leskovec \cite{YL12}. The data is available to download from \url{http://snap.stanford.edu/data/com-Amazon.html}, and as explained on the site, the network was collected by crawling the Amazon website, and creating an undirected graph with nodes representing products and edges present between node $i$ and $j$ if product $i$ is frequently co-purchased with product $j$. They regard each connected component in a product category as separate ground-truh community, and provide the top 5,000 communities with `highest quality' as described in \cite{YL12}.
+
+Another example of an application is the use of community detection in financial networks, where the aim is to identify groups of nodes with stronger correlation internally than with the rest of the network \cite{MG13}. We will investigate the problem where the network is a weighted undirected graph, with nodes representing assets and the weight on the edges representing the correlation between the assets associated with the nodes connected by the edge. Note that in this setting there is an edge connecting every pair of nodes, and loops are present, hence every element of the adjacency matrix for this graph equals 1. Rather, the weights of the edges are crucial in determining community memberships, as we will now explain. We will consider the same model as described by MacMahon and Garlaschelli \cite{MG13}.
+
+Firstly, consider $n$ nodes in the graph, where each node represents an asset, and assign to the $i$-th node a single time series, $X_{i}$, defined as
+\begin{equation}
+\label{eq:singleTimeSeries}
+	X_{i} = \{x_{i}(1),\dots,x_{i}(T)\}
+\end{equation}
+This time series describes the evolution of the logarithmic return over $T$ time steps (i.e. $x_{i}(t) = \ln p_{i}(t) - \ln p_{i}(t-1)$ where $p_{i}(t)$ is the price of asset $i$ at time $t$).
+In this case we may assume each time step is a trading day. We then model the weight of an edge connecting nodes $i$ and $j$ of the graph as the cross-correlation between the time series associated with those nodes, and specifically define a cross-correlation matrix, $\mathbf{C}$, whose elements $(C_{ij})$ are
+\begin{equation}
+\label{eq:crossCorrelationMatrix}
+	C_{ij} = corr[X_{i},X_{j}] = \frac{cov[X_{i},X_{j}]}{\sigma_{i} \cdot \sigma_{j}}
+\end{equation}
+where
+\begin{equation}
+\label{eq:sampleCovariance}
+	cov[X_{i},X_{j}] = \mean{X_{i} X_{j}} - \mean{X_{i}} \cdot \mean{X_{j}}
+\end{equation}
+is the sample covariance of $X_{i}$ and $X_{j}$,
+\begin{equation}
+\label{eq:sampleVariance}
+	\sigma_{i}^{2} = \mean{X_{i}^{2}} - \mean{X_{i}}^{2}
+\end{equation}
+is the sample variance of $X_{i}$, and the $\mean{\dots}$ notation denotes a time average, so
+\begin{equation}
+\label{eq:temporalMean}
+	\mean{X_{i}} = \frac{1}{T} \sum_{t=1}^{T}x_{i}(t)
+\end{equation}
+\begin{equation}
+\label{eq:temporalMeanSquare}
+	\mean{X_{i}^{2}} = \frac{1}{T} \sum_{t=1}^{T}x_{i}^{2}(t)
+\end{equation}
+\begin{equation}
+\label{eq:temporalMeanProduct}
+	\mean{X_{i}X_{j}} = \frac{1}{T} \sum_{t=1}^{T}x_{i}(t)x_{j}(t)
+\end{equation}
+As in \cite{MG13}, we will assume each time series $X_{i}$ has been filtered to have zero temporal mean and unit sample variance (by using $X_{i} \coloneqq (X_{i} - \mean{X_{i}}) / \sigma_{i}$), so that
+\begin{equation}
+\label{eq:zeroSampleMean}
+	\mean{X_{i}} = 0
+\end{equation}
+\begin{equation}
+\label{eq:unitSampleVariance}
+	\sigma_{i} = 1
+\end{equation}
+
+Now we have defined our model, we aim to partition the network into communities of assets whose members have a larger correlation between themselves than with the rest of the graph.
+
+In order to find such partitions, we will modify the community detection algorithms we considered for the first part of the project (this is necessary since we no longer consider the connectivity of nodes in the graph but rather the weights of the edges). We will use a dataset provided by Onnela (\url{http://jponnela.com}), which contains 4787 price quotes for 116 NYSE stocks from the S\&P 500 index, in order to test the behaviour of algorithms in recovering community structure.
 
 %------------------------------------
 %---   Crowdsourcing Systems Section   ---
 %------------------------------------
 \subsection{Crowdsourcing Systems}
-\label{sec:background;subsec:crowdsourcingSystems}
+\label{subsec:crowdsourcingSystems}
 
 Crowdsourcing systems, such as Amazon Mechanical Turk (\url{http://www.mturk.com}), aim to solve taks using human-powered problem solving, where humans, which we will call users (collectively known as the crowd), are paid a small fee for their rating of an item \cite{KOS13,EHR12}. The aim of crowdsourcing algorithms is to interpret the user's responses to infere the true rating. Many platforms including Amazon Mechanical Turk have a large, anonymous, crowd as a workforce so it is difficult to leverage the fee paid on correct ratings since they may be subjective and true ratings not known \cite{KOS13}. Therefore, most crowdsourcing systems introduce redundancy by asking for a rating to each item from several users and aggregating the results by giving each user's response the same weighting \cite{GKM11,KOS13,DDK+13}.
 
@@ -400,7 +460,7 @@ The problem of assigning items to users (i.e. deciding which set of items each u
 %---   Probabilistic Model Sub-Section   ---
 %------------------------------------
 \subsubsection{Probabilistic Model}
-\label{sec:background;subsec:crowdsourcingSystems;subsubsec:probabilisticModel}
+\label{subsubsec:crowdsourcingProbabilisticModel}
 
 We will now describe the probabilistic model considered by Karger et al. \cite{KOS13}, which is very similar to those considered by \cite{GKM11,DDK+13}.
 
@@ -428,7 +488,7 @@ We assume the user's reliabilities are independent and identically distributed r
 \end{equation*}
 This model assumes the crowd consists of only two types of users, a `hammer' and a `spammer'. A hammer rates all items correctly, so can be thought of as perfectly reliable users with their reliability equal to $1$. A spammer rates items by giving random responses, essentially flipping a fair coin and using the result as their answer, meaning their reliability is equal to $1/2$.  Moreover, since the distribution of $\mathbf{p}$ charcaterises the crowd, we can define the collective quality parameter by
 \begin{equation*}
-	q \equiv \mathbb{E}[(2\mathbf{p}-1)^{2}].
+	q = \mathbb{E}[(2\mathbf{p}-1)^{2}].
 \end{equation*}
 Note that the parameter in the spammer-hammer model is consistent with this definition of $q$.
 Clearly, using this model with larger values of $q$ increases the portion of hammers and thus the intelligence of the crowd. We will be interested how the error rate of different algorithms vary as we alter the value of $q$.
@@ -453,18 +513,18 @@ Details of the work that has been done so far is given below.
 \begin{itemize}
 	\item \textbf{Research, understand and implement community detection algorithms.}
 
-	\textit{Status: Completed.}	
+	\textit{Status: Almost Completed.}	
 
-	We have spent several months researching the problem of community detection in graphs. Firstly, we analysed the problem specifications, essentially the literature summarised in section \ref{sec:background;subsec:communityDetection}. Then we proceeded to survey different community detection algorithms, including spectral clustering (using Laplacian and Modularity matrices) and message passing (such as belief propagation and approximate message passing). We have also implemented some of these methods (spectral clustering so far) and applied them to synthetic data generated by the stochastic block model, using MATLAB and C++ implementations.
+	We have spent several months researching the problem of community detection in graphs. Firstly, we analysed the problem specifications, essentially the literature summarised in section \ref{subsec:communityDetection}. Then we proceeded to survey different community detection algorithms, including spectral clustering (using Laplacian and Modularity matrices) and message passing (such as belief propagation and approximate message passing). We have also implemented some of these methods (spectral clustering so far) and applied them to synthetic data generated by the stochastic block model, using MATLAB and C++ implementations.
 
 	\item \textbf{Research, understand and implement crowdsourcing algorithms.}
 
 	\textit{Status: Completed.}
 
-	Recently, we turned our attention to the crowdsourcing problem. Starting by surveying the relevant literature explaining the problem, as summarised in section \ref{sec:background;subsec:crowdsourcingSystems}, we proceeded to implement the basic setting and algorithms such as majority voting, singular vector and iterative message passing.
+	Recently, we turned our attention to the crowdsourcing problem. Starting by surveying the relevant literature explaining the problem, as summarised in section \ref{subsec:crowdsourcingSystems}, we proceeded to implement the basic setting and algorithms such as majority voting, singular vector and iterative message passing.
 \end{itemize}
 
-Details of work that is to be done in the remainder of the project is given below.
+Details of work that will be done in the remainder of the project is given below.
 \begin{itemize}
 	\item \textbf{Finish implementing message passing algorithms for community detection.}
 
@@ -476,26 +536,26 @@ Details of work that is to be done in the remainder of the project is given belo
 
 	\textit{Status: Estimated completion date of April 2014.}	
 
-	We aim to utilise our implementations of these algorithms in order to test them among different synthetic data settings (by altering paramters of model such as sparsity, number of communities and size of communities). The results of these tests, within the generative model as described in section \ref{sec:background;subsec:communityDetection;subsubsec:stochasticBlockModel}, will allow us to thoroughly compare the algorithms and provide recommendations (i.e. which algorithm we believe will perform best) for specific problem settings.
+	We aim to utilise our implementations of these algorithms in order to test them among different synthetic data settings (by altering paramters of model such as sparsity, number of communities and size of communities). The results of these tests, within the generative model as described in section \ref{subsubsec:stochasticBlockModel}, will allow us to thoroughly compare the algorithms and provide recommendations (i.e. which algorithm we believe will perform best) for specific problem settings.
 
 	\item \textbf{Analysis of different algorithms for crowdsourcing systems using synthetic data.}
 
 	\textit{Status: Estimated completion date of May 2014.}	
 
-	We wish to analyse the algorithms for crowdsourcing systems using synthetc data generated by the model described in section \ref{sec:background;subsec:crowdsourcingSystems;subsubsec:probabilisticModel}.
+	We wish to analyse the algorithms for crowdsourcing systems using synthetc data generated by the model described in section \ref{subsubsec:crowdsourcingProbabilisticModel}.
 
 	\item \textbf{Apply community detection algorithms to real-world data.}
 
 	\textit{Status: Estimated completion date of June 2014.}	
 
-	We wish to apply some of the community detection algorithms we have studied to real-world networks described in section \ref{sec:background;subsec:communityDetection;subsubsec:applicationToRealWorldData}. This involves parsing the data taken into a suitable format and using the Stanford Network Analysis Platform (SNAP) C++ library to help represent the network and apply the algorithms. It is available from \url{http://snap.stanford.edu/snap/index.html}, and we will use it to represent the large network and implement suitable (in terms of complexity) algorithms.
+	We wish to apply some of the community detection algorithms we have studied to real-world networks described in section \ref{subsubsec:communityDetectionApplicationToRealWorldData}. This involves parsing the data taken into a suitable format and using the Stanford Network Analysis Platform (SNAP) C++ library, available from \url{http://snap.stanford.edu/snap/index.html}, to represent the large network and implement suitable algorithms.
 \end{itemize}
 
 Details of fall back options in case any of the planned milestones can not be achieved is summarised below.
 \begin{itemize}
 	\item \textbf{Only consider financial networks for real-world data applications.}
 
-	The difficulty in apply algorithms to real-world datasets revolves around the size of the graphs considered. For example, the Amazon co-purchasing network has 334,683 nodes and 925,872 edges and storing and operating on this data requires far more attention and care than smaller graphs (below 1000 nodes for instance) that we would consider for financial networks.
+	The difficulty in apply algorithms to real-world datasets revolves around the size of the graphs considered. For example, the Amazon co-purchasing network has 334,683 nodes and 925,872 edges and storing and operating on this data requires far more attention and care than smaller graphs (below 1000 nodes for instance) that we would consider for financial networks. Thus, we would implement modified version of the algorithms to financial networks, some examples mentioned in section \ref{subsubsec:communityDetectionApplicationToRealWorldData}, and not on social network data.
 \end{itemize}
 
 %----------------------------------------------------------------------------------------
