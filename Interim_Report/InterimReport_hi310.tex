@@ -45,10 +45,10 @@
     pdfkeywords={Hesam Ipakchi, Interim Report}, % list of keywords
     pdfnewwindow=true, % links in new window
     colorlinks=true, % false: boxed links; true: colored links
-    linkcolor=red, % color of internal links (change box color with linkbordercolor)
-    citecolor=blue, % color of links to bibliography
-    filecolor=magenta, % color of file links
-    urlcolor=cyan  % color of external links
+    linkcolor=black, % color of internal links (change box color with linkbordercolor)
+    citecolor=black, % color of links to bibliography
+    filecolor=black, % color of file links
+    urlcolor=black  % color of external links
 }
 \urlstyle{same}
 
@@ -171,7 +171,7 @@ Succinct project deliverables, alongside detailed explanations, are given below.
 
 	\item \textbf{Investigate behaviour of different community detection algorithms using real-world data.}
 
-	We aim to apply community detection algorithms to real-world data, for example, in the form of an Amazon product co-purchasing network made available by Yang and Leskovec \cite{YL12}, or a financial network made available by Onnela et al. \cite{OFR+12}. By applying the algorithms to a dataset, we can get a better appreciation of the behaviour of algorithms in real-world settings.
+	We aim to apply community detection algorithms to real-world data, for example, in the form of an Amazon product co-purchasing network made available by Yang and Leskovec \cite{YL12}, or a financial network made available by Onnela (\url{http://jponnela.com}). By applying the algorithms to a dataset, we can get a better appreciation of the behaviour of algorithms in real-world settings.
 \end{itemize}
 
 %----------------------------------------------------------------------------------------
@@ -261,7 +261,7 @@ From definition \ref{def:adjacencyMatrix} it follows that elements of the adjace
 		0 & \text{otherwise}.
 	\end{cases}
 \end{equation*}
-Note that the sum of elements of the $i$-th row of the adjacency matrix yields the degree of node $i$ of the graph, $d_{i} = \sum\limits_{j} A_{ij}$. Also, the adjacency matrix is symmetric if the graph is undirected.
+Note that the sum of elements of the $i$-th row of the adjacency matrix yields the degree of node $i$ of the graph, $d_{i} = \sum_{j} A_{ij}$. Also, the adjacency matrix is symmetric if the graph is undirected.
 
 There are other matrices that have also been studied extensively in spectral graph theory, including the Laplacian which is applied in topics such as graph partitioning, synchronisation and graph connectivity \cite{For10}.
 \begin{definition}
@@ -322,21 +322,21 @@ In order to help provide a setting where different algorithms may be compared, w
 \label{subsubsec:stochasticBlockModel}
 
 The stochastic block model has parameters: $n$, $k$, $p_{in}$ and $p_{out}$. $n$ represents the number of nodes, $k$ represents the number of communities, $p_{in}$ represents the probability of an edge occurring between two nodes belonging to the same community and $p_{out}$ represents the probability of an edge occurring between two nodes belonging to the different communities. Since we are focused on assortative community structure, we consider the case where $p_{in} > p_{out}$. We then assign, to each node of the graph, a label indicating which community the node belongs to; so let $\sigma_{i} \in \{1,\dots,k\}$ be the label of node $i$, for $i = 1,\dots,n$. Also, let $\mathbfit{\sigma} = [\sigma_{1},\dots,\sigma_{n}]^{T}$ be the node assignments of the graph. We proceed to generate a random graph, $\mathcal{G}$, on $n$ nodes, $k$ communities and node assignments, $\mathbfit{\sigma} = [\sigma_{1},\dots,\sigma_{n}]^{T}$, with the adjacency matrix of the graph, $\mathbf{A}$ whose elements $(A_{ij})$ are defined as
-\begin{equation*}
+\begin{equation}
 	A_{ij} =
 	\begin{cases}
 		0 & \text{if } i = j\\
 		X & \text{otherwise},
 	\end{cases}
-\end{equation*}
+\end{equation}
 where $X \sim Be(p_{ij})$ and {$p_{ij}$} is defined as
-\begin{equation*}
+\begin{equation}
 	p_{ij} =
 	\begin{cases}
 		p_{in} & \text{if } \sigma_{i} = \sigma_{j}\\
 		p_{out} & \text{otherwise}.
 	\end{cases}
-\end{equation*}
+\end{equation}
 This formulation matches the intuition of assortative community structure, that the connectivity between two nodes depends solely on the community memeberships of the two nodes; specificallly there is a greater probability of an edge occurring between nodes belonging to the same community than with belonging to different communities. Note, also, that we do not allow loops in the model.
 
 Typically, community detection within dense graphs (those with a dense adjacency matrix) is straightforward \cite{DKM+13}, thus we are especially interested in community detection within sparse graphs (those with a sparse adjacency matrix) where $p_{in}$, $p_{out} = O(1/n)$. When we consider the sparse regime, it will be more convenient to work with $c_{in} = np_{in}$ and $c_{out} = np_{out}$.
@@ -403,7 +403,7 @@ Firstly, consider $n$ nodes in the graph, where each node represents an asset, a
 \label{eq:singleTimeSeries}
 	X_{i} = \{x_{i}(1),\dots,x_{i}(T)\}
 \end{equation}
-This time series describes the evolution of the logarithmic return over $T$ time steps (i.e. $x_{i}(t) = \ln p_{i}(t) - \ln p_{i}(t-1)$ where $p_{i}(t)$ is the price of asset $i$ at time $t$).
+This time series describes the evolution of the logarithmic return of the asset over $T$ time steps (i.e. $x_{i}(t) = \ln p_{i}(t) - \ln p_{i}(t-1)$ where $p_{i}(t)$ is the price of asset $i$ at time $t$).
 In this case we may assume each time step is a trading day. We then model the weight of an edge connecting nodes $i$ and $j$ of the graph as the cross-correlation between the time series associated with those nodes, and specifically define a cross-correlation matrix, $\mathbf{C}$, whose elements $(C_{ij})$ are
 \begin{equation}
 \label{eq:crossCorrelationMatrix}
@@ -422,15 +422,15 @@ is the sample covariance of $X_{i}$ and $X_{j}$,
 is the sample variance of $X_{i}$, and the $\mean{\dots}$ notation denotes a time average, so
 \begin{equation}
 \label{eq:temporalMean}
-	\mean{X_{i}} = \frac{1}{T} \sum_{t=1}^{T}x_{i}(t)
+	\mean{X_{i}} = \frac{1}{T} \sum_{t=1}^{T} x_{i}(t)
 \end{equation}
 \begin{equation}
 \label{eq:temporalMeanSquare}
-	\mean{X_{i}^{2}} = \frac{1}{T} \sum_{t=1}^{T}x_{i}^{2}(t)
+	\mean{X_{i}^{2}} = \frac{1}{T} \sum_{t=1}^{T} x_{i}^{2}(t)
 \end{equation}
 \begin{equation}
 \label{eq:temporalMeanProduct}
-	\mean{X_{i}X_{j}} = \frac{1}{T} \sum_{t=1}^{T}x_{i}(t)x_{j}(t)
+	\mean{X_{i}X_{j}} = \frac{1}{T} \sum_{t=1}^{T} x_{i}(t)x_{j}(t)
 \end{equation}
 As in \cite{MG13}, we will assume each time series $X_{i}$ has been filtered to have zero temporal mean and unit sample variance (by using $X_{i} \coloneqq (X_{i} - \mean{X_{i}}) / \sigma_{i}$), so that
 \begin{equation}
@@ -444,7 +444,7 @@ As in \cite{MG13}, we will assume each time series $X_{i}$ has been filtered to 
 
 Now we have defined our model, we aim to partition the network into communities of assets whose members have a larger correlation between themselves than with the rest of the graph.
 
-In order to find such partitions, we will modify the community detection algorithms we considered for the first part of the project (this is necessary since we no longer consider the connectivity of nodes in the graph but rather the weights of the edges). We will use a dataset provided by Onnela (\url{http://jponnela.com}), which contains 4787 price quotes for 116 NYSE stocks from the S\&P 500 index, in order to test the behaviour of algorithms in recovering community structure.
+In order to find such partitions, we will modify the community detection algorithms we considered for the first part of the project (the modification is necessary since we no longer consider the connectivity of nodes in the graph but rather the weights of the edges). We will use datasets corresponding to different indicies, in order to test the behaviour of algorithms in recovering community structure. For example, one dataset is available from \url{http://jponnela.com}, which contains 4787 price quotes for 116 NYSE stocks from the S\&P 500 index. Also, historical prices for FTSE 100 stocks are available from \url{http://uk.finance.yahoo.com}.
 
 %------------------------------------
 %---   Crowdsourcing Systems Section   ---
@@ -469,27 +469,27 @@ There are a set of $m$ binary items with unobserved ratings, $\mathbfit{t} = [t_
 Let us denote the reliability (probability of rating an item correctly) of the $j$-th user by $p_{j} \in [0,1]$, with the crowd reliability characterised as $\mathbf{p} = [p_{1},\dots,p_{n}]^{T}$. Note that the reliability of each user is the same no matter which item is being attempted, so here we do not consider any notion of diffculty of rating items. We also emphasize that the user reliability values $p_{j}$ are unknown to the system (and thus the algorithms), and accurate approximation of them within algorithms will be important for achieving low error rates.
 
 The matrix of user's responses is called the \textit{response matrix}, $\mathbf{R} \in \{-1,0,1\}^{m \times n}$, and is defined by
-\begin{equation*}
+\begin{equation}
 	R_{ij} =
 	\begin{cases}
 		0 & \text{if } i \not \in T_{j}\\
 		t_{i} & \text{with probability }  p_{j} \text{ if } i \in T_{j}\\
 		-t_{i} & \text{otherwise}.
 	\end{cases}
-\end{equation*}
+\end{equation}
 
 We assume the user's reliabilities are independent and identically distributed random variables as defined by the \textit{spammer-hammer model} and a `collective quality' parameter denoted by $q$,
-\begin{equation*}
+\begin{equation}
 	p_{j} =
 	\begin{cases}
 		1/2 & \text{with probability } 1-q\\
 		1 & \text{otherwise}.
 	\end{cases}
-\end{equation*}
+\end{equation}
 This model assumes the crowd consists of only two types of users, a `hammer' and a `spammer'. A hammer rates all items correctly, so can be thought of as perfectly reliable users with their reliability equal to $1$. A spammer rates items by giving random responses, essentially flipping a fair coin and using the result as their answer, meaning their reliability is equal to $1/2$.  Moreover, since the distribution of $\mathbf{p}$ charcaterises the crowd, we can define the collective quality parameter by
-\begin{equation*}
+\begin{equation}
 	q = \mathbb{E}[(2\mathbf{p}-1)^{2}].
-\end{equation*}
+\end{equation}
 Note that the parameter in the spammer-hammer model is consistent with this definition of $q$.
 Clearly, using this model with larger values of $q$ increases the portion of hammers and thus the intelligence of the crowd. We will be interested how the error rate of different algorithms vary as we alter the value of $q$.
 
@@ -555,7 +555,7 @@ Details of fall back options in case any of the planned milestones can not be ac
 \begin{itemize}
 	\item \textbf{Only consider financial networks for real-world data applications.}
 
-	The difficulty in apply algorithms to real-world datasets revolves around the size of the graphs considered. For example, the Amazon co-purchasing network has 334,683 nodes and 925,872 edges and storing and operating on this data requires far more attention and care than smaller graphs (below 1000 nodes for instance) that we would consider for financial networks. Thus, we would implement modified version of the algorithms to financial networks, some examples mentioned in section \ref{subsubsec:communityDetectionApplicationToRealWorldData}, and not on social network data.
+	The difficulty in apply algorithms to real-world datasets revolves around the size of the graphs considered. For example, the Amazon co-purchasing network has 334,683 nodes and 925,872 edges and storing and operating on this data requires far more attention and care than smaller graphs (below 1000 nodes for instance) that we would consider for financial networks. Thus, we would implement modified version of the algorithms to financial networks, some examples are mentioned in section \ref{subsubsec:communityDetectionApplicationToRealWorldData}, and not on social network data.
 \end{itemize}
 
 %----------------------------------------------------------------------------------------
