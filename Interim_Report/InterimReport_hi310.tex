@@ -396,25 +396,19 @@ Mossel, Neeman and Sly \cite{MNS12} proved the undetectable phase region of the 
 
 We will apply the community detection algorithms to real-world data. One example is an Amazon product co-purchasing network made available by Yang and Leskovec \cite{YL12}. The data is available to download from \url{http://snap.stanford.edu/data/com-Amazon.html}, and as explained on the site, the network was collected by crawling the Amazon website, and creating an undirected graph with nodes representing products and edges present between node $i$ and $j$ if product $i$ is frequently co-purchased with product $j$. They regard each connected component in a product category as separate ground-truh community, and provide the top 5,000 communities with `highest quality' as described in \cite{YL12}.
 
-Another example of an application is the use of community detection in financial networks, where the aim is to identify groups of nodes with stronger correlation internally than with the rest of the network \cite{MG13}. We will investigate the problem where the network is a weighted undirected graph, with nodes representing assets and the weight on the edges representing the correlation between the assets associated with the nodes connected by the edge. Note that in this setting there is an edge connecting every pair of nodes, and loops are present, hence every element of the adjacency matrix for this graph equals 1. Rather, the weights of the edges are crucial in determining community memberships, as we will now explain. We will consider the same model as described by MacMahon and Garlaschelli \cite{MG13}.
+Another example of an application is the use of community detection in financial networks, where the aim is to identify groups of nodes with stronger correlation internally than with the rest of the network \cite{MG13}. We will investigate the problem where the network is a weighted undirected graph, with nodes representing assets and the weight on the edges representing the correlation between the assets associated with the nodes connected by the edge. Note that in this setting there is an edge connecting every pair of nodes. Contrary to graphs with community structure considered earlier in the project, the weights of the edges are crucial in determining community memberships. We will consider the following model as described by MacMahon and Garlaschelli \cite{MG13}.
 
 Firstly, consider $n$ nodes in the graph, where each node represents an asset, and assign to the $i$-th node a single time series, $X_{i}$, defined as
 \begin{equation}
 \label{eq:singleTimeSeries}
 	X_{i} = \{x_{i}(1),\dots,x_{i}(T)\}
 \end{equation}
-This time series describes the evolution of the logarithmic return of the asset over $T$ time steps (i.e. $x_{i}(t) = \ln p_{i}(t) - \ln p_{i}(t-1)$ where $p_{i}(t)$ is the price of asset $i$ at time $t$).
-In this case we may assume each time step is a trading day. We then model the weight of an edge connecting nodes $i$ and $j$ of the graph as the cross-correlation between the time series associated with those nodes, and specifically define a cross-correlation matrix, $\mathbf{C}$, whose elements $(C_{ij})$ are
+This time series describes the evolution of the logarithmic return of the asset over $T$ time steps, trading days in this case, so that $x_{i}(t) = \ln p_{i}(t) - \ln p_{i}(t-1)$ where $p_{i}(t)$ is the price of asset $i$ at time $t$. We then model the weight of an edge connecting nodes $i$ and $j$ of the graph as the cross-correlation between the time series associated with those nodes, and specifically define a cross-correlation matrix, $\mathbf{C}$, whose elements $(C_{ij})$ are
 \begin{equation}
 \label{eq:crossCorrelationMatrix}
-	C_{ij} = corr[X_{i},X_{j}] = \frac{cov[X_{i},X_{j}]}{\sigma_{i} \cdot \sigma_{j}}
+	C_{ij} = \frac{\mean{X_{i} X_{j}} - \mean{X_{i}} \cdot \mean{X_{j}}}{\sigma_{i} \cdot \sigma_{j}}
 \end{equation}
 where
-\begin{equation}
-\label{eq:sampleCovariance}
-	cov[X_{i},X_{j}] = \mean{X_{i} X_{j}} - \mean{X_{i}} \cdot \mean{X_{j}}
-\end{equation}
-is the sample covariance of $X_{i}$ and $X_{j}$,
 \begin{equation}
 \label{eq:sampleVariance}
 	\sigma_{i}^{2} = \mean{X_{i}^{2}} - \mean{X_{i}}^{2}
@@ -444,7 +438,7 @@ As in \cite{MG13}, we will assume each time series $X_{i}$ has been filtered to 
 
 Now we have defined our model, we aim to partition the network into communities of assets whose members have a larger correlation between themselves than with the rest of the graph.
 
-In order to find such partitions, we will modify the community detection algorithms we considered for the first part of the project (the modification is necessary since we no longer consider the connectivity of nodes in the graph but rather the weights of the edges). We will use datasets corresponding to different indicies, in order to test the behaviour of algorithms in recovering community structure. For example, one dataset is available from \url{http://jponnela.com}, which contains 4787 price quotes for 116 NYSE stocks from the S\&P 500 index. Also, historical prices for FTSE 100 stocks are available from \url{http://uk.finance.yahoo.com}.
+In order to find such partitions, we will modify the community detection algorithms we considered for the first part of the project (the modification is necessary since we no longer consider the connectivity of nodes in the graph but rather the weights of the edges). We will use datasets corresponding to different indicies, in order to test the behaviour of algorithms in recovering community structure. For example, one dataset is available from \url{http://jponnela.com}, which contains 4787 price quotes for 116 NYSE stocks from the S\&P 500 index. Also, approximately 2500 daily closing prices of 87 FTSE 100 stocks (from 2004 to 2013) have been collected from \url{http://uk.finance.yahoo.com}, and parsed to form another dataset.
 
 %------------------------------------
 %---   Crowdsourcing Systems Section   ---
@@ -464,7 +458,7 @@ The problem of assigning items to users (i.e. deciding which set of items each u
 
 We will now describe the probabilistic model considered by Karger et al. \cite{KOS13}, which is very similar to those considered by \cite{GKM11,DDK+13}.
 
-There are a set of $m$ binary items with unobserved ratings, $\mathbfit{t} = [t_{1},\dots,t_{m}]^{T}$, where the true rating of the $i$-th item is $t_{i} \in \{-1,1\}$. Assume we need $n$ users in the crowd, of whom we allocate tasks to. Referring to task allocation, denote $T_{j} \subseteq \{1,\dots,m\}$ as the set of items assigned to the $j$-th user, with a limit of $r$ items that can be assigned to an individual to avoid overloading a user, meaning $\left\vert{T_{j}}\right\vert \le r \text{ for } j=1,\dots,n$.
+There are a set of $m$ binary items with unobserved ratings, $\mathbfit{t} = [t_{1},\dots,t_{m}]^{T}$, where the true rating of the $i$-th item is $t_{i} \in \{-1,1\}$ $\text{ for } i=1,\dots,m$. Assume we need $n$ users in the crowd, of whom we allocate tasks to. Referring to task allocation, denote $T_{j} \subseteq \{1,\dots,m\}$ as the set of items assigned to the $j$-th user, with a limit of $r$ items that can be assigned to an individual to avoid overloading a user, meaning $\left\vert{T_{j}}\right\vert \le r \text{ for } j=1,\dots,n$.
 
 Let us denote the reliability (probability of rating an item correctly) of the $j$-th user by $p_{j} \in [0,1]$, with the crowd reliability characterised as $\mathbf{p} = [p_{1},\dots,p_{n}]^{T}$. Note that the reliability of each user is the same no matter which item is being attempted, so here we do not consider any notion of diffculty of rating items. We also emphasize that the user reliability values $p_{j}$ are unknown to the system (and thus the algorithms), and accurate approximation of them within algorithms will be important for achieving low error rates.
 
@@ -555,7 +549,7 @@ Details of fall back options in case any of the planned milestones can not be ac
 \begin{itemize}
 	\item \textbf{Only consider financial networks for real-world data applications.}
 
-	The difficulty in apply algorithms to real-world datasets revolves around the size of the graphs considered. For example, the Amazon co-purchasing network has 334,683 nodes and 925,872 edges and storing and operating on this data requires far more attention and care than smaller graphs (below 1000 nodes for instance) that we would consider for financial networks. Thus, we would implement modified version of the algorithms to financial networks, some examples are mentioned in section \ref{subsubsec:communityDetectionApplicationToRealWorldData}, and not on social network data.
+	The difficulty in apply algorithms to real-world datasets revolves around the size of the graphs considered. For example, the Amazon co-purchasing network has 334,683 nodes and 925,872 edges and storing and operating on this data requires far more attention and care than smaller graphs (below 1000 nodes for instance) that we would consider for financial networks. Thus, we would implement modified version of the algorithms to financial networks, with some examples are mentioned in section \ref{subsubsec:communityDetectionApplicationToRealWorldData}, and not on social network data.
 \end{itemize}
 
 %----------------------------------------------------------------------------------------

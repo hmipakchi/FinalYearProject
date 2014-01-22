@@ -1,14 +1,20 @@
 clear;
 
+% S&P 500 Data
 load('stockdata.mat');
+priceMatrix = price;
 
-[n,T] = size(price);
+% FTSE 100 Data
+FTSEStockDataFilename = 'outputStockData.txt';
+priceMatrix = dlmread(FTSEStockDataFilename);
+
+[n,T] = size(priceMatrix);
 
 n_str = num2str(n);
 T_str = num2str(T);
 
 % calculate logarithmic returns for stock price data
-logReturns = calculateLogarithmicReturns(price);
+logReturns = calculateLogarithmicReturns(priceMatrix);
 
 % calculate calculate time average and sample variance of logarithmic returns
 timeAverage = calculateTimeAverage(logReturns);
@@ -23,15 +29,15 @@ meanProductTimeAverage = calculateMeanProductTimeAverage(logReturns);
 sampleCrossCorrelationMatrix = calculateSampleCrossCorrelationMatrix(logReturns);
 
 % write sample cross-correlation returns to file
-% filename_str = sprintf('../data_files/financialNetworks/crossCorrelation_n_%s_T_%s.dat',n_str,T_str);
-% fileID = fopen(filename_str,'w');
-% for i=1:n
-%     for j=1:n
-%         fprintf(fileID,'%d ',sampleCrossCorrelationMatrix(i,j));
-%     end
-%     fprintf(fileID,'\n');
-% end
-% fclose(fileID);
+filename_str = sprintf('../data_files/financialNetworks/crossCorrelation_n_%s_T_%s.dat',n_str,T_str);
+fileID = fopen(filename_str,'w');
+for i=1:n
+    for j=1:n
+        fprintf(fileID,'%d ',sampleCrossCorrelationMatrix(i,j));
+    end
+    fprintf(fileID,'\n');
+end
+fclose(fileID);
 
 % plot density of eigenvalues of sample cross-correlation matrix
 eigenvalues = [];
