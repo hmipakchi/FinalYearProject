@@ -3,7 +3,7 @@
 
 int main(int argc, char* argv[]) {
     Env = TEnv(argc, argv, TNotify::StdNotify);
-    Env.PrepArgs(TStr::Fmt("\nGenerate different synthetic networks & cascades. build: %s, %s. Time: %s", __TIME__, __DATE__, TExeTm::GetCurTm()));
+    Env.PrepArgs(TStr::Fmt("\nGenerate stochastic block model networks. build: %s, %s. Time: %s", __TIME__, __DATE__, TExeTm::GetCurTm()));
     TExeTm ExeTm;
     Try
     
@@ -19,26 +19,15 @@ int main(int argc, char* argv[]) {
     TStr networkFilename = TStr("test-network-sbm.txt");
     TStr networkAdjacencyMatrixFilename = TStr("test-network-sbm-adjacency-matrix.txt");
     TStr networkGexfFilename = TStr("test-network-sbm.gexf");
+    TStr networkLouvainFormatFilename = TStr("test-network-sbm-louvain.txt");
+    TStr louvainTreeFilename = TStr("test-network-sbm-louvain.tree");
+    TStr communityLabelsFilename = TStr("test-network-sbm-assignments.txt");
     
     graphAlgo.saveGroundTruth(networkFilename);
     graphAlgo.saveGroundTruthAdjacencyMatrix(networkAdjacencyMatrixFilename);
     graphAlgo.saveGroundTruthGexf(networkGexfFilename);
-    
-//    TGreedyAlg::TSpectralClusteringAlg spectralClusteringAlg;
-//    
-//    spectralClusteringAlg.generateUndirectedTestGraph(noNodes, d_regular, pEdgeWithinCommunityNodes);
-//    
-//    spectralClusteringAlg.generateGroundTruthUndirectedTestAdjacencyMatrix();
-//    
-//    spectralClusteringAlg.initialiseLaplacianMatrix(spectralClusteringAlg.getGroundTruthUndirectedTestGraph(), d_regular);
-//    
-//    TLAMisc::SaveMatlabTFltVV(spectralClusteringAlg.laplacianMatrix, TStr("laplacian-matrix.txt"));
-    
-//    spectralClusteringAlg.calculateLaplacianEigenvectors();
-//    
-//    spectralClusteringAlg.applyKMeansClusteringToEmbeddedVectors(noColours);
-//    
-//    spectralClusteringAlg.printClusterAssignments();
+    graphAlgo.convertGroundTruthToLouvainFormat(networkLouvainFormatFilename);
+    graphAlgo.saveCommunityLabels(communityLabelsFilename, noNodes, noCommunities);
     
     Catch
     printf("\nrun time: %s (%s)\n", ExeTm.GetTmStr(), TSecTm::GetCurTm().GetTmStr().CStr());
