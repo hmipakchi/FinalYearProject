@@ -1,12 +1,16 @@
 clear;
 
 % S&P 500 Data
-load('stockdata.mat');
-priceMatrix = price;
+% load('stockdata.mat');
+% priceMatrix = price;
 
-% FTSE 100 Data
+% FTSE 100 Data and tickers
 FTSEStockDataFilename = 'outputStockData.txt';
 priceMatrix = dlmread(FTSEStockDataFilename);
+tickersFilename = 'tickers.txt';
+fileID = fopen(tickersFilename);
+tickersVector = textscan(fileID,'%s');
+fclose(fileID);
 
 [n,T] = size(priceMatrix);
 
@@ -29,15 +33,15 @@ meanProductTimeAverage = calculateMeanProductTimeAverage(logReturns);
 sampleCrossCorrelationMatrix = calculateSampleCrossCorrelationMatrix(logReturns);
 
 % write sample cross-correlation returns to file
-filename_str = sprintf('../data_files/financialNetworks/crossCorrelation_n_%s_T_%s.dat',n_str,T_str);
-fileID = fopen(filename_str,'w');
-for i=1:n
-    for j=1:n
-        fprintf(fileID,'%d ',sampleCrossCorrelationMatrix(i,j));
-    end
-    fprintf(fileID,'\n');
-end
-fclose(fileID);
+% filename_str = sprintf('../data_files/financialNetworks/crossCorrelation_n_%s_T_%s.dat',n_str,T_str);
+% fileID = fopen(filename_str,'w');
+% for i=1:n
+%     for j=1:n
+%         fprintf(fileID,'%d ',sampleCrossCorrelationMatrix(i,j));
+%     end
+%     fprintf(fileID,'\n');
+% end
+% fclose(fileID);
 
 % plot density of eigenvalues of sample cross-correlation matrix
 eigenvalues = [];
@@ -70,4 +74,3 @@ nbins = 200;
 plot(lambda,spectrum/trapz(lambda,spectrum),'red','LineWidth',2);
 hold on;
 plot(theoreticalSpectrum(:,1),theoreticalSpectrum(:,2),'blue','LineWidth',2);
-

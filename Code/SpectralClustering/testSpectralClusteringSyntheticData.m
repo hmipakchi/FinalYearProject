@@ -3,14 +3,14 @@ clear;
 % definition of the stochastic block model
 
 % number vertices
-n = 150;
+n = 200;
 n_str = int2str(n);
 
 % number of communities
 q = 2;
 q_str = int2str(q);
 
-pinValueVector = [0.6; 0.9];
+pinValueVector = [0.9];
 noColumnsInPlot = 1;
 
 for pinValueNo=1:max(size(pinValueVector))
@@ -23,15 +23,22 @@ for pinValueNo=1:max(size(pinValueVector))
     cout = floor(pout*n);
     % let number of iterations be proportional to number of vertices in
     % graph
-    maxNoIterations = n;
+    maxNoIterations = 100;
     deltaCout = (cin - cout) / maxNoIterations;
-
+    
     errorsMatrix = zeros(maxNoIterations, 8);
 
     for iteration=1:maxNoIterations
         
+        display(iteration);
+        
+        % decide which stochastic block model to use
         affinityMatrix = (pout .* ones(q,q)) + ((pin-pout) .* eye(q,q));
 
+%         adjustedBackgroundPertubationMatrix = eye(q,q);
+%         adjustedBackgroundPertubationMatrix(q,q) = 0;
+%         affinityMatrix = (pout .* ones(q,q)) + ((pin-pout) .* adjustedBackgroundPertubationMatrix);
+        
         % choose communitiy for each edge (i.e. 1,...,q)
         nodeCommunities = zeros(n, 1);
         for i=1:n
@@ -57,17 +64,18 @@ for pinValueNo=1:max(size(pinValueVector))
         
         % apply spectral clustering using Modularity method
 %         communityAssignmentsModularity = zeros(n,1);
-        communityAssignmentsModularity = spectralClusteringModularity(adjacencyMatrix, q);
+%         communityAssignmentsModularity = spectralClusteringModularity(adjacencyMatrix, q);
+        communityAssignmentsModularity = fast_newman(adjacencyMatrix);
 
         % apply spectral clustering using Approximate Message Passing (AMP) method
         % Note: only works for 2 communities -> q = 2 !!!
 %         communityAssignmentsAMP = zeros(n,1);
-        communityAssignmentsAMP = spectralClusteringAMP(adjacencyMatrix, pout, 100);
+        communityAssignmentsAMP = spectralClusteringAMP(adjacencyMatrix, pout, 50);
         
         % apply spectral clustering using Approximate Message Passing (AMP) method
         % Note: only works for 2 communities -> q = 2 !!!
-%         communityAssignmentsAMPWithOnsanger = zeros(n,1);
-        communityAssignmentsAMPWithOnsanger = spectralClusteringAMPWithOnsanger(adjacencyMatrix, pout, 100);
+%         communityAssignmentsAMPWithOnsager = zeros(n,1);
+        communityAssignmentsAMPWithOnsager = spectralClusteringAMPWithOnsager(adjacencyMatrix, pout, 50);
 
         % check errors in community detection
         communityDetectionAlgorithmSuccessVector = zeros(n, 4);
@@ -88,7 +96,7 @@ for pinValueNo=1:max(size(pinValueVector))
             else
                 communityDetectionAlgorithmSuccessVector(i,3) = 0;
             end
-            if communityAssignmentsAMPWithOnsanger(i,1) == nodeCommunities(i,1)
+            if communityAssignmentsAMPWithOnsager(i,1) == nodeCommunities(i,1)
                 communityDetectionAlgorithmSuccessVector(i,4) = 1;
             else
                 communityDetectionAlgorithmSuccessVector(i,4) = 0;
@@ -98,7 +106,7 @@ for pinValueNo=1:max(size(pinValueVector))
         summationForOverlapCommunityDetectionLaplacian = sum(communityDetectionAlgorithmSuccessVector(:,1)) / n;
         summationForOverlapCommunityDetectionModularity = sum(communityDetectionAlgorithmSuccessVector(:,2)) / n;
         summationForOverlapCommunityDetectionAMP = sum(communityDetectionAlgorithmSuccessVector(:,3)) / n;
-        summationForOverlapCommunityDetectionAMPWithOnsanger = sum(communityDetectionAlgorithmSuccessVector(:,4)) / n;
+        summationForOverlapCommunityDetectionAMPWithOnsager = sum(communityDetectionAlgorithmSuccessVector(:,4)) / n;
 
         errorsMatrix(iteration, 1) = cin;
         errorsMatrix(iteration, 2) = cout;
@@ -106,7 +114,7 @@ for pinValueNo=1:max(size(pinValueVector))
         errorsMatrix(iteration, 4) = (summationForOverlapCommunityDetectionLaplacian - (1/q)) / (1-(1/q));
         errorsMatrix(iteration, 5) = (summationForOverlapCommunityDetectionModularity - (1/q)) / (1-(1/q));
         errorsMatrix(iteration, 6) = (summationForOverlapCommunityDetectionAMP - (1/q)) / (1-(1/q));
-        errorsMatrix(iteration, 7) = (summationForOverlapCommunityDetectionAMPWithOnsanger - (1/q)) / (1-(1/q));
+        errorsMatrix(iteration, 7) = (summationForOverlapCommunityDetectionAMPWithOnsager - (1/q)) / (1-(1/q));
         
         errorsMatrix(iteration, 4) = abs(errorsMatrix(iteration, 4));
         errorsMatrix(iteration, 5) = abs(errorsMatrix(iteration, 5));
@@ -131,21 +139,29 @@ for pinValueNo=1:max(size(pinValueVector))
         hold on;
         
         %errorsMatrix(i,3) > ((errorsMatrix(i,1) + 1 - sqrt((4*errorsMatrix(i,1))+1)) / errorsMatrix(i,1))
+        
+        % plot results for Laplacian Method
         if errorsMatrix(iteration, 8) <= 0
             scatter(errorsMatrix(i,3),errorsMatrix(i,4),circlePlotSize,'blue');
         else
             scatter(errorsMatrix(i,3),errorsMatrix(i,4),circlePlotSize,'blue');
         end
+        
+        % plot results for Modularity Method
         if errorsMatrix(iteration, 8) <= 0
             scatter(errorsMatrix(i,3),errorsMatrix(i,5),circlePlotSize,'red');
         else
             scatter(errorsMatrix(i,3),errorsMatrix(i,5),circlePlotSize,'red');
         end
+        
+        % plot results for AMP (without Onsager term) Method
         if errorsMatrix(iteration, 8) <= 0
             scatter(errorsMatrix(i,3),errorsMatrix(i,6),circlePlotSize,'green');
         else
             scatter(errorsMatrix(i,3),errorsMatrix(i,6),circlePlotSize,'green');
         end
+        
+        % plot results for AMP (with Onsager term) Method
         if errorsMatrix(iteration, 8) <= 0
             scatter(errorsMatrix(i,3),errorsMatrix(i,7),circlePlotSize,'black');
         else
@@ -154,16 +170,16 @@ for pinValueNo=1:max(size(pinValueVector))
     end
     
     % write algorithms errors to file
-    filename_str = sprintf('data_files/spectralClustering/syntheticDataErrors_pin_%s.dat',pin_str);
-    fileID = fopen(filename_str,'w');
-    for i=1:maxNoIterations
-        fprintf(fileID,'%d ',errorsMatrix(i,3));
-        fprintf(fileID,'%d ',errorsMatrix(i,4));
-        fprintf(fileID,'%d ',errorsMatrix(i,5));
-        fprintf(fileID,'%d ',errorsMatrix(i,6));
-        fprintf(fileID,'%d ',errorsMatrix(i,7));
-        fprintf(fileID,'\n');
-    end
-    fclose(fileID);
+%     filename_str = sprintf('data_files/spectralClustering/syntheticDataErrors_pin_%s.dat',pin_str);
+%     fileID = fopen(filename_str,'w');
+%     for i=1:maxNoIterations
+%         fprintf(fileID,'%d ',errorsMatrix(i,3));
+%         fprintf(fileID,'%d ',errorsMatrix(i,4));
+%         fprintf(fileID,'%d ',errorsMatrix(i,5));
+%         fprintf(fileID,'%d ',errorsMatrix(i,6));
+%         fprintf(fileID,'%d ',errorsMatrix(i,7));
+%         fprintf(fileID,'\n');
+%     end
+%     fclose(fileID);
     
 end
