@@ -25,15 +25,15 @@ T_str = num2str(T);
 logReturns = calculateLogarithmicReturns(priceMatrix);
 
 % write price and log-return time sereis for first stock in list
-whichStock = 1;
-dateFormat = 'yyyy-mm-dd';
-filename = sprintf('../data_files/financialNetworks/price_and_logreturn_timeseries_%s.dat',tickersVector{1,1}{whichStock});
-fileID = fopen(filename,'w');
-for i=1:T
-    fprintf(fileID,'%s %d %d',datestr(testableDatesVector{1,1}{i},dateFormat), priceMatrix(whichStock,i),logReturns(whichStock,i));
-    fprintf(fileID,'\n');
-end
-fclose(fileID);
+% whichStock = 1;
+% dateFormat = 'yyyy-mm-dd';
+% filename = sprintf('../data_files/financialNetworks/price_and_logreturn_timeseries_%s.dat',tickersVector{1,1}{whichStock});
+% fileID = fopen(filename,'w');
+% for i=1:T
+%     fprintf(fileID,'%s %d %d',datestr(testableDatesVector{1,1}{i},dateFormat), priceMatrix(whichStock,i),logReturns(whichStock,i));
+%     fprintf(fileID,'\n');
+% end
+% fclose(fileID);
 
 % calculate calculate time average and sample variance of logarithmic returns
 timeAverage = calculateTimeAverage(logReturns);
@@ -57,6 +57,7 @@ sampleCrossCorrelationMatrix = calculateSampleCrossCorrelationMatrix(logReturns)
 %     fprintf(fileID,'\n');
 % end
 % fclose(fileID);
+
 
 % plot density of eigenvalues of sample cross-correlation matrix
 eigenvalues = [];

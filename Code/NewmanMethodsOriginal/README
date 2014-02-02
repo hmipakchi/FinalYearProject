@@ -1,0 +1,62 @@
+------------------------------------------------------
+### Community Detection using Modulairty (2012)    ###
+### Suite of Modualrity based community detection  ###
+### algorithms                                     ###
+### Dr. Colin Mclean <cmclean5@staffmail.ed.ac.uk> ###
+------------------------------------------------------
+
+Based on the fast community algorithm implemented by Aaron Clauset <aaron@cs.unm.edu>, Chris Moore, Mark Newman, and the R IGraph library Copyright (C) 2007  Gabor Csardi <csardi@rmki.kfki.hu>.
+
+Suite containing three community detection algorithms based on the Modularity measure containing: Geodesic and Random Walk edge Betweenness [1] and Spectral Modularity [2]. 
+
+----------------------------
+*** TO INSTALL AND BUILD ***
+----------------------------
+
+(1) Build clustering package within a convienient location,  by running the Makefile. This should create the executable 'run'.
+
+
+----------------------------
+***       TO RUN         ***
+----------------------------
+
+To run the clustering package at the command line type the following:
+
+ > ./run 1 1 nw network_file.txt 
+
+This will execute the Geodeic edge Betweenness algorithm on the network file. The first argument above sets the random number seed; the second argument selects which of the three algorithms to execute: 1 = Geodesic egde Betweenness, 2 = Random Walk edge Betweenness, 3 = Spectral Modularity. The third argument indicates whether the network file is weighted = w, or unweighted = nw. The final argument is the network file to be analised. 
+
+The network file can have a single header line at the begining. After this, the first two tab separated columns contain the numerical IDs of the network edges, and the additional third column the edge weights. For example network_file.txt could look like this:
+
+    #PPI 1
+    10006 10458
+    7316 10152
+    6709 10006
+
+The use can obtain help on running each of the arguments by typing the following:
+ > ./run -help 
+
+ ./run requires 4 arguments: 
+ argument 1: random number seed  
+ argument 2: the type of algorithm to run 
+ 	   : 1 = Geodesic edge Betweenness
+           : 2 = Random edge Betweenness
+           : 3 = Spectral Betweenness
+ argument 3: specify if network file is *weighted or not: 
+           : w  = Using a weighted network file 
+           : nw = Using a non-weighted network file 
+ argument 4: the network file to run  
+ Example   : 
+ *         : The structure of the network file is:
+ w         : A (interactor) 	 B (interactor) 	 W (weight) 
+ nw        : A (interactor) 	 B (interactor) 
+           : Where A and B are integers and W is a double.
+
+
+----------------------------
+***      References      ***
+----------------------------
+
+ [1] M. Newman & M. Girvan. Finding and evaluating community structure in networks. Physical Review, E 69 (026113), 2004.
+
+ [2] M. Newman. Finding community structure in networks using the eigenvectors of matrices. Physical Review E, 74(3):036104, 2006.

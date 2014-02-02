@@ -17,24 +17,32 @@ using namespace std;
 
 vector<vector<int> > readGroundTruthAssignments(const string& groundTruthAssignmentsFilename);
 
-vector<vector<int> > readAssignmentsFromLouvainTree(const string& louvainTreeFilename, const int& noNodes, const int& noCommunities);
+vector<vector<int> > readAssignmentsFromLouvainTree(const string& louvainAssignmentsFilename, const int& noNodes, const int& noCommunities);
+
+vector<vector<int> > readAssignmentsFromNewman(const string& newmanAssignmentsFilename, const int& noNodes, const int& noCommunities);
 
 int main(int argc, const char * argv[])
 {
-    string groundTruthAssignmentsFilename = "test-network-sbm-assignments.txt";
-    string louvainTreeFilename = "test-network-sbm-louvain.tree";
-    int noNodes, noGTCommunities, noLouCommunities;
-    noNodes = 150;
-    noLouCommunities = 4;
+    string groundTruthAssignmentsFilename = "testData/test-network-sbm-assignments.txt";
+    string louvainAssignmentsFilename = "testData/test-network-sbm-louvain.tree";
+    string newmanAssignmentsFilename = "testData/communities_newman.txt";
+    
+    int noNodes = 150;
+    int noLouvainCommunities = 4;
+    int noNewmanCommunities = 5;
     
     vector<vector<int> > groundTruthAssignments = readGroundTruthAssignments(groundTruthAssignmentsFilename);
     cout << "ground truth assignments:" << endl << groundTruthAssignments << endl;
     
-    vector<vector<int> > louvainAssignments = readAssignmentsFromLouvainTree(louvainTreeFilename, noNodes, noLouCommunities);
+    vector<vector<int> > louvainAssignments = readAssignmentsFromLouvainTree(louvainAssignmentsFilename, noNodes, noLouvainCommunities);
     cout << "louvain assignments:" << endl << louvainAssignments << endl;
+    
+    vector<vector<int> > newmanAssignments = readAssignmentsFromNewman(newmanAssignmentsFilename, noNodes, noNewmanCommunities);
+    cout << "newman assignments:" << endl << newmanAssignments << endl;
     
     groundTruthAssignments.clear();
     louvainAssignments.clear();
+    newmanAssignments.clear();
     
     return 0;
 }
@@ -73,9 +81,9 @@ vector<vector<int> > readGroundTruthAssignments(const string& groundTruthAssignm
     }
 }
 
-vector<vector<int> > readAssignmentsFromLouvainTree(const string& louvainTreeFilename, const int& noNodes, const int& noCommunities) {
+vector<vector<int> > readAssignmentsFromLouvainTree(const string& louvainAssignmentsFilename, const int& noNodes, const int& noCommunities) {
     ifstream fInp;
-    fInp.open(louvainTreeFilename.c_str());
+    fInp.open(louvainAssignmentsFilename.c_str());
     if (fInp.is_open()) {
         vector<vector<int> > louvainAssignments;
         for (int i = 0; i < noNodes; i++) {
@@ -100,7 +108,45 @@ vector<vector<int> > readAssignmentsFromLouvainTree(const string& louvainTreeFil
         return louvainAssignments;
     }
     else {
-        string message = "readAssignmentsFromLouvainTree: error opening file: " + louvainTreeFilename;
+        string message = "readAssignmentsFromLouvainTree: error opening file: " + louvainAssignmentsFilename;
+        throw message.c_str();
+    }
+}
+
+vector<vector<int> > readAssignmentsFromNewman(const string& newmanAssignmentsFilename, const int& noNodes, const int& noCommunities) {
+    ifstream fInp;
+    fInp.open(newmanAssignmentsFilename.c_str());
+    if (fInp.is_open()) {
+        vector<vector<int> > newmanAssignments;
+        string uselessString;
+        // read in "communities"
+        fInp >> uselessString;
+        for (int i = 0; i < noNodes; i++) {
+            int nodeId, communityId;
+            // read in "=" inbetween nodeId and communityId
+            fInp >> nodeId >> uselessString >> communityId;
+            // newman communities tart from 1 not 0!
+            communityId--;
+            if (communityId >= noCommunities) {
+                string message = "readAssignmentsFromLouvainTree: considering nodeId: " + convertIntToString(nodeId) + ", the communityId = " + convertIntToString(communityId) + ", which is above the noCommunities(" + convertIntToString(noCommunities) + ")!!!";
+                throw message.c_str();
+            }
+            vector<int> nodes;
+            if ((int) newmanAssignments.size() <= communityId) {
+                nodes.push_back(nodeId);
+                newmanAssignments.push_back(nodes);
+            }
+            else {
+                nodes = newmanAssignments.at(communityId);
+                nodes.push_back(nodeId);
+                newmanAssignments.at(communityId) = nodes;
+            }
+        }
+        fInp.close();
+        return newmanAssignments;
+    }
+    else {
+        string message = "readAssignmentsFromNewman: error opening file: " + newmanAssignmentsFilename;
         throw message.c_str();
     }
 }
