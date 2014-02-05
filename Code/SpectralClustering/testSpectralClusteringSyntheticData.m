@@ -34,10 +34,6 @@ for pinValueNo=1:max(size(pinValueVector))
         
         % decide which stochastic block model to use
         affinityMatrix = (pout .* ones(q,q)) + ((pin-pout) .* eye(q,q));
-
-%         adjustedBackgroundPertubationMatrix = eye(q,q);
-%         adjustedBackgroundPertubationMatrix(q,q) = 0;
-%         affinityMatrix = (pout .* ones(q,q)) + ((pin-pout) .* adjustedBackgroundPertubationMatrix);
         
         % choose communitiy for each edge (i.e. 1,...,q)
         nodeCommunities = zeros(n, 1);
