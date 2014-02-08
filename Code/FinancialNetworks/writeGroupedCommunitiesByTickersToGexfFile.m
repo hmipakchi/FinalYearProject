@@ -11,9 +11,9 @@ function [] = writeGroupedCommunitiesByTickersToGexfFile( filename_str , communi
     end
     
     maxNoCommunitiesPerColumn = 2;
-    maxNoNodesPerLine = 8;
-    widthText = 150;
-    heightText = 80;
+    maxNoNodesPerLine = 5;
+    widthText = 200;
+    heightText = 100;
     spaceConstant = 2;
     communityColumnSpacing = (maxNoNodesPerLine*widthText)+(spaceConstant*widthText);
     communityRowSpacing = (ceil(max(countMembersEachCommunity)/maxNoNodesPerLine)*heightText)+(spaceConstant*heightText);
@@ -44,4 +44,5 @@ function [] = writeGroupedCommunitiesByTickersToGexfFile( filename_str , communi
     fprintf(fileID,'</gexf>');
 
     fclose(fileID);
+    
 end
