@@ -58,7 +58,6 @@ sampleCrossCorrelationMatrix = calculateSampleCrossCorrelationMatrix(logReturns)
 % end
 % fclose(fileID);
 
-
 % plot density of eigenvalues of sample cross-correlation matrix
 eigenvalues = [];
 % Take real part to compensate for numerical issues
@@ -85,8 +84,31 @@ while eigenvalue <= maxEmpiricalEigenvalue
     eigenvalue = eigenvalue + eigenvalueStep;
 end
 
-nbins = 200;
-[spectrum,lambda] = hist(eigenvalues,nbins);
-plot(lambda,spectrum/trapz(lambda,spectrum),'red','LineWidth',2);
-hold on;
-plot(theoreticalSpectrum(:,1),theoreticalSpectrum(:,2),'blue','LineWidth',2);
+% nbins = 200;
+% [spectrum,lambda] = hist(eigenvalues,nbins);
+% plot(lambda,spectrum/trapz(lambda,spectrum),'red','LineWidth',2);
+% hold on;
+% plot(theoreticalSpectrum(:,1),theoreticalSpectrum(:,2),'blue','LineWidth',2);
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+[V,D] = eig(sampleCrossCorrelationMatrix);
+modularityMatrix = zeros(n,n);
+for i=1:n
+    if (eigenvalues(i) > maxTheoreticalEigenvalue) && (eigenvalues(i) < maxEmpiricalEigenvalue)
+        disp(i);
+        modularityMatrix = modularityMatrix + (eigenvalues(i).*(V(:,i)*V(:,i)'));
+    end
+end
+[fastNewmanModifiedCommunities,fastNewmanModifiedModularity] = fast_newman_modified(modularityMatrix);
+weightedAdjacencyMatrix = zeros(n,n);
+for i=1:n
+    for j=1:n
+        weightedAdjacencyMatrix(i,j) = 0.5*(sampleCrossCorrelationMatrix(i,j)+1) - delta(i,j);
+    end
+end
+[fastNewmanCommunities,fastNewmanModularity] = fast_newman(weightedAdjacencyMatrix);
+
+fastNewmanModifiedMethod_filename_str = '../data_files/financialNetworks/outputFTSE100FastNewmanModifiedMethod.gexf';
+fastNewmanMethod_filename_str = '../data_files/financialNetworks/outputFTSE100FastNewmanMethod.gexf';
+writeGroupedCommunitiesByTickersToGexfFile(fastNewmanModifiedMethod_filename_str, fastNewmanModifiedCommunities, tickersVector);
+writeGroupedCommunitiesByTickersToGexfFile(fastNewmanMethod_filename_str, fastNewmanCommunities, tickersVector);

@@ -1,38 +1,35 @@
-% Modularity optimisation based on a greedy agglomerative method
-%
-% Input
-%   - adj: (symmetrical) adjacency matrix
-%
-% Output
-%   - com: communities (listed for each node)
-%   - Q  : modularity value of the given partition
-%
-% Author: Erwan Le Martelot
-% Date: 23/11/10
+function [com,Q] = fast_newman_modified(correlationMatrix)
 
-function [com,Q] = fast_newman(adj)
+    % number of nodes
+    n = length(correlationMatrix);
+    
+    % Compute normalisation for modularity to be in [-1,+1]
+    cNorm = 0;
+    for i=1:n
+        for j=1:n
+            cNorm = cNorm + abs(correlationMatrix(i,j));
+        end
+    end
 
     % Set initial communities with one node per community
-    cur_com = [1:length(adj)]';
+    cur_com = [1:n]';
 
     % Initialise best community to current value
     com = cur_com;
 
     % Compute initial community matrix
-    e = get_community_matrix(adj,com);
-    % Lines and columns sum (speed optimisation)
-    ls = sum(e,2);
-    cs = sum(e,1);
+    e = get_community_matrix_modified(correlationMatrix,com);
 
     % Initialise best known and current Q values
-    cur_Q = trace(e) - sum(sum(e^2));
+%     cur_Q = (trace(e) - sum(sum(e^2)))/cNorm;
+    cur_Q = trace(correlationMatrix)/cNorm;
     Q = cur_Q;
 
     % Loop until no more aggregation is possible
     while length(e) > 1
 
         % Print progress
-        %fprintf('Loop %d/%d...',length(adj)-length(e)+1,length(adj));
+        %fprintf('Loop %d/%d...',length(correlationMatrix)-length(e)+1,length(correlationMatrix));
         %tic
 
         % Best Q variation
@@ -42,16 +39,13 @@ function [com,Q] = fast_newman(adj)
         can_merge = false;
         for i=1:length(e)
             for j=i+1:length(e)
-                % If they share edges
-                if e(i,j) > 0
-                    % Compute the variation in Q
-                    dQ = 2 * (e(i,j) - ls(i)*cs(j));
-                    % If best variation, then keep track of the pair
-                    if dQ > loop_best_dQ
-                        loop_best_dQ = dQ;
-                        best_pair = [i,j];
-                        can_merge = true;
-                    end
+                % Compute the variation in Q
+                dQ = e(i,j)/cNorm;
+                % If best variation, then keep track of the pair
+                if dQ > loop_best_dQ
+                    loop_best_dQ = dQ;
+                    best_pair = [i,j];
+                    can_merge = true;
                 end
             end
         end
@@ -72,17 +66,12 @@ function [com,Q] = fast_newman(adj)
 
         % Update community matrix
         % Slow way (for precision comparison)
-%         e = get_community_matrix(adj,com);
+%         e = get_community_matrix_modified(correlationMatrix,com);
         % Faster way
         e(best_pair(1),:) = e(best_pair(1),:) + e(best_pair(2),:);
         e(:,best_pair(1)) = e(:,best_pair(1)) + e(:,best_pair(2));
         e(best_pair(2),:) = [];
         e(:,best_pair(2)) = [];
-        % Update lines/colums sum
-        ls(best_pair(1)) = ls(best_pair(1)) + ls(best_pair(2));
-        cs(best_pair(1)) = cs(best_pair(1)) + cs(best_pair(2));
-        ls(best_pair(2)) = [];
-        cs(best_pair(2)) = [];
 
         % Update Q value
         cur_Q = cur_Q + loop_best_dQ;
