@@ -116,7 +116,7 @@ fastNewmanModifiedMethod_filename_str = '../data_files/financialNetworks/outputF
 fastNewmanMethod_filename_str = '../data_files/financialNetworks/outputFTSE100FastNewmanMethod.gexf';
 % writeGroupedCommunitiesByTickersToGexfFile(fastNewmanModifiedMethod_filename_str, fastNewmanModifiedCommunities, tickersVector);
 % writeGroupedCommunitiesByTickersToGexfFile(fastNewmanMethod_filename_str, fastNewmanCommunities, tickersVector);
-fastNewmanModifiedMethod_Industries_filename_str = '../data_files/financialNetworks/outputFTSE100IndustriesFastNewmanModifiedMethod.gexf';
-fastNewmanMethod_Industries_filename_str = '../data_files/financialNetworks/outputFTSE100IndustriesFastNewmanMethod.gexf';
-writeGroupedCommunitiesByIndustriesToGexfFile(fastNewmanModifiedMethod_Industries_filename_str , fastNewmanModifiedCommunities, ICBIndustriesVector);
-writeGroupedCommunitiesByIndustriesToGexfFile(fastNewmanMethod_Industries_filename_str , fastNewmanCommunities, ICBIndustriesVector);
+% fastNewmanModifiedMethod_Industries_filename_str = '../data_files/financialNetworks/outputFTSE100IndustriesFastNewmanModifiedMethod.gexf';
+% fastNewmanMethod_Industries_filename_str = '../data_files/financialNetworks/outputFTSE100IndustriesFastNewmanMethod.gexf';
+% writeGroupedCommunitiesByIndustriesToGexfFile(fastNewmanModifiedMethod_Industries_filename_str , fastNewmanModifiedCommunities, ICBIndustriesVector);
+% writeGroupedCommunitiesByIndustriesToGexfFile(fastNewmanMethod_Industries_filename_str , fastNewmanCommunities, ICBIndustriesVector);

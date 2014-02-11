@@ -3,7 +3,7 @@ clear;
 % definition of the stochastic block model
 
 % number vertices
-n = 500;%500
+n = 250;%500
 n_str = int2str(n);
 
 % number of iterations of algorithm
@@ -16,8 +16,8 @@ deltaLambda = (lambdaMax - lambdaMin) / noLambdaPoints;
 lambdaIterationNo = 1;
 
 lambdaVector = zeros(noLambdaPoints,1);
-qVector = zeros(noLambdaPoints,1);
-pVector = zeros(noLambdaPoints,1);
+% qVector = zeros(noLambdaPoints,1);
+% pVector = zeros(noLambdaPoints,1);
 
 scalarProductsAMP = zeros(noLambdaPoints,noLambdaPoints);
 scalarProductsAMPWithOnsager = zeros(noLambdaPoints,noLambdaPoints);
@@ -27,15 +27,15 @@ for lambda=lambdaMin+deltaLambda:deltaLambda:(lambdaMax)
     
     lambdaVector(lambdaIterationNo) = lambda;
     
-    p = 1.0;
-    [q1,q2] = solveQuadraticEquation(1+(lambda*lambda*n),-(2*p)-(lambda*lambda*n),p*p);
-    q = q2;
-    qVector(lambdaIterationNo) = q;
+%     p = 1.0;
+%     [q1,q2] = solveQuadraticEquation(1+(lambda*lambda*n),-(2*p)-(lambda*lambda*n),p*p);
+%     q = q2;
+%     qVector(lambdaIterationNo) = q;
     
     kIterationNo = 1;
     for k=1:ceil(n/noLambdaPoints):n
         
-        % choose communitiy for each edge (i.e. 0,...,q-1)
+        % choose communitiy for each node
         nodeCommunities = zeros(n,1);
         nodeCommunities(1:k) = 1;
 
