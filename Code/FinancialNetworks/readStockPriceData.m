@@ -104,6 +104,7 @@ for i=1:n
     end
 end
 [fastNewmanModifiedCommunities,fastNewmanModifiedModularity] = fast_newman_modified(modularityMatrix);
+
 weightedAdjacencyMatrix = zeros(n,n);
 for i=1:n
     for j=1:n
@@ -111,12 +112,20 @@ for i=1:n
     end
 end
 [fastNewmanCommunities,fastNewmanModularity] = fast_newman(weightedAdjacencyMatrix);
+[montanariCommunities] = montanari_modularity(weightedAdjacencyMatrix);
 
 fastNewmanModifiedMethod_filename_str = '../data_files/financialNetworks/outputFTSE100FastNewmanModifiedMethod.gexf';
 fastNewmanMethod_filename_str = '../data_files/financialNetworks/outputFTSE100FastNewmanMethod.gexf';
+montanariMethod_filename_str = '../data_files/financialNetworks/outputFTSE100MontanariMethod.gexf';
+
 % writeGroupedCommunitiesByTickersToGexfFile(fastNewmanModifiedMethod_filename_str, fastNewmanModifiedCommunities, tickersVector);
 % writeGroupedCommunitiesByTickersToGexfFile(fastNewmanMethod_filename_str, fastNewmanCommunities, tickersVector);
-% fastNewmanModifiedMethod_Industries_filename_str = '../data_files/financialNetworks/outputFTSE100IndustriesFastNewmanModifiedMethod.gexf';
-% fastNewmanMethod_Industries_filename_str = '../data_files/financialNetworks/outputFTSE100IndustriesFastNewmanMethod.gexf';
-% writeGroupedCommunitiesByIndustriesToGexfFile(fastNewmanModifiedMethod_Industries_filename_str , fastNewmanModifiedCommunities, ICBIndustriesVector);
-% writeGroupedCommunitiesByIndustriesToGexfFile(fastNewmanMethod_Industries_filename_str , fastNewmanCommunities, ICBIndustriesVector);
+writeGroupedCommunitiesByTickersToGexfFile(montanariMethod_filename_str, montanariCommunities, tickersVector);
+
+fastNewmanModifiedMethod_Industries_filename_str = '../data_files/financialNetworks/outputFTSE100IndustriesFastNewmanModifiedMethod.gexf';
+fastNewmanMethod_Industries_filename_str = '../data_files/financialNetworks/outputFTSE100IndustriesFastNewmanMethod.gexf';
+montanariMethod_Industries_filename_str = '../data_files/financialNetworks/outputFTSE100IndustriesMontanariMethod.gexf';
+
+writeGroupedCommunitiesByIndustriesToGexfFile(fastNewmanModifiedMethod_Industries_filename_str , fastNewmanModifiedCommunities, ICBIndustriesVector);
+writeGroupedCommunitiesByIndustriesToGexfFile(fastNewmanMethod_Industries_filename_str , fastNewmanCommunities, ICBIndustriesVector);
+writeGroupedCommunitiesByIndustriesToGexfFile(montanariMethod_Industries_filename_str , montanariCommunities, ICBIndustriesVector);

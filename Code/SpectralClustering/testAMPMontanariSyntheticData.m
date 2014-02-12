@@ -68,7 +68,7 @@ for lambda=lambdaMin+deltaLambda:deltaLambda:(lambdaMax)
 
         Z = sqrt(1/n).*randn(n,n);
         adjacencyMatrix = (lambda/k.*(nodeCommunities * nodeCommunities')) + Z;
- 
+
         if (lambda > 0.8) && (k/n > 0.9)
             debug = 1;
         end

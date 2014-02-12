@@ -56,7 +56,7 @@ function [com,Q] = fast_newman(adj)
             end
         end
         if ~can_merge
-            disp('!!! Graph with isolated communities, no more merging possible !!!');
+%             disp('!!! Graph with isolated communities, no more merging possible !!!');
             break;
         end
 

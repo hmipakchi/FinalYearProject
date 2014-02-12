@@ -3,14 +3,14 @@ clear;
 % definition of the stochastic block model
 
 % number vertices
-n = 200;
+n = 100;%200
 n_str = int2str(n);
 
 % number of communities
-q = 2;
+q = 2;%2
 q_str = int2str(q);
 
-pinValueVector = [0.9];
+pinValueVector = [0.9;];
 noColumnsInPlot = 1;
 
 for pinValueNo=1:max(size(pinValueVector))
@@ -30,7 +30,7 @@ for pinValueNo=1:max(size(pinValueVector))
 
     for iteration=1:maxNoIterations
         
-        display(iteration);
+        disp(iteration);
         
         % decide which stochastic block model to use
         affinityMatrix = (pout .* ones(q,q)) + ((pin-pout) .* eye(q,q));
@@ -58,20 +58,18 @@ for pinValueNo=1:max(size(pinValueVector))
 %         communityAssignmentsLaplacian = zeros(n,1);
         communityAssignmentsLaplacian = spectralClusteringLaplacian(adjacencyMatrix, q);
         
-        % apply spectral clustering using Modularity method
-%         communityAssignmentsModularity = zeros(n,1);
-%         communityAssignmentsModularity = spectralClusteringModularity(adjacencyMatrix, q);
-        communityAssignmentsModularity = fast_newman(adjacencyMatrix);
-
-        % apply spectral clustering using Approximate Message Passing (AMP) method
-        % Note: only works for 2 communities -> q = 2 !!!
-%         communityAssignmentsAMP = zeros(n,1);
-        communityAssignmentsAMP = spectralClusteringAMP(adjacencyMatrix, pout, 50);
+        % apply spectral clustering using Modularity: Spectral method
+%         communityAssignmentsModularitySpectral = zeros(n,1);
+        communityAssignmentsModularitySpectral = spectralClusteringModularity(adjacencyMatrix, q);
         
-        % apply spectral clustering using Approximate Message Passing (AMP) method
-        % Note: only works for 2 communities -> q = 2 !!!
-%         communityAssignmentsAMPWithOnsager = zeros(n,1);
-        communityAssignmentsAMPWithOnsager = spectralClusteringAMPWithOnsager(adjacencyMatrix, pout, 50);
+        % apply spectral clustering using Modularity: Fast Newman method
+%         communityAssignmentsModularityFastNewman = zeros(n,1);
+        communityAssignmentsModularityFastNewman = fast_newman(adjacencyMatrix);
+        
+        % apply spectral clustering using Modularity: Montanari method
+%         communityAssignmentsModularityMontanari = zeros(n,1);
+        communityAssignmentsModularityMontanari = montanari_modularity(adjacencyMatrix);
+
 
         % check errors in community detection
         communityDetectionAlgorithmSuccessVector = zeros(n, 4);
@@ -82,17 +80,17 @@ for pinValueNo=1:max(size(pinValueVector))
             else
                 communityDetectionAlgorithmSuccessVector(i,1) = 0;
             end
-            if communityAssignmentsModularity(i,1) == nodeCommunities(i,1)
+            if communityAssignmentsModularitySpectral(i,1) == nodeCommunities(i,1)
                 communityDetectionAlgorithmSuccessVector(i,2) = 1;
             else
                 communityDetectionAlgorithmSuccessVector(i,2) = 0;
             end
-            if communityAssignmentsAMP(i,1) == nodeCommunities(i,1)
+            if communityAssignmentsModularityFastNewman(i,1) == nodeCommunities(i,1)
                 communityDetectionAlgorithmSuccessVector(i,3) = 1;
             else
                 communityDetectionAlgorithmSuccessVector(i,3) = 0;
             end
-            if communityAssignmentsAMPWithOnsager(i,1) == nodeCommunities(i,1)
+            if communityAssignmentsModularityMontanari(i,1) == nodeCommunities(i,1)
                 communityDetectionAlgorithmSuccessVector(i,4) = 1;
             else
                 communityDetectionAlgorithmSuccessVector(i,4) = 0;
@@ -100,17 +98,17 @@ for pinValueNo=1:max(size(pinValueVector))
         end
         
         summationForOverlapCommunityDetectionLaplacian = sum(communityDetectionAlgorithmSuccessVector(:,1)) / n;
-        summationForOverlapCommunityDetectionModularity = sum(communityDetectionAlgorithmSuccessVector(:,2)) / n;
-        summationForOverlapCommunityDetectionAMP = sum(communityDetectionAlgorithmSuccessVector(:,3)) / n;
-        summationForOverlapCommunityDetectionAMPWithOnsager = sum(communityDetectionAlgorithmSuccessVector(:,4)) / n;
+        summationForOverlapCommunityDetectionModularitySpectral = sum(communityDetectionAlgorithmSuccessVector(:,2)) / n;
+        summationForOverlapCommunityDetectionModularityFastNewman = sum(communityDetectionAlgorithmSuccessVector(:,3)) / n;
+        summationForOverlapCommunityDetectionModularityMontanari = sum(communityDetectionAlgorithmSuccessVector(:,4)) / n;
 
         errorsMatrix(iteration, 1) = cin;
         errorsMatrix(iteration, 2) = cout;
         errorsMatrix(iteration, 3) = cout / cin;
         errorsMatrix(iteration, 4) = (summationForOverlapCommunityDetectionLaplacian - (1/q)) / (1-(1/q));
-        errorsMatrix(iteration, 5) = (summationForOverlapCommunityDetectionModularity - (1/q)) / (1-(1/q));
-        errorsMatrix(iteration, 6) = (summationForOverlapCommunityDetectionAMP - (1/q)) / (1-(1/q));
-        errorsMatrix(iteration, 7) = (summationForOverlapCommunityDetectionAMPWithOnsager - (1/q)) / (1-(1/q));
+        errorsMatrix(iteration, 5) = (summationForOverlapCommunityDetectionModularitySpectral - (1/q)) / (1-(1/q));
+        errorsMatrix(iteration, 6) = (summationForOverlapCommunityDetectionModularityFastNewman - (1/q)) / (1-(1/q));
+        errorsMatrix(iteration, 7) = (summationForOverlapCommunityDetectionModularityMontanari - (1/q)) / (1-(1/q));
         
         errorsMatrix(iteration, 4) = abs(errorsMatrix(iteration, 4));
         errorsMatrix(iteration, 5) = abs(errorsMatrix(iteration, 5));
@@ -125,7 +123,7 @@ for pinValueNo=1:max(size(pinValueVector))
     
     subplot(floor((max(size(pinValueVector))-1)/noColumnsInPlot)+1, noColumnsInPlot, pinValueNo);
     
-    title_str = sprintf('plot for laplacian (blue), modularity (red), AMP (green) methods [n = %s, q = %s, pin = %s]',n_str,q_str,pin_str);
+    title_str = sprintf('plot for laplacian (blue), spectral (red), fast newman (green) and montanari (black) methods [n = %s, q = %s, pin = %s]',n_str,q_str,pin_str);
     title(title_str,'FontSize',16);
     xlabel('cout / cin','FontSize',17);
     ylabel('overlap','FontSize',16);

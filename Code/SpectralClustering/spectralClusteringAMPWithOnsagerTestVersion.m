@@ -8,18 +8,20 @@ function [ communityAssignments ] = spectralClusteringAMPWithOnsagerTestVersion(
     [noRows, noCols] = size(adjacencyMatrix);
     n = noRows;
     
-    u = zeros(n,1);
-    z = rand(n,1);
+%     u = zeros(n,1);
+    u_prev = zeros(n,1);
+    u = ones(n,1);
+    z = zeros(n,1);
     
     for t=1:noIterations
         % keep theta non-negative
-        theta = abs(mean(z));
-        u_prev = u;
+%         theta = abs(mean(z));
 %         u = etaThresholdingSoft(z, theta);
 %         beta = (1/n) * sum(etaPrimeThresholdingSoft(z,theta));
-        u = positivePartThresholding(z);
         beta = (1/n) * sum(positivePartPrimeThresholding(z));
         z = (adjacencyMatrix * u) - (beta * u_prev);
+        u_prev = u;
+        u = positivePartThresholding(z);
     end
     
    communityAssignments = zeros(n,1);

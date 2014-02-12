@@ -13,10 +13,12 @@ function [ communityAssignments ] = spectralClusteringAMPTestVersion( adjacencyM
     
     for t=1:noIterations
         z = (adjacencyMatrix * u);
-%         u = positivePartThresholding(z);
+        u = etaThresholdingPositivePart(z);
+%         u = truncationThresholding(z);
+%         u = softRuleThresholding(z);
         % keep theta non-negative
-        theta = median(abs(z));
-        u = etaThresholdingSoft(z, theta);
+%         theta = median(abs(z));
+%         u = etaThresholdingSoft(z, theta);
     end
  
     communityAssignments = zeros(n,1);
@@ -35,12 +37,21 @@ function [ communityAssignments ] = spectralClusteringAMPTestVersion( adjacencyM
     
 end
 
-function [ y ] = positivePartThresholding(x)
+function [ y ] = softRuleThresholding(x)
     n = length(x);
-    y = x;
+    y = zeros(n,1);
+    scalingFactor = 10;
     for i=1:n
-        if x(i) <= 0
-            y(i) = 0;
+        y(i) = 1/(1+exp(-scalingFactor*(x(i))));
+    end
+end
+
+function [ y ] = truncationThresholding(x)
+    n = length(x);
+    y = zeros(n,1);
+    for i=1:n
+        if x(i) > 0
+            y(i) = 1;
         end
     end
 end

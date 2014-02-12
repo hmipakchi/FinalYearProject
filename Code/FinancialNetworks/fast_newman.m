@@ -56,7 +56,7 @@ function [com,Q] = fast_newman(adj)
             end
         end
         if ~can_merge
-            disp('!!! Graph with isolated communities, no more merging possible !!!');
+%             disp('!!! Graph with isolated communities, no more merging possible !!!');
             break;
         end
 
@@ -72,7 +72,7 @@ function [com,Q] = fast_newman(adj)
 
         % Update community matrix
         % Slow way (for precision comparison)
-%         e = get_community_matrix(adj,com);
+        %e = get_community_matrix(adj,com);
         % Faster way
         e(best_pair(1),:) = e(best_pair(1),:) + e(best_pair(2),:);
         e(:,best_pair(1)) = e(:,best_pair(1)) + e(:,best_pair(2));

@@ -34,9 +34,9 @@ function [ communityAssignments ] = spectralClusteringAMPWithOnsager( adjacencyM
     epsilon = 0.01;
     for i=1:n
         if u(i) > epsilon
-            communityAssignments(i) = 1;
+            communityAssignments(i) = 1;%1;
         else
-            communityAssignments(i) = 2;
+            communityAssignments(i) = 0;%2;
         end
     end
     

@@ -2,9 +2,9 @@
 % initialising cluster id's to vertices.
 
 function [ communityAssignments ] = spectralClusteringModularity( adjacencyMatrix, q )
-%testLaplacianSpectralClustering: Implements Spectral Clustering based on Modularity matrix
+%spectralClusteringModularity: Implements Spectral Clustering based on Modularity matrix
 %   Inputs: Adjacency matrix of a graph, number of communities (k)
-%   Outputs: Indicators matrix classfying each node in the graph to a
+%   Outputs: Indicators vector classfying each node in the graph to a
 %   particular community
 
     [noRows, noCols] = size(adjacencyMatrix);

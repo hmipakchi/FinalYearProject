@@ -23,8 +23,9 @@ function [ communityAssignments ] = spectralClusteringAMP( adjacencyMatrix, pout
     
     for t=1:noIterations
         % keep theta non-negative
-        theta = abs(mean(z));
-        u = etaThresholdingSoft(z, theta);
+%         theta = abs(mean(z));
+%         u = etaThresholdingSoft(z, theta);
+        u = etaThresholdingPositivePart(z);
         z = (normalisedAdjacencyMatrix * u);
     end
     
@@ -32,9 +33,9 @@ function [ communityAssignments ] = spectralClusteringAMP( adjacencyMatrix, pout
     epsilon = 0.1;
     for i=1:n
         if u(i) > epsilon
-            communityAssignments(i) = 1;
+            communityAssignments(i) = 1;%1;
         else
-            communityAssignments(i) = 2;
+            communityAssignments(i) = 0;%2;
         end
     end
 
