@@ -20,6 +20,12 @@ fileID = fopen(ICBIndustriesFilename);
 ICBIndustriesVector = textscan(fileID,'%d');
 fclose(fileID);
 
+% remove stocks with strange prices - need to sort out!!!
+rowsToDelete = [11;25;36;64;65;76];
+for candidateRow=1:size(rowsToDelete,1)
+    priceMatrix(rowsToDelete(candidateRow)-candidateRow+1, :) = [];
+end
+
 [n,T] = size(priceMatrix);
 
 n_str = num2str(n);
@@ -27,6 +33,24 @@ T_str = num2str(T);
 
 % calculate logarithmic returns for stock price data
 logReturns = calculateLogarithmicReturns(priceMatrix);
+
+% calculate expected returns for stock price data between 2012-2013
+% startDate = '2011-01-01';
+% endDate = '2013-01-01';
+% startDateIndex = getDateIndexFromDate(testableDatesVector,startDate);
+% endDateIndex = getDateIndexFromDate(testableDatesVector,endDate);
+% returns = calculateReturns(priceMatrix(:,startDateIndex:endDateIndex));
+% expectedReturns = calculateTimeAverage(returns);
+% varianceReturns = calculateSampleVariance(returns);
+
+% write sample expected returns and volatilities to file
+% filename_str = sprintf('../data_files/financialNetworks/expectedReturnsAndVolatility_n_%s_T_%s.dat',n_str,num2str(endDateIndex-startDateIndex+1));
+% fileID = fopen(filename_str,'w');
+% for i=1:n
+%     fprintf(fileID,'%d %d ',sqrt(varianceReturns(i)),expectedReturns(i));
+%     fprintf(fileID,'\n');
+% end
+% fclose(fileID);
 
 % write price and log-return time sereis for first stock in list
 % whichStock = 1;
