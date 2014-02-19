@@ -1,40 +1,50 @@
-function [ communityAssignments ] = financialSpectralClustering( modularityMatrix, maxK )
-
-
-    [noRows, noCols] = size(modularityMatrix);
-    n = noRows;
+function [ communityAssignments ] = financialSpectralClustering( adjacencyMatrix, k )
+    n = size(adjacencyMatrix, 1);
+    deg = full(sum(adjacencyMatrix)');
+    m = sum(deg)/2;
+%     modularityMatrix = full(adjacencyMatrix) - deg*deg'/(2*m);
+    modularityMatrix = adjacencyMatrix;
     
     % calculate eigenvectors of Modularity matrix
     [eigVecM, eigValM] = eig(modularityMatrix);
     
-    communityAssignments = zeros(n,maxK);
+    communityAssignments = zeros(n,1);
     
-    for k=1:maxK
+    % only consider first k eigenvectors and eigenvalues
+    eigVec = zeros(n,k);
+    eigVal = zeros(k,1);
 
-        % only consider first k eigenvectors and eigenvalues
-        eigVec = zeros(n,k);
-        eigVal = zeros(k,1);
-
-        % first eigenvector has all elements = 1, so provides no information
-        for i = 1:k
-            eigVec(:,i) = eigVecM(:,i);
-            eigVal(i,1) = eigValM(i,i);
-        end
-
-        % create embedded vectors and plot graph
-        embedVec = eigVec';
-        
-        [indicators, clusterCentres] = testKMeansClustering(embedVec', k);
-    
-        [noDataPoints, noClusters] = size(indicators);
-        for i=1:noDataPoints
-            for j=1:noClusters
-                if (indicators(i,j) == 1)
-                    communityAssignments(i,k) = j;
-                end
-            end
-        end
+    for i = 1:k
+        eigVec(:,k-i+1) = eigVecM(:,n-i+1);
+        eigVal(k-i+1,k-i+1) = eigValM(n-i+1,n-i+1);
     end
+
+    % create embedded vectors and plot graph
+    embedVec = eigVec';
+    
+    k_str = num2str(k);
+    filename = sprintf('../data_files/financialNetworks/syntheticCorrelationMatrices_ModularityMatrix_Eigenvectors_top_%s.dat',k_str);
+    fileID = fopen(filename,'w');
+    for i=1:n
+        for j=1:k
+            fprintf(fileID,'%d ',eigVec(i,j));
+        end
+        fprintf(fileID,'\n');
+    end
+    fclose(fileID);
+
+    communityAssignments = kmeans(embedVec',k,'distance','cityblock');
+    
+%     [indicators, clusterCentres] = testKMeansClustering(embedVec', k);
+% 
+%     [noDataPoints, noClusters] = size(indicators);
+%     for i=1:noDataPoints
+%         for j=1:noClusters
+%             if (indicators(i,j) == 1)
+%                 communityAssignments(i) = j;
+%             end
+%         end
+%     end
 
 end
 
