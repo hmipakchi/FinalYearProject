@@ -38,6 +38,8 @@ for lambda=lambdaMin+deltaLambda:deltaLambda:(lambdaMax)
         % choose communitiy for each node
         nodeCommunities = zeros(n,1);
         nodeCommunities(1:k) = 1;
+%         epsilon = k/n;
+%         nodeCommunities = binornd(1,epsilon,n,1);
 
         % create adjacency matrix for this stochastic block model
 %         adjacencyMatrix = zeros(n,n);
@@ -66,8 +68,10 @@ for lambda=lambdaMin+deltaLambda:deltaLambda:(lambdaMax)
 %         end
 %         adjacencyMatrix = (lambda/(p-q)).*(adjacencyMatrix - (q.*ones(n,n)));
 
-        Z = sqrt(1/n).*randn(n,n);
-        adjacencyMatrix = (lambda/k.*(nodeCommunities * nodeCommunities')) + Z;
+%         Z = sqrt(1/n).*randn(n,n);
+%         adjacencyMatrix = (lambda/k.*(nodeCommunities * nodeCommunities')) + Z;
+        Z = randn(n,n);
+        adjacencyMatrix = ((lambda*sqrt(n)/k).*(nodeCommunities * nodeCommunities')) + Z;
 
         if (lambda > 0.8) && (k/n > 0.9)
             debug = 1;
@@ -76,14 +80,19 @@ for lambda=lambdaMin+deltaLambda:deltaLambda:(lambdaMax)
         % apply spectral clustering using Approximate Message Passing (AMP) method
         % Note: only works for 2 communities -> q = 2 !!!
         communityAssignmentsAMP = spectralClusteringAMPTestVersion(adjacencyMatrix, t);
-
+        
         % apply spectral clustering using Approximate Message Passing (AMP) method
         % Note: only works for 2 communities -> q = 2 !!!
         communityAssignmentsAMPWithOnsager = spectralClusteringAMPWithOnsagerTestVersion(adjacencyMatrix, t);
         
         % calculate scalar products of estimate
-        scalarProductsAMP(lambdaIterationNo,kIterationNo) = (nodeCommunities' * communityAssignmentsAMP) / (norm(nodeCommunities,2));
-        scalarProductsAMPWithOnsager(lambdaIterationNo,kIterationNo) = (nodeCommunities' * communityAssignmentsAMPWithOnsager) / (norm(nodeCommunities,2));
+        if (norm(nodeCommunities,2) ~= 0)
+            scalarProductsAMP(lambdaIterationNo,kIterationNo) = (nodeCommunities' * communityAssignmentsAMP) / (norm(nodeCommunities,2));
+            scalarProductsAMPWithOnsager(lambdaIterationNo,kIterationNo) = (nodeCommunities' * communityAssignmentsAMPWithOnsager) / (norm(nodeCommunities,2));
+        else
+            scalarProductsAMP(lambdaIterationNo,kIterationNo) = 0;
+            scalarProductsAMPWithOnsager(lambdaIterationNo,kIterationNo) = 0;
+        end
 
         kIterationNo = kIterationNo + 1;
     end
@@ -97,7 +106,7 @@ fileID = fopen(filename_str,'w');
 for lambdaIterationNo=1:length(lambdaVector)
     kIterationNo = 1;
     for k=1:ceil(n/noLambdaPoints):n
-        epsilon = k / n;
+        epsilon = k/n;
         fprintf(fileID,'%d ',epsilon);
         fprintf(fileID,'%d ',lambdaVector(lambdaIterationNo));
         fprintf(fileID,'%d ',scalarProductsAMP(lambdaIterationNo,kIterationNo));

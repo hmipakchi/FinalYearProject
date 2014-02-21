@@ -8,6 +8,10 @@ function [ communityAssignments ] = spectralClusteringAMPTestVersion( adjacencyM
     [noRows, noCols] = size(adjacencyMatrix);
     n = noRows;
     
+    %%% added because of "Information-theoretically Optimal Sparse PCA"
+    %%% paper!!!
+    adjacencyMatrix = sqrt(1/n).*adjacencyMatrix;
+    
     z = zeros(n,1);
     u = ones(n,1);
     
