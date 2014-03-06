@@ -21,9 +21,11 @@ ICBIndustriesVector = textscan(fileID,'%d');
 fclose(fileID);
 
 % remove stocks with strange prices - need to sort out!!!
-rowsToDelete = [11;25;36;64;65;76];
+rowsToDelete = [11;25;36;64;65;76;79];
 for candidateRow=1:size(rowsToDelete,1)
     priceMatrix(rowsToDelete(candidateRow)-candidateRow+1, :) = [];
+%     ICBIndustriesVector{rowsToDelete(candidateRow)-candidateRow+1,1} = [];
+    tickersVector{1,1}{rowsToDelete(candidateRow)} = [];
 end
 
 [n,T] = size(priceMatrix);
@@ -33,8 +35,13 @@ T_str = num2str(T);
 
 % calculate logarithmic returns for stock price data
 logReturns = calculateLogarithmicReturns(priceMatrix);
+% startDate = '2011-01-01';
+% endDate = '2013-01-01';
+% startDateIndex = getDateIndexFromDate(testableDatesVector,startDate);
+% endDateIndex = getDateIndexFromDate(testableDatesVector,endDate);
+% logReturns = calculateLogarithmicReturns(priceMatrix(:,startDateIndex:endDateIndex));
 
-% calculate expected returns for stock price data between 2012-2013
+% calculate expected returns for stock price data between 2011-2013
 % startDate = '2011-01-01';
 % endDate = '2013-01-01';
 % startDateIndex = getDateIndexFromDate(testableDatesVector,startDate);
@@ -52,7 +59,7 @@ logReturns = calculateLogarithmicReturns(priceMatrix);
 % end
 % fclose(fileID);
 
-% write price and log-return time sereis for first stock in list
+% write price and log-return time series for first stock in list
 % whichStock = 1;
 % dateFormat = 'yyyy-mm-dd';
 % filename = sprintf('../data_files/financialNetworks/price_and_logreturn_timeseries_%s.dat',tickersVector{1,1}{whichStock});
@@ -76,15 +83,15 @@ meanProductTimeAverage = calculateMeanProductTimeAverage(logReturns);
 sampleCrossCorrelationMatrix = calculateSampleCrossCorrelationMatrix(logReturns);
 
 % write sample cross-correlation returns to file
-% filename_str = sprintf('../data_files/financialNetworks/crossCorrelation_n_%s_T_%s.dat',n_str,T_str);
-% fileID = fopen(filename_str,'w');
-% for i=1:n
-%     for j=1:n
-%         fprintf(fileID,'%d ',sampleCrossCorrelationMatrix(i,j));
-%     end
-%     fprintf(fileID,'\n');
-% end
-% fclose(fileID);
+filename_str = sprintf('../data_files/financialNetworks/crossCorrelation_n_%s_T_%s.dat',n_str,T_str);
+fileID = fopen(filename_str,'w');
+for i=1:n
+    for j=1:n
+        fprintf(fileID,'%d ',sampleCrossCorrelationMatrix(i,j));
+    end
+    fprintf(fileID,'\n');
+end
+fclose(fileID);
 
 % plot density of eigenvalues of sample cross-correlation matrix
 eigenvalues = [];

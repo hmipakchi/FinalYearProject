@@ -1,0 +1,20 @@
+% Chapter 5
+
+\chapter{Community Detection in Financial Networks}
+
+\label{cha:communityDetectionFinancialNetworks}
+
+%----------------------------------------------------------------------------------------
+
+In this chapter we aim to apply algorithms to detect communities within real-world financial networks.
+Firstly, we explain the process of gathering the data to create the financial networks.
+Then we investigate and apply different community detection algorithms and compare their performance on both synthetically generated and real world data.
+
+%-----------------------------------------------------
+%   Financial Data Processing Section
+%-----------------------------------------------------
+
+\section{Constructing Real-world Financial Networks}
+\label{sec:constructingRealWorldFinancialNetworks}
+
+The dataset we use consists of daily closing prices of 80 stocks in the FTSE 100 index, which we obtained from \cite{YahFi}. The time period considered is between the beginning of 2004 to the end of 2013, a total of 2501 prices. This is the data we obtained after the removal of a few data points due to incomplete data across different stocks. The complete list of stocks is given in \cref{app:listFTSE100Stocks}. We then calculated, for each stock and for each time period, the logarithmic return. We generated a time series of these returns and associated each stock with a single time series.

@@ -1,0 +1,19 @@
+% Chapter 1
+
+\chapter{Introduction}
+
+\label{cha:introduction}
+
+%----------------------------------------------------------------------------------------
+
+Networks have been studied extensively to model many interesting complex systems, including the Internet, social networks, financial networks and biological networks \cite{New06a,DKM+13,MG13}.
+Any network consists of \emphT{nodes} which represent items of interest, and \emphT{edges} which represent the connectivity between pairs of nodes. For example, considering social networks, nodes are the users and the edges correspond to interactions between the users.
+An interesting feature many networks exhibit is \emphT{community structure}, which involves the natural dividing of nodes into groups, called \emphT{communities}, where there are denser connections within a group, and sparser connections between different groups \cite{New06a,DKM+13,For10,New06b}. This particular type of community structure is also known as \emphT{assortative} \cite{DKM+13}. For instance, social networks contain communities corresponding to real-life communities consisting of the members, such as friendship or family circles.
+The problem of detecting communities within networks is known as \emphT{community detection}, and algorithms are developed as a solution.
+
+In order to provide a theoretical setting to test and compare different community detection algorithms, generative models of random graphs are very useful, and one such commonly used model is the \emphT{stochastic block model} \cite{DKM+13,NN12}. We will investigate several community detection algorithms, and will use different generative models in order to analyse and reason about them.
+
+The underlying ingredients of the community detection algorithms have other interesting applications also, including the analysis of time series data within the context of financial networks. The aim involves seeking groups of correlated financial assets that can be used in \emphT{mean variance portfolio optimisation}.
+We consider the application of community detection algorithms to real-world financial networks, in order find groups of correlated stocks found on the FTSE 100 exchange.
+
+This project aims is two fold; firstly, we investigate and study different community detection algorithms, and secondly, apply modifications to these techniques in order to use them detect communities in the financial networks setting.

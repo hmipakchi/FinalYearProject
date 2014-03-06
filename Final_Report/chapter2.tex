@@ -1,0 +1,316 @@
+% Chapter 2
+
+\chapter{Background}
+
+\label{cha:background}
+
+%----------------------------------------------------------------------------------------
+
+In this chapter we will describe all the technical background required to understand and detail the different settings we investigate for the project.
+Initially, we will highlight some basic results in graph theory.
+Then, we will outline the problem of community detection and present three models used to generate random graphs with community structure to be used as a testing playground for algorithms.
+Following this, we will discuss basic concepts within finance required to understand the behaviour of financial assets that will provide the motivation for applying community detection algorithms to financial networks.
+
+%-----------------------------------------------------
+%   Preliminaries in Networks Background Section
+%-----------------------------------------------------
+
+\section{Graph Theory Preliminaries}
+\label{sec:graphTheoryBackground}
+
+We assume the reader is familiar with some basic concepts in linear algebra such as matrix multiplication, eigenvectors and eigenvalues of matrices. Rather, we will cover some basic tools within spectral graph theory using definitions from \cite{For10,New06a, Spi12, Spi07}. Spectral graph theory is the study of graphs through the eigenvalues and eigenvectors of matrices associated with the graphs \cite{Spi12}. We begin by defining some basic notions about graphs.
+\begin{definition}
+	\label{def:graph}
+	A graph $\graphvar{G}$ is a pair of sets (V,E), where V is a set of vertices or nodes and $E \subset V^{2}$, the set of unordered pairs of elements of V. The elements of E are called edges or links.
+\end{definition}
+\begin{definition}
+	\label{def:undirectedGraph}
+	A graph $\graphvar{G} = (V,E)$ is called undirected if for all $v,w \in V$: $(v,w) \in E \iff (w,v) \in E$. Otherwise, $\graphvar{G}$ is called directed.
+\end{definition}
+\begin{definition}
+	\label{def:weightedGraph}
+	A weighted graph is a graph where a number (weight) is assigned to each edge.
+\end{definition}
+We will assume, without loss of generality, that $V = \{1,\dots,n\}$. See Figure \ref{fig:exampleGraphSmall} for an example of an undirected graph with seven vertices and eleven edges.
+\begin{definition}
+	\label{def:subGraph}
+	A graph $\graphvar{G}^{\prime} = (V^{\prime},E^{\prime})$ is a subgraph of $\graphvar{G} = (V,E)$ if $V^{\prime} \subset V$ and $E^{\prime} \subset E$. If $\graphvar{G}^{\prime}$ contains all edges of $\graphvar{G}$ that join vertices of $V^{\prime}$, one says that the subgraph $\graphvar{G}^{\prime}$ is induced or spanned by $V^{\prime}$.
+\end{definition}
+\begin{definition}
+	\label{def:cuts}
+	A partition of the vertex set V in two subsets S and $V-S$ is called a cut. The cut size is the number of edges of $\graphvar{G}$ joining vertices of S with vertices of $V-S$.
+\end{definition}
+\begin{definition}
+	\label{def:neighbourhoodNode}
+	Two vertices are adjacent or neighbours if they are connected by an edge. The set of neighbours of a vertex $v$ is called neighbourhood, and denoted by $\Gamma(v)$.
+\end{definition}
+\begin{definition}
+	\label{def:degreeNode}
+	The degree $d_{v}$ of a vertex $v$ is the number of its neighbours, $\abs{\Gamma(v)}$.
+\end{definition}
+We will be interested in using certain graphs is the models, such as bipartite graphs.
+\begin{definition}
+	\label{def:bipartiteGraph}
+	A bipartite graph, $\graphvar{G} = (V,E)$, is a graph whose vertices can be decomposed into two disjoint sets such that no two vertices within the same set are adjacent.
+\end{definition}
+An example of an undirected bipartite graph with nine vertices and eight edges is shown in Figure \ref{fig:exampleGraphBipartite}.
+
+
+%---   UNCOMMENT
+\begin{figure}
+\centering
+	\begin{subfigure}{.5\textwidth}
+		\centering
+		\includegraphics[width=0.8\linewidth]{figures/exampleGraphSmall.png}
+		\caption{}
+		\label{fig:exampleGraphSmall}
+	\end{subfigure}%
+	\begin{subfigure}{.5\textwidth}
+		\centering
+		\includegraphics[width=0.8\linewidth]{figures/exampleGraphBipartite.png}
+		\caption{}
+		\label{fig:exampleGraphBipartite}
+	\end{subfigure}
+	\caption[Visualisations of example undirected graphs]{\label{fig:exampleGraphs} A set of visualisations of undirected graphs. In \subref{fig:exampleGraphSmall}, the graph has seven nodes and eleven edges. In \subref{fig:exampleGraphBipartite}, a bipartite graph, with nine nodes (elements of disjoint sets are coloured black and red denoting membership) and eight edges, is shown.}
+\end{figure}
+
+There is a very close connection between graphs and matrices, since the whole information about the topology of a graph can be entailed in matrix form, called the \textit{adjacency matrix}.
+\begin{definition}
+	\label{def:adjacencyMatrix}
+	The adjacency matrix, $\matvar{A} \in \{0,1\}^{n \times n}$ of a graph $\graphvar{G} = (V,E)$, is a $n\times n$ matrix whose element $A_{ij}$ equals 1 if there exists an edge joining vertices i and j in $\graphvar{G}$, and zero otherwise.
+\end{definition}
+From definition \ref{def:adjacencyMatrix}, it follows that elements of the adjacency matrix, $\matvar{A}$, can be written as
+\begin{equation*}
+	A_{ij} =
+	\begin{cases}
+		1 & \text{if } (i,j) \in E\\
+		0 & \text{otherwise}.
+	\end{cases}
+\end{equation*}
+Note that the sum of elements of the $i$-th row of the adjacency matrix yields the degree of node $i$ of the graph, $d_{i} = \sum_{j} A_{ij}$. Also, the adjacency matrix is symmetric if the graph is undirected.
+
+There are other matrices that have also been studied extensively in spectral graph theory, including the Laplacian which is applied in topics such as graph partitioning, synchronisation and graph connectivity \cite{For10}.
+\begin{definition}
+	\label{def:degreeMatrix}
+	The degree matrix, $\matvar{D}$ of a graph $\graphvar{G} = (V,E)$, is a $n \times n$ diagonal matrix whose element $D_{ii}$ equals the degree of vertex $i$.
+\end{definition}
+From definition \ref{def:degreeMatrix}, it follows that elements of the degree matrix, $\matvar{D}$, can be written as
+\begin{equation*}
+	 D_{ij} =
+	\begin{cases}
+		d_{i} & \text{if } i = j\\
+		0 & \text{otherwise}.
+	\end{cases}
+\end{equation*}
+\begin{definition}
+	\label{def:unnormalisedLaplacianMatrix}
+	The matrix $\matvar{L} = \matvar{D}  - \matvar{A} $ is called the unnormalised Laplacian matrix.
+\end{definition}
+From definition \ref{def:unnormalisedLaplacianMatrix}, it follows that elements of the unnormalised Laplacian matrix of a graph $\graphvar{G} = (V,E)$, $\matvar{L}$, can be written as
+\begin{equation*}
+	L_{ij} =
+	\begin{cases}
+		d_{i} & \text{if } i = j\\
+		-1 & \text{if } i \neq j \text{ and }  (i,j) \in E\\
+		0 & \text{otherwise}.
+	\end{cases}
+\end{equation*}
+\begin{definition}
+	\label{def:normalisedLaplacianMatrix}
+	The matrix $\matvar{L_{norm}} = \matvar{I}  - \matvar{D}^{-1/2}\matvar{A}\matvar{D}^{-1/2}$ is called the normalised Laplacian matrix, where $\matvar{I}$ is the $n \times n$ identity matrix.
+\end{definition}
+Note that from definitions \ref{def:unnormalisedLaplacianMatrix} and \ref{def:normalisedLaplacianMatrix}, the normalised Laplacian matrix can also be written as $\matvar{L_{norm}} = \matvar{D}^{-1/2}\matvar{L}\matvar{D}^{-1/2}$.
+
+An important property of adjacency and Laplacian matrices is their spectra, which we will use, later in the project, to motivate and develop a spectral clustering algorithm for community detection.
+\begin{definition}
+	\label{def:spectrum}
+	The spectrum of a graph $\graphvar{G}$ is the set of eigenvalues of its adjacency matrix, $\{\lambda_{1},\dots,\lambda_{n}\}$.
+\end{definition}
+\begin{definition}
+	\label{def:spectralRadius}
+	Let $\lambda_{1},\dots,\lambda_{n}$ be the eigenvalues of a matrix $\matvar{M} \in \mathbb{R}^{n \times n}$. The spectral radius is defined as $\rho(\matvar{M}) = \max\limits_{i} \abs{\lambda_{i}}$.
+\end{definition}
+
+
+%-----------------------------------------------------
+%   Community Structure in Networks Background Section
+%-----------------------------------------------------
+
+\section{Community Structure in Networks}
+\label{sec:communityStructureBackground}
+
+%--------------------------------
+%   Financial Background Section   
+%--------------------------------
+
+\section{Financial Networks}
+\label{sec:financialNetworksBackground}
+
+\subsection{Prices and Returns of financial assets}
+\label{subsec:financialAssetsBackground}
+
+Consider financial assets as instruments claiming to have monetary value that can be bought and sold. Financial assets can be separated into broad classes, with examples including stocks, bonds or real estate \cite{Kuh12d,BKM13}.
+The values of these assets is reflected in their price, which varies with time. Investors may wish to decide between which asset classes to invest in at any time, a process known as \emphT{asset allocation} \cite{BKM13}.
+Also, within a particular asset class, an investor wishes to allocate money to specific assets, a process known as \emphT{portfolio selection} \cite{BKM13}.
+For this project, we will focus on portfolio selection of stocks in our application of community detection algorithms, due to available data constraints; however a very similar scheme may be used to tackle asset allocation also.
+
+Investors tend not to consider the prices of assets they have invested in, but rather the \emphT{return} generated. Let us consider a financial asset whose price at time $t$ is $p(t)$. One popular measure of return is called the \emphT{rate of return} \cite{Kuh12e,BKM13} at a time $t$, denoted by $r(t)$, which is defined as
+\begin{equation}
+	\label{eq:rateOfReturn}
+	r(t_{0}) = \frac{p(t_{1}) - p(t_{0})}{p(t_{0})}
+\end{equation}
+where we can interpret $t_{1}$ as the time when the investor sold the asset, and $t_{0}$ as the time when the investor bought the asset.
+
+Critically, the rate of return is sensitive to large changes for longer time horizons \cite{Onn02}. In particular, we can consider a different measure of return, which is equivalent to a return with a constant interest rate \cite{Onn02}. We can generalise the concept interest rates with the simple example of an investor placing money (investing) in a bank account, as explained in \cite{Kuh12c,Lue98}.
+The amount of money initially invested is referred to as the \emphT{principal}. We then assume money grows by a multiplicative factor, where the gain is paid into the account by the bank. This process is often called \emphT{compounding}. The time at which the interest is compounded, is called the compounding period.
+\emphT{Compound interest} involves interest being paid on both the principal and the accumulated interest up to the present \cite{Onn02}. Typically, we are interested in the number of compounding periods in one year (i.e. the number of times the interest on our principal is compounded each year) \cite{Kuh12c}. Denote the principal by $w_{0}$, the amount in the account time $t$ by $w_{t}$, the interest rate by $y$ and the number of compounding periods in a year by $m$. Then the amount within the account holdings after 1 year is given by
+\begin{equation}
+	\label{eq:compoundInterest}
+	w_{1} = w_{0} (1 + (y/m))^{m}
+\end{equation}
+
+We can imagine diving a year into infinitesimally small compounding periods, and then determine the effect of this continuous compounding by taking the limit of ordinary compounding \cite{Lue98}. Notice the total number of compounding periods in a length of $t$ years is given by $mt$. Thus the effect of continuous compounding is
+\begin{equation}
+	\label{eq:continuousCompounding}
+	w_{t} = \lim_{m {\to} \infty} w_{0}(1 + (y/m))^{mt} = w_{0}\exp(yt)
+\end{equation}
+
+If we divide \cref{eq:continuousCompounding} by the initial investment $w_{0}$, and take the natural logarithm, we get a representation for the return, $r = yt$. This indicates that taking the natural logarithm results in a constant interest rate.
+We have arrived at another measure for return, called the \emphT{logarithmic return}, that is defined as
+\begin{equation}
+	\label{eq:logarithmicReturn}
+	r(t_{0}) = \log(p(t_{1})) - \log(p(t_{0}))
+\end{equation}
+where, once more, we can interpret $t_{1}$ as the time when the investor sold the asset, and $t_{0}$ as the time when the investor bought the asset.
+
+There are several advantages to using logarithmic returns, as explained in \cite{QuaWp}, which we will briefly summarise.
+Firstly, if we assume asset prices have a \emphT{log normal} distribution, then the logarithmic returns are conveniently normally distributed \cite{QuaWp}. The reasons why assuming a log normal distribution may be appropriate for dynamic pricing of assets is beyond the scope of this project.
+Secondly, for small rates of return, the logarithmic return is approximately equal to the rate of return \cite{QuaWp}. To see this, consider the following approximation combined with \cref{eq:rateOfReturn} and \cref{eq:logarithmicReturn}
+\begin{equation}
+	\label{eq:logarithApproximation}
+	\log(1 + x) \approx x \text{, for } x \ll 1
+\end{equation}
+Thirdly, we benefit from numerical stability since the addition of small numbers is numerically stable, whilst multiplying small numbers is subject to \emphT{arithmetic underflow} \cite{QuaWp}.
+
+However, there are disadvantages to using the logarithmic return, including the issue that the derivation is only correct if the interest rate is constant \cite{QuaWp,Onn02}.
+Nonetheless, the logarithmic return is widely used in the literature (e.g. see \cite{Onn02,OCK+02,OKK03,FPM+10,FPW+11,MG13}), and hence we shall use it for the rest of the report, and the reader should note we shall use the terms `return' and `logarithmic return' interchangeably from now on. An example plot of price and logarithmic return for a stock is shown in \cref{fig:priceAndLogReturn}.
+
+%--- UNCOMMENT BELOW
+%\begin{figure}
+%	\centering
+%	\includegraphics[width=0.8\linewidth]{figures/priceAndLogReturnTimeSeries.png}
+%	\caption[Example plot for price and logarithmic return]{\label{fig:priceAndLogReturn} Plots of price and logarithmic return for Anglo American plc (AAL) between 2004 and 2014}
+%\end{figure}
+
+\subsection{Mean-Variance Portfolio Theory}
+\label{subsec:portfolioTheoryBackground}
+
+The term \emphT{portfolio} relates to a investing in a combination of different assets. We can characterise a portfolio by \emphT{portfolio weights}, where the weight of an asset within the portfolio is given by the ratio of the value of the position in the asset divided by the total value of the portfolio.
+We are particularly interested in the return of the portfolio, which is related to the mean of the returns of the individual assets that make up the portfolio, as we will see, and the risk of the portfolio, which is related to the variance of the returns of the individual assets. This is the source of the term mean-variance portfolio theory.
+The reader should realise the inherit trade-off between risk and return; if the investor wishes to realise a larger return, he must bear a higher risk. A more detailed explanation of this relationship is given in \cite{Lue98,Kuh12e}, but is not crucial for the purposes of this project.
+Rather we are simply interested in finding the most efficient, or \emphT{minimum-variance portfolio} for a given requested portfolio return (that is to say, the investor requests a specific expected return, and wishes to form a portfolio that has the lowest variance of all possible portfolio that can deliver the specified expected return).
+We can formalise the mean-variance portfolio setting in the following way, which summarises the explanations from \cite{Onn02,Lue98,Kuh12e}.
+
+Let $p$ be a portfolio comprising of $n$ assets, where the return of the portfolio is denoted by $r_{p}$ and the variance of the portfolio is denoted by $\sigma^{2}_{p} = \variance{r_{p}}$. Denote the return of asset $i$ by $r_{i}$, the variance of the asset's return by $\sigma^{2}_{i} = \variance{r_{i}}$, and the weight of asset $i$ in the portfolio by $w_{i}$.
+Let the portfolio weights be defined using
+\begin{equation}
+	\label{eq:portfolioWeights}
+	w_{i} = \frac{\text{amount invested in asset }i}{\text{total amount invested in portfolio}}
+\end{equation}
+Clearly,
+\begin{equation}
+	\label{eq:portfolioWeightsSum}
+	\sum_{i=1}^{n} w_{i} = 1
+\end{equation}
+Note that a negative weight indicates a \emphT{short position} in that asset, and that the returns of the individual assets and portfolio are random variables.
+
+In particular we can represent the return of the portfolio by
+\begin{equation}
+	\label{eq:portfolioReturn}
+	r_{p} = \sum_{i=1}^{n} w_{i} r_{i}
+\end{equation}
+and, by using \cref{eq:portfolioReturn}, we obtain the expected return of the portfolio
+\begin{equation}
+	\label{eq:portfolioExpectedReturn}
+	\expectation{r_{p}} = \sum_{i=1}^{n} w_{i} \expectation{r_{i}}
+\end{equation}
+and the variance of the portfolio
+\begin{equation}
+	\label{eq:portfolioVariance}
+	\variance{r_{p}} = \sigma^{2}_{p}  = \sum_{i=1}^{n} \sum_{j=1}^{n} w_{i} w_{j} \rho_{ij} \sigma_{i} \sigma_{j}
+\end{equation}
+where $\rho_{ij}$ is the correlation coefficient of the returns of assets $i$ and $j$, defined as
+\begin{equation}
+	\label{eq:correlationCoefficient}
+	\rho_{ij} = \frac{\covariance{r_{i},r_{j}}}{\sigma_{i} \sigma_{j}}
+\end{equation}
+Note that the standard deviation of the returns of the portfolio (or any asset) is often called its \emphT{volatility}.
+
+This serves a key question, given estimates of each assets returns, variances and covariances (which one can obtain from historical data), how does one pick a selection of these assets, for any given time period, in order to form the best portfolio for the investor?
+We see in \cref{eq:portfolioVariance}, that by simply investing in assets which have a lower correlation with one another (i.e. lower value of $\rho_{ij}$), we can reduce the variance, and thus risk, of the portfolio. This process is called \emphT{diversification}.
+Thus, for any given time period (and possibly dynamically), finding groups of assets, where the returns have higher correlation within groups and lower correlation between groups would help by presenting `baskets' of assets that the investor can pick from knowing selecting from a range of baskets would be beneficial (of course which assets to select from inside the basket relates to the risk-return trade off). This serves as the main motivation for the application of community detection algorithms within financial networks, as we formalise in \cref{subsec:financialNetworksConstructionBackground}.
+
+
+\subsection{Constructing financial networks}
+\label{subsec:financialNetworksConstructionBackground}
+
+From \cref{subsec:portfolioTheoryBackground} we understand that one way to help minimise risk in constructing portfolios is to analyse the correlation coefficients between returns of two assets.
+In order to study all possible correlations between all available assets, we construct a weighted, undirected and fully-connected network of assets, which we call the \emphT{financial network}. The following model has been considered by \cite{PGR+99,OCK+02,OKK03,FPM+10,MG13}.
+
+Let us consider the situation where the investors if faced with $n$ financial assets, and has access to historical price data for all these assets for $T$ time steps. The time steps may be trading days, or weeks, for instance and the appropriate choice will depend on the type of assets available.
+
+We proceed to construct a graph with $n$ nodes, where each nodes represents an asset, and assign to the $i$-th node a single time series, denoted by $X_{i}$, which is defined as
+\begin{equation}
+	\label{eq:singleTimeSeries}
+	X_{i} = \{x_{i}(1),\dots,x_{i}(T)\}
+\end{equation}
+where $x_{i}(t)$ describes the logarithmic return of asset $i$ at time $t$, defined by \cref{eq:logarithmicReturn}.
+This time series describes the evolution of the logarithmic return of the asset over $T$ time steps.
+We then model the weight of an edge connecting nodes $i$ and $j$ of the graph by the cross-correlation between the time series corresponding to assets $i$ and $j$. We form a cross-correlation matrix, denoted by $\matvar{C}$, whose elements are defined by
+\begin{equation}
+	\label{eq:crossCorrelationMatrix}
+	C_{ij} = \frac{\mean{X_{i} X_{j}} - \mean{X_{i}} \mean{X_{j}}}{\sqrt{[\mean{X_{i}^{2}} - \mean{X_{i}}^{2}][\mean{X_{j}^{2}} - \mean{X_{j}}^{2}]}}
+\end{equation}
+where the $\mean{\cdots}$ notation denotes a time average, so that
+\begin{equation}
+	\label{eq:temporalMean}
+	\mean{X_{i}} = \frac{1}{T} \sum_{t=1}^{T} x_{i}(t)
+\end{equation}
+\begin{equation}
+	\label{eq:temporalMeanSquare}
+	\mean{X_{i}^{2}} = \frac{1}{T} \sum_{t=1}^{T} x_{i}^{2}(t)
+\end{equation}
+\begin{equation}
+	\label{eq:temporalMeanProduct}
+	\mean{X_{i}X_{j}} = \frac{1}{T} \sum_{t=1}^{T} x_{i}(t)x_{j}(t)
+\end{equation}
+We also assume each time series $X_{i}$ has been standardised (i.e. before computing cross correlations) by using
+\begin{equation}
+	\label{eq:standardiseTimeSeries}
+	X_{i} \coloneqq \frac{X_{i} - \mean{X_{i}}}{\sqrt{\mean{X_{i}^{2}} - \mean{X_{i}}^{2}}}
+\end{equation}
+so that
+\begin{equation}
+	\label{eq:zeroTemporalMean}
+	\mean{X_{i}} = 0
+\end{equation}
+\begin{equation}
+	\label{eq:unitTemporalVariance}
+	\mean{X_{i}^{2}} - \mean{X_{i}}^{2} = 1
+\end{equation}
+Note that the cross correlation values is just a sample estimate for the correlation coefficient, $\rho_{ij}$, used in \cref{subsec:financialNetworksConstructionBackground}, calculated from the historical data.
+
+We can then characterise the financial network by the correlation matrix, which we also refer to as the networks \emphT{weighted adjacency matrix}.
+
+In \cref{fig:exampleCrossCorrelationMatrix}, we have plotted a correlation matrix using data of 80 stocks listed on the FTSE 100 (see \cref{app:listFTSE100Stocks} for a list) between 2011 and 2013. Notice that the main diagonal has all elements equal to one, as you would expect, and that there are very few negative elements (i.e. very few assets that are anti-correlated with one another).
+
+%--- UNCOMMENT BELOW
+%\begin{figure}
+%	\centering
+%	\includegraphics[width=0.8\linewidth]{figures/correlationMatrix_FTSE100_n_80_T_2501.png}
+%	\caption[Example plot for a correlation matrix]{\label{fig:exampleCrossCorrelationMatrix} Example of a correlation matrix. Evaluated from an ensemble of 80 stocks listed on the FTSE 100 (see \cref{app:listFTSE100Stocks} for a list) using data between 01/01/2011 and 01/01/2013.}
+%\end{figure}
+
+The problem statement can now summarised as given a financial network, how can we group nodes into communities where cross-correlations are higher within the communities and lower between the communities.
+Contrary to graphs with community structure described in \cref{sec:communityStructureBackground}, the weights of the edges rather than the topology of the network are crucial in determining community memberships.
+Also the reader should note that the correlations between asset returns will vary over time, and thus representing this relationship dynamically (rather than over a one long period of time) is very important since investors wish to change their positions in order to react to the dynamics of market conditions, and as such, we will investigate this also.

@@ -1,0 +1,266 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Masters/Doctoral Thesis 
+% LaTeX Template
+% Version 1.42 (19/1/14)
+%
+% This template has been downloaded from:
+% http://www.latextemplates.com
+%
+% Original authors:
+% Steven Gunn 
+% http://users.ecs.soton.ac.uk/srg/softwaretools/document/templates/
+% and
+% Sunil Patel
+% http://www.sunilpatel.co.uk/thesis-template/
+%
+% License:
+% CC BY-NC-SA 3.0 (http://creativecommons.org/licenses/by-nc-sa/3.0/)
+%
+% Note:
+% Make sure to edit document variables in the Thesis.cls file
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%----------------------------------------------------------------------------------------
+%	PACKAGES AND OTHER DOCUMENT CONFIGURATIONS
+%----------------------------------------------------------------------------------------
+
+\documentclass[11pt, a4paper, oneside]{Thesis} % Paper size, default font size and one-sided paper
+
+\graphicspath{{images/}} % Specifies the directory where pictures are stored
+
+\hypersetup{urlcolor=black, colorlinks=true} % Colors hyperlinks in blue - change to black if annoying
+\title{\ttitle} % Defines the thesis title - don't touch this
+
+\begin{document}
+
+\frontmatter % Use roman page numbering style (i, ii, iii, iv...) for the pre-content pages
+
+\setstretch{1.3} % Line spacing of 1.3
+
+\pagestyle{plain}
+
+\newcommand{\HRule}{\rule{\linewidth}{0.5mm}} % New command to make the lines in the title page
+
+% Subreferences Setup
+\captionsetup{subrefformat=parens}
+
+% PDF meta-data
+\hypersetup{pdftitle={\ttitle}}
+\hypersetup{pdfsubject=\subjectname}
+\hypersetup{pdfauthor=\authornames}
+\hypersetup{pdfkeywords=\keywordnames}
+
+%----------------------------------------------------------------------------------------
+%	DEFINITIONS OF NEW COMMANDS
+%----------------------------------------------------------------------------------------
+
+% vector variable command
+\newcommand*\vecvar[1]{\mathbfit#1}
+
+% matrix variable command
+\newcommand*\matvar[1]{\mathbf#1}
+
+% transpose command
+\newcommand*\transpose[1]{#1^{T}}
+
+% trace command
+\newcommand*\trace[1]{Tr(#1)}
+
+% expectation command
+\newcommand*\expectation[1]{\mathbb{E}(#1)}
+
+% variance command
+\newcommand*\variance[1]{Var(#1)}
+
+% covariance command
+\newcommand*\covariance[2]{Cov(#1#2)}
+
+% graph variable command
+\newcommand*\graphvar[1]{\mathcal#1}
+
+% set variable command
+\newcommand*\setvar[1]{\mathcal#1}
+
+% mean command
+\newcommand*\mean[1]{\langle#1\rangle}
+
+% absolute value command
+\newcommand*\abs[1]{\left\vert#1\right\vert}
+
+% emphasise in text command
+\newcommand*\emphT[1]{\textit{#1}}
+
+% euler constant (e) command
+\newcommand{\euler}{e\xspace}
+
+% special number one (1) command
+\newcommand*\one{\mathds{1}\xspace}
+
+%----------------------------------------------------------------------------------------
+%	TITLE PAGE
+%----------------------------------------------------------------------------------------
+
+\begin{titlepage}
+\begin{center}
+
+\includegraphics[scale=0.1]{imperialCrest} % University/department logo - uncomment to place it 
+
+\textsc{\LARGE \univname}\\[1cm] % University name
+\textsc{\Large Final Year Project Report}\\[0.5cm] % Thesis type
+
+\HRule \\[0.4cm] % Horizontal line
+{\huge \bfseries \ttitle}\\[0.1cm] % Thesis title
+\HRule \\[1.5cm] % Horizontal line
+ 
+\begin{minipage}{0.4\textwidth}
+\begin{flushleft} \large
+\emph{Author:}\\
+{\authornames} % Author name - remove the \href bracket to remove the link
+\end{flushleft}
+\end{minipage}
+\begin{minipage}{0.4\textwidth}
+\begin{flushright} \large
+\emph{Supervisor:} \\
+{\supname} \\% Supervisor name - remove the \href bracket to remove the link
+\emph{Second marker:} \\
+{\secmark}
+\end{flushright}
+\end{minipage}\\[2cm]
+ 
+\large This report is submitted in fulfilment of the requirements\\ for the degree of \textit{\degreename}\\ % University requirement text
+in the\\
+\deptname\\\univname\\[1.5cm] % Research group name and department name
+
+{\large \today}\\[0.1cm] % Date
+
+\vfill
+\end{center}
+
+\end{titlepage}
+
+
+%----------------------------------------------------------------------------------------
+%	DECLARATION PAGE
+%	Your institution may give you a different text to place here
+%----------------------------------------------------------------------------------------
+
+%\Declaration{
+%
+%\addtocontents{toc}{\vspace{1em}} % Add a gap in the Contents, for aesthetics
+%
+%I, \authornames, declare that this thesis titled, '\ttitle' and the work presented in it are my own. I confirm that:
+%
+%\begin{itemize} 
+%\item[\tiny{$\blacksquare$}] This work was done wholly or mainly while in candidature for a research degree at this University.
+%\item[\tiny{$\blacksquare$}] Where any part of this thesis has previously been submitted for a degree or any other qualification at this University or any other institution, this has been clearly stated.
+%\item[\tiny{$\blacksquare$}] Where I have consulted the published work of others, this is always clearly attributed.
+%\item[\tiny{$\blacksquare$}] Where I have quoted from the work of others, the source is always given. With the exception of such quotations, this thesis is entirely my own work.
+%\item[\tiny{$\blacksquare$}] I have acknowledged all main sources of help.
+%\item[\tiny{$\blacksquare$}] Where the thesis is based on work done by myself jointly with others, I have made clear exactly what was done by others and what I have contributed myself.\\
+%\end{itemize}
+% 
+%Signed:\\
+%\rule[1em]{25em}{0.5pt} % This prints a line for the signature
+% 
+%Date:\\
+%\rule[1em]{25em}{0.5pt} % This prints a line to write the date
+%}
+%
+%\clearpage % Start a new page
+
+%----------------------------------------------------------------------------------------
+%	ABSTRACT PAGE
+%----------------------------------------------------------------------------------------
+
+\addtotoc{Abstract} % Add the "Abstract" page entry to the Contents
+
+\abstract{}
+
+\clearpage % Start a new page
+
+%----------------------------------------------------------------------------------------
+%	ACKNOWLEDGEMENTS
+%----------------------------------------------------------------------------------------
+
+\setstretch{1.3} % Reset the line-spacing to 1.3 for body text (if it has changed)
+
+\acknowledgements{}
+
+\clearpage % Start a new page
+
+%----------------------------------------------------------------------------------------
+%	LIST OF CONTENTS/FIGURES/TABLES PAGES
+%----------------------------------------------------------------------------------------
+
+\tableofcontents
+
+\listoffigures
+
+\listoftables
+
+
+%----------------------------------------------------------------------------------------
+%	NOTATIONS
+%----------------------------------------------------------------------------------------
+
+\clearpage % Start a new page
+
+\setstretch{1.3} % Reset the line-spacing to 1.3 for body text (if it has changed)
+
+\listofnomenclature{ll}
+{
+$\abs{\setvar{S}}$ & Cardinality of the set $\setvar{S}$ \\
+$y$ & Scalar $y$ \\
+$\abs{y}$ & Absolute value of $y$ \\
+$\vecvar{v}$ & Vector $\vecvar{v}$ \\
+$\one_{n}$ & n-dimensional vector with every element equal to one \\
+$\matvar{M}$ & Matrix $\matvar{M}$ \\
+$M_{ij}$ & The element of the matrix $\matvar{M}$ at row $i$ and column $j$\\
+$\transpose{\matvar{M}}$ & Transpose of the matrix $\matvar{M}$ \\
+$\abs{\matvar{M}}$ & Determinant of the matrix $\matvar{M}$ \\
+$\trace{\matvar{M}}$ & Trace of the matrix $\matvar{M}$ \\
+$\expectation{X}$ & Expected value of $X$ \\
+$\variance{X}$ & Variance of $X$ \\
+$\log(x)$ & \emphT{natural logarithm} of $x$ (logarithm to the base $\euler$)
+}
+
+%----------------------------------------------------------------------------------------
+%	THESIS CONTENT - CHAPTERS
+%----------------------------------------------------------------------------------------
+
+\mainmatter % Begin numeric (1,2,3...) page numbering
+
+\nocite{*}
+
+% Introduction
+\input{chapters/chapter1}
+
+% Background
+\input{chapters/chapter2}
+
+% Community detection in financial networks
+\input{chapters/chapter5}
+
+%----------------------------------------------------------------------------------------
+%	THESIS CONTENT - APPENDICES
+%----------------------------------------------------------------------------------------
+
+\appendix % Cue to tell LaTeX that the following 'chapters' are Appendices
+
+% List of FTSE 100 Stocks considered
+\input{appendices/appendixA}
+
+\backmatter
+
+%----------------------------------------------------------------------------------------
+%	BIBLIOGRAPHY
+%----------------------------------------------------------------------------------------
+
+\label{Bibliography}
+
+%%% Add bibliography here
+\bibliographystyle{hieeetr.bst}
+\bibliography{finalReportBibliography}
+
+\end{document}  

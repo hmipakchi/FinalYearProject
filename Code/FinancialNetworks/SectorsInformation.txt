@@ -1,87 +1,87 @@
-AAL Basic Materials
-ABF Consumer Goods
-ADN Financials
-AGK Industrials
-AHT Industrials
-AMEC Basic Materials
-ANTO Basic Materials
-ARM Technology
-AV Financials
-AZN Health Care
-BA Industrials
-BAB Industrials
-BARC Financials
-BATS Consumer Goods
-BG Basic Materials
-BLND Technology
-BLT Basic Materials
-BNZL Industrials
-BP Basic Materials
-BRBY Consumer Goods
-BSY Consumer Services
-BT-A Technology
-CCL Consumer Goods
-CNA Utilities
-CPG Consumer Services
-CPI Industrials
-DGE Consumer Goods
-EZJ Consumer Services
-GFS Industrials
-GKN Consumer Goods
-GSK Health Care
-HMSO Financials
-HSBA Financials
-IAG Consumer Services
-IHG Consumer Services
-IMI Industrials
-IMT Consumer Goods
-ITRK Industrials
-ITV Consumer Services
-JMAT Basic Materials
-KGF Consumer Services
-LAND Financials
-LGEN Financials
-LLOY Financials
-LSE Financials
-MGGT Industrials
-MKS Consumer Services
-MRO Oil & Gas
-MRW Consumer Services
-NG Utilities
-NXT Consumer Services
-OML Financials
-PRU Financials
-PSN Industrials
-PSON Consumer Services
-RB Consumer Goods
-RBS Financials
-RDSB Basic Materials
-REL Consumer Services
-REX Consumer Goods
-RIO Basic Materials
-RR Industrials
-RRS Basic Materials
-RSA Financials
-SAB Consumer Goods
-SBRY Consumer Services
-SDR Financials
-SGE Technology
-SHP Health Care
-SMIN Industrials
-SN Health Care
-SSE Utilities
-STAN Financials
-SVT Utilities
-TATE Consumer Goods
-TLW Basic Materials
-TPK Industrials
-TSCO Consumer Services
-TT Consumer Goods
-ULVR Consumer Goods
-UU Utilities
-VOD Technology
-WEIR Industrials
-WMH Consumer Services
-WOS Industrials
-WPP Consumer Services
-WTB Consumer Services
+AAL;Basic Materials
+ABF;Consumer Goods
+ADN;Financials
+AGK;Industrials
+AHT;Industrials
+AMEC;Basic Materials
+ANTO;Basic Materials
+ARM;Technology
+AV;Financials
+AZN;Health Care
+BA;Industrials
+BAB;Industrials
+BARC;Financials
+BATS;Consumer Goods
+BG;Basic Materials
+BLND;Technology
+BLT;Basic Materials
+BNZL;Industrials
+BP;Basic Materials
+BRBY;Consumer Goods
+BSY;Consumer Services
+BT-A;Technology
+CCL;Consumer Goods
+CNA;Utilities
+CPG;Consumer Services
+CPI;Industrials
+DGE;Consumer Goods
+EZJ;Consumer Services
+GFS;Industrials
+GKN;Consumer Goods
+GSK;Health Care
+HMSO;Financials
+HSBA;Financials
+IAG;Consumer Services
+IHG;Consumer Services
+IMI;Industrials
+IMT;Consumer Goods
+ITRK;Industrials
+ITV;Consumer Services
+JMAT;Basic Materials
+KGF;Consumer Services
+LAND;Financials
+LGEN;Financials
+LLOY;Financials
+LSE;Financials
+MGGT;Industrials
+MKS;Consumer Services
+MRO;Oil & Gas
+MRW;Consumer Services
+NG;Utilities
+NXT;Consumer Services
+OML;Financials
+PRU;Financials
+PSN;Industrials
+PSON;Consumer Services
+RB;Consumer Goods
+RBS;Financials
+RDSB;Basic Materials
+REL;Consumer Services
+REX;Consumer Goods
+RIO;Basic Materials
+RR;Industrials
+RRS;Basic Materials
+RSA;Financials
+SAB;Consumer Goods
+SBRY;Consumer Services
+SDR;Financials
+SGE;Technology
+SHP;Health Care
+SMIN;Industrials
+SN;Health Care
+SSE;Utilities
+STAN;Financials
+SVT;Utilities
+TATE;Consumer Goods
+TLW;Basic Materials
+TPK;Industrials
+TSCO;Consumer Services
+TT;Consumer Goods
+ULVR;Consumer Goods
+UU;Utilities
+VOD;Technology
+WEIR;Industrials
+WMH;Consumer Services
+WOS;Industrials
+WPP;Consumer Services
+WTB;Consumer Services
