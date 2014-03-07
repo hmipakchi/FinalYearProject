@@ -51,28 +51,31 @@ We will assume, without loss of generality, that $V = \{1,\dots,n\}$. See Figure
 We will be interested in using certain graphs is the models, such as bipartite graphs.
 \begin{definition}
 	\label{def:bipartiteGraph}
-	A bipartite graph, $\graphvar{G} = (V,E)$, is a graph whose vertices can be decomposed into two disjoint sets such that no two vertices within the same set are adjacent.
+	A bipartite graph, is a graph whose vertices can be decomposed into two disjoint sets such that no two vertices within the same set are adjacent.
+\end{definition}
+\begin{definition}
+	\label{def:clique}
+	A clique of an undirected graph is a subset of its vertices such that every pair of vertices in the subset are adjacent in the graph.
 \end{definition}
 An example of an undirected bipartite graph with nine vertices and eight edges is shown in Figure \ref{fig:exampleGraphBipartite}.
 
-
 %---   UNCOMMENT
-\begin{figure}
-\centering
-	\begin{subfigure}{.5\textwidth}
-		\centering
-		\includegraphics[width=0.8\linewidth]{figures/exampleGraphSmall.png}
-		\caption{}
-		\label{fig:exampleGraphSmall}
-	\end{subfigure}%
-	\begin{subfigure}{.5\textwidth}
-		\centering
-		\includegraphics[width=0.8\linewidth]{figures/exampleGraphBipartite.png}
-		\caption{}
-		\label{fig:exampleGraphBipartite}
-	\end{subfigure}
-	\caption[Visualisations of example undirected graphs]{\label{fig:exampleGraphs} A set of visualisations of undirected graphs. In \subref{fig:exampleGraphSmall}, the graph has seven nodes and eleven edges. In \subref{fig:exampleGraphBipartite}, a bipartite graph, with nine nodes (elements of disjoint sets are coloured black and red denoting membership) and eight edges, is shown.}
-\end{figure}
+%\begin{figure}
+%\centering
+%	\begin{subfigure}{.5\textwidth}
+%		\centering
+%		\includegraphics[width=0.8\linewidth]{figures/exampleGraphSmall.png}
+%		\caption{}
+%		\label{fig:exampleGraphSmall}
+%	\end{subfigure}%
+%	\begin{subfigure}{.5\textwidth}
+%		\centering
+%		\includegraphics[width=0.8\linewidth]{figures/exampleGraphBipartite.png}
+%		\caption{}
+%		\label{fig:exampleGraphBipartite}
+%	\end{subfigure}
+%	\caption[Visualisations of example undirected graphs]{\label{fig:exampleGraphs} A set of visualisations of undirected graphs. In \subref{fig:exampleGraphSmall}, the graph has seven nodes and eleven edges. In \subref{fig:exampleGraphBipartite}, a bipartite graph, with nine nodes (elements of disjoint sets are coloured black and red denoting membership) and eight edges, is shown.}
+%\end{figure}
 
 There is a very close connection between graphs and matrices, since the whole information about the topology of a graph can be entailed in matrix form, called the \textit{adjacency matrix}.
 \begin{definition}
@@ -84,10 +87,14 @@ From definition \ref{def:adjacencyMatrix}, it follows that elements of the adjac
 	A_{ij} =
 	\begin{cases}
 		1 & \text{if } (i,j) \in E\\
-		0 & \text{otherwise}.
+		0 & \text{otherwise}
 	\end{cases}
 \end{equation*}
 Note that the sum of elements of the $i$-th row of the adjacency matrix yields the degree of node $i$ of the graph, $d_{i} = \sum_{j} A_{ij}$. Also, the adjacency matrix is symmetric if the graph is undirected.
+\begin{definition}
+	\label{def:weightedAdjacencyMatrix}
+	The weighted adjacency matrix, $\matvar{A} \in \realsR^{n \times n}$ of a weighted graph $\graphvar{G} = (V,E)$, is a $n\times n$ matrix whose element $A_{ij}$ equals the weight of the edge connecting nodes $i$ and $j$, if it exists, and zero otherwise. 
+\end{definition}
 
 There are other matrices that have also been studied extensively in spectral graph theory, including the Laplacian which is applied in topics such as graph partitioning, synchronisation and graph connectivity \cite{For10}.
 \begin{definition}
@@ -99,7 +106,7 @@ From definition \ref{def:degreeMatrix}, it follows that elements of the degree m
 	 D_{ij} =
 	\begin{cases}
 		d_{i} & \text{if } i = j\\
-		0 & \text{otherwise}.
+		0 & \text{otherwise}
 	\end{cases}
 \end{equation*}
 \begin{definition}
@@ -112,7 +119,7 @@ From definition \ref{def:unnormalisedLaplacianMatrix}, it follows that elements 
 	\begin{cases}
 		d_{i} & \text{if } i = j\\
 		-1 & \text{if } i \neq j \text{ and }  (i,j) \in E\\
-		0 & \text{otherwise}.
+		0 & \text{otherwise}
 	\end{cases}
 \end{equation*}
 \begin{definition}
@@ -128,7 +135,7 @@ An important property of adjacency and Laplacian matrices is their spectra, whic
 \end{definition}
 \begin{definition}
 	\label{def:spectralRadius}
-	Let $\lambda_{1},\dots,\lambda_{n}$ be the eigenvalues of a matrix $\matvar{M} \in \mathbb{R}^{n \times n}$. The spectral radius is defined as $\rho(\matvar{M}) = \max\limits_{i} \abs{\lambda_{i}}$.
+	Let $\lambda_{1},\dots,\lambda_{n}$ be the eigenvalues of a matrix $\matvar{M} \in \realsR^{n \times n}$. The spectral radius is defined as $\rho(\matvar{M}) = \max\limits_{i} \abs{\lambda_{i}}$.
 \end{definition}
 
 
@@ -139,6 +146,51 @@ An important property of adjacency and Laplacian matrices is their spectra, whic
 \section{Community Structure in Networks}
 \label{sec:communityStructureBackground}
 
+An intuitive notion of communities within graphs involves the assignment of nodes to communities such that there are denser connections between nodes belonging to the same community, and sparser connections between nodes belonging to different communities. If a graph exhibits this property, it is said to contain assortative community structure \cite{New06a,DKM+13,For10,New06b}.
+For instance, within social networks where nodes are users and edges between nodes represent interactions between the users, community structure within the graph corresponds to real-life communities consisting of the users.
+The aim of community detection algorithms is to estimate or recover the node assignments. The algorithms need to be efficient due to the large size of graphs in real-world networks, so we require the computationally complexity to not be worse than nearly linear in the number of edges in the graph (approximately $O(n^{2}\natlog n)$ where $n$ represents the number of nodes in the graph).
+
+Within the literature, the terms \emphT{groups} and \emphT{clusters} are synonymous with communities, and as such we will use all three terms interchangeably through the report; so the reader should note all these terms refer to the same notion of communities in graphs.
+
+In order to help provide a setting where different algorithms may be compared, we wish to study particular models which generate random graphs. One popular model is called the stochastic block model.
+Many special cases of this model have been studied, but we consider two versions, available in the literature.
+Firstly, there is a model considered by Decellle et al. \cite{DKM+13} and Nadakuditi et al. \cite{NN12}, also known as the \emphT{planted partition model}.
+Secondly, there is a model used by Montanari \cite{DM13,Mon13}, which, for the remainder of the report, we will refer to as the \emphT{hidden clique model}. We emphasise that we do not exclusively focus on detecting cliques for the latter model, but the name is simply used for association.
+
+Let us define the stochastic block model following Decellle et al. \cite{DKM+13}. The stochastic block model has parameters: $k$, $n_{a}$, $\matvar{P}$. $k$ represents the number of communities (or groups), $n_{a}$ refers to the expected fraction of nodes within each group $a$, for $1 \leq a \leq k$, and a $k \times k$ matrix $\matvar{P}$ whose element $P_{ab}$ equals the probability of an edge occurring between nodes belonging to groups $a$ and $b$. It is known as the \emphT{affinity matrix}.
+We proceed to generate a random directed graph, $\graphvar{G}$, consisting of $n$ nodes.
+Firstly, though, assign, to each node $i$ of the graph, $\sigma_{i} \in \{1,\dots,k\}$, a label indicating which community the node belongs to. These labels are chose independently, where, for each node $i$, $\probability{\sigma_{i} = a} = n_{a}$.
+Let $\vecvar{\sigma} = \transpose{[\sigma_{1},\dots,\sigma_{n}]}$ be the \emphT{ground-truth node assignments} of the graph.
+The random graph is generated to have an adjacency matrix, $\matvar{A}$, whose elements are defined by
+\begin{equation}
+	\label{def:sbmAdjacencyMatrix}
+	A_{ij} =
+	\begin{cases}
+		0 & \text{if } i = j\\
+		X & \text{otherwise}
+	\end{cases}
+\end{equation}
+where $X \sim \bernoulli{P_{\sigma_{i},\sigma_{j}}}$.
+
+This formulation matches the intuition of community structure, that the connectivity between two nodes depends solely on the community memberships of the two nodes.
+Note, also, that we do not allow self-loops.
+
+The framework for testing community detection algorithms, which we will use, can now be summarised.
+Firstly, we generate synthetic datasets, by creating random graphs from the models described in \cref{subsec:plantedPartitionModel,subsec:hiddenCliqueModel}, with varying parameters and known underlying ground-truth node assignments.
+Then we use the synthetically-generated graphs as an input to various algorithms (an appropriate model is chosen for each algorithm), which provides, as output, an estimate to the community assignments.
+Finally, for each algorithm, we compare the estimated community assignments to the ground-truth values.
+This provides a notion of performance and accuracy to compare between the algorithms. This process is explained in detail in \cref{cha:comparingCommunityDetectionSyntheticData}.
+
+We now describe two models that are special cases of the stochastic block model, created by imposing specific properties on the parameters.
+
+\subsection{Planted Partition Model}
+\label{subsec:plantedPartitionModel}
+
+
+
+\subsection{Hidden Clique Model}
+\label{subsec:hiddenCliqueModel}
+
 %--------------------------------
 %   Financial Background Section   
 %--------------------------------
@@ -146,7 +198,7 @@ An important property of adjacency and Laplacian matrices is their spectra, whic
 \section{Financial Networks}
 \label{sec:financialNetworksBackground}
 
-\subsection{Prices and Returns of financial assets}
+\subsection{Prices and Returns of Financial Assets}
 \label{subsec:financialAssetsBackground}
 
 Consider financial assets as instruments claiming to have monetary value that can be bought and sold. Financial assets can be separated into broad classes, with examples including stocks, bonds or real estate \cite{Kuh12d,BKM13}.
@@ -179,7 +231,7 @@ If we divide \cref{eq:continuousCompounding} by the initial investment $w_{0}$, 
 We have arrived at another measure for return, called the \emphT{logarithmic return}, that is defined as
 \begin{equation}
 	\label{eq:logarithmicReturn}
-	r(t_{0}) = \log(p(t_{1})) - \log(p(t_{0}))
+	r(t_{0}) = \natlog(p(t_{1})) - \natlog(p(t_{0}))
 \end{equation}
 where, once more, we can interpret $t_{1}$ as the time when the investor sold the asset, and $t_{0}$ as the time when the investor bought the asset.
 
@@ -188,7 +240,7 @@ Firstly, if we assume asset prices have a \emphT{log normal} distribution, then 
 Secondly, for small rates of return, the logarithmic return is approximately equal to the rate of return \cite{QuaWp}. To see this, consider the following approximation combined with \cref{eq:rateOfReturn} and \cref{eq:logarithmicReturn}
 \begin{equation}
 	\label{eq:logarithApproximation}
-	\log(1 + x) \approx x \text{, for } x \ll 1
+	\natlog(1 + x) \approx x \text{, for } x \ll 1
 \end{equation}
 Thirdly, we benefit from numerical stability since the addition of small numbers is numerically stable, whilst multiplying small numbers is subject to \emphT{arithmetic underflow} \cite{QuaWp}.
 
@@ -229,7 +281,7 @@ In particular we can represent the return of the portfolio by
 	\label{eq:portfolioReturn}
 	r_{p} = \sum_{i=1}^{n} w_{i} r_{i}
 \end{equation}
-and, by using \cref{eq:portfolioReturn}, we obtain the expected return of the portfolio
+By using \cref{eq:portfolioReturn}, we obtain the expected return of the portfolio
 \begin{equation}
 	\label{eq:portfolioExpectedReturn}
 	\expectation{r_{p}} = \sum_{i=1}^{n} w_{i} \expectation{r_{i}}
@@ -300,7 +352,7 @@ so that
 \end{equation}
 Note that the cross correlation values is just a sample estimate for the correlation coefficient, $\rho_{ij}$, used in \cref{subsec:financialNetworksConstructionBackground}, calculated from the historical data.
 
-We can then characterise the financial network by the correlation matrix, which we also refer to as the networks \emphT{weighted adjacency matrix}.
+We can then characterise the financial network by the correlation matrix, which we also refer to as the networks weighted adjacency matrix.
 
 In \cref{fig:exampleCrossCorrelationMatrix}, we have plotted a correlation matrix using data of 80 stocks listed on the FTSE 100 (see \cref{app:listFTSE100Stocks} for a list) between 2011 and 2013. Notice that the main diagonal has all elements equal to one, as you would expect, and that there are very few negative elements (i.e. very few assets that are anti-correlated with one another).
 
@@ -313,4 +365,4 @@ In \cref{fig:exampleCrossCorrelationMatrix}, we have plotted a correlation matri
 
 The problem statement can now summarised as given a financial network, how can we group nodes into communities where cross-correlations are higher within the communities and lower between the communities.
 Contrary to graphs with community structure described in \cref{sec:communityStructureBackground}, the weights of the edges rather than the topology of the network are crucial in determining community memberships.
-Also the reader should note that the correlations between asset returns will vary over time, and thus representing this relationship dynamically (rather than over a one long period of time) is very important since investors wish to change their positions in order to react to the dynamics of market conditions, and as such, we will investigate this also.
+Also the reader should note that the correlations between asset returns will vary over time, and thus representing this relationship dynamically (rather than over a one long period of time) is very important since investors wish to change their positions in order to react to the dynamics of market conditions.

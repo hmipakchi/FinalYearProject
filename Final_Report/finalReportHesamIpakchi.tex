@@ -67,6 +67,12 @@
 % trace command
 \newcommand*\trace[1]{Tr(#1)}
 
+% bernoulli distribution command
+\newcommand*\bernoulli[1]{Be(#1)}
+
+% probability event command
+\newcommand*\probability[1]{\Pr(#1)}
+
 % expectation command
 \newcommand*\expectation[1]{\mathbb{E}(#1)}
 
@@ -91,11 +97,18 @@
 % emphasise in text command
 \newcommand*\emphT[1]{\textit{#1}}
 
+% natural logarithm command
+\newcommand*\natlog[1]{\log#1}
+
 % euler constant (e) command
 \newcommand{\euler}{e\xspace}
 
+% set of real numbers 'R' command
+\newcommand*\realsR{\mathbb{R}\xspace}
+
 % special number one (1) command
 \newcommand*\one{\mathds{1}\xspace}
+
 
 %----------------------------------------------------------------------------------------
 %	TITLE PAGE
@@ -211,10 +224,10 @@ in the\\
 \listofnomenclature{ll}
 {
 $\abs{\setvar{S}}$ & Cardinality of the set $\setvar{S}$ \\
+$\one_{\setvar{S}}$ & Indicator variable over the set $\setvar{S}$ \\
 $y$ & Scalar $y$ \\
 $\abs{y}$ & Absolute value of $y$ \\
 $\vecvar{v}$ & Vector $\vecvar{v}$ \\
-$\one_{n}$ & n-dimensional vector with every element equal to one \\
 $\matvar{M}$ & Matrix $\matvar{M}$ \\
 $M_{ij}$ & The element of the matrix $\matvar{M}$ at row $i$ and column $j$\\
 $\transpose{\matvar{M}}$ & Transpose of the matrix $\matvar{M}$ \\
@@ -222,7 +235,7 @@ $\abs{\matvar{M}}$ & Determinant of the matrix $\matvar{M}$ \\
 $\trace{\matvar{M}}$ & Trace of the matrix $\matvar{M}$ \\
 $\expectation{X}$ & Expected value of $X$ \\
 $\variance{X}$ & Variance of $X$ \\
-$\log(x)$ & \emphT{natural logarithm} of $x$ (logarithm to the base $\euler$)
+$\natlog(x)$ & \emphT{natural logarithm} of $x$ (logarithm to the base $\euler$)
 }
 
 %----------------------------------------------------------------------------------------
