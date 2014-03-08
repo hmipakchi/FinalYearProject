@@ -1,0 +1,22 @@
+<gexf version="1.1">
+<meta>
+<creator>Hesam Ipakchi</creator>
+</meta><graph defaultedgetype="undirected" idtype="string" type="static">
+<nodes count="6">
+<node id="1" label="1"/>
+<node id="2" label="2"/>
+<node id="3" label="3"/>
+<node id="4" label="4"/>
+<node id="5" label="5"/>
+<node id="6" label="6"/>
+</nodes>
+<edges count="6">
+<edge id="1" source="1" target="2"/>
+<edge id="2" source="1" target="3"/>
+<edge id="3" source="2" target="3"/>
+<edge id="4" source="2" target="4"/>
+<edge id="5" source="4" target="5"/>
+<edge id="6" source="5" target="6"/>
+</edges>
+</graph>
+</gexf>

@@ -137,13 +137,18 @@
 \setcounter{bottomnumber}{9}
 \setcounter{totalnumber}{20}
 \setcounter{dbltopnumber}{9}
+
+% switch comments to dd/remove figures and replace with black boxes to compile faster
+\usepackage[demo]{graphicx}
+%\usepackage{graphicx}
+
 \usepackage{epstopdf}
 \usepackage{booktabs}
 \usepackage{rotating}
 \usepackage{listings}
 \usepackage{lstpatch}
 \usepackage{cite}
-\usepackage{graphicx}
+%\usepackage{graphicx}
 
 \lstset{captionpos=b,
         frame=tb,
@@ -192,6 +197,7 @@
 \usepackage{dsfont}
 \usepackage{longtable}
 
+
 \newcommand*{\supervisor}[1]{\def\supname{#1}}
 \newcommand*{\thesistitle}[1]{\def\ttitle{#1}}
 \newcommand*{\secondmarker}[1]{\def\secmark{#1}}
@@ -219,9 +225,9 @@
 
 \thesistitle{Community Detection in Networks} % Your thesis title - this is used in the title and abstract
 %-------------------------------------------------  
-\supervisor{Moez Draief} % You supervisor's name - this is used in the title page
+\supervisor{Dr. Moez Draief} % You supervisor's name - this is used in the title page
 %-------------------------------------------------   
-\secondmarker{Jeremy Pitt} % Your examiner's name - this is not currently used anywhere in the template, cite it with \secondmarker if you want it
+\secondmarker{Dr. Jeremy Pitt} % Your examiner's name - this is not currently used anywhere in the template, cite it with \secondmarker if you want it
 %-------------------------------------------------   
 \degree{MEng Electronic and Information Engineering} % Your degree name - this is currently used in the title page and abstract
 %-------------------------------------------------   
