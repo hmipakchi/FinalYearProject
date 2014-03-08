@@ -31,7 +31,7 @@ We assume the reader is familiar with some basic concepts in linear algebra such
 	\label{def:weightedGraph}
 	A weighted graph is a graph where a number (weight) is assigned to each edge.
 \end{definition}
-We will assume, without loss of generality, that $V = \{1,\dots,n\}$. See Figure \ref{fig:exampleGraphSmall} for an example of an undirected graph with seven vertices and eleven edges.
+We will assume, without loss of generality, that $V = \{1,\dots,n\}$. See \cref{fig:exampleGraphSmall} for an example of an undirected graph with seven vertices and eleven edges.
 \begin{definition}
 	\label{def:subGraph}
 	A graph $\graphvar{G}^{\prime} = (V^{\prime},E^{\prime})$ is a subgraph of $\graphvar{G} = (V,E)$ if $V^{\prime} \subset V$ and $E^{\prime} \subset E$. If $\graphvar{G}^{\prime}$ contains all edges of $\graphvar{G}$ that join vertices of $V^{\prime}$, one says that the subgraph $\graphvar{G}^{\prime}$ is induced or spanned by $V^{\prime}$.
@@ -59,7 +59,7 @@ We will be interested in using certain graphs is the models, such as bipartite g
 \end{definition}
 An example of an undirected bipartite graph with nine vertices and eight edges is shown in \cref{fig:exampleGraphBipartite}, whilst an example of a clique within an undirected graph is shown in \cref{fig:exampleGraphClique}.
 
-%---   UNCOMMENT
+%---   FIGURE
 \begin{figure}
 \centering
 	\begin{subfigure}{.5\textwidth}
@@ -88,7 +88,7 @@ There is a very close connection between graphs and matrices, since the whole in
 	\label{def:adjacencyMatrix}
 	The adjacency matrix, $\matvar{A} \in \{0,1\}^{n \times n}$ of a graph $\graphvar{G} = (V,E)$, is a $n\times n$ matrix whose element $A_{ij}$ equals 1 if there exists an edge joining vertices i and j in $\graphvar{G}$, and zero otherwise.
 \end{definition}
-From definition \ref{def:adjacencyMatrix}, it follows that elements of the adjacency matrix, $\matvar{A}$, can be written as
+From \cref{def:adjacencyMatrix}, it follows that elements of the adjacency matrix, $\matvar{A}$, can be written as
 \begin{equation*}
 	A_{ij} =
 	\begin{cases}
@@ -107,7 +107,7 @@ There are other matrices that have also been studied extensively in spectral gra
 	\label{def:degreeMatrix}
 	The degree matrix, $\matvar{D}$ of a graph $\graphvar{G} = (V,E)$, is a $n \times n$ diagonal matrix whose element $D_{ii}$ equals the degree of vertex $i$.
 \end{definition}
-From definition \ref{def:degreeMatrix}, it follows that elements of the degree matrix, $\matvar{D}$, can be written as
+From \cref{def:degreeMatrix}, it follows that elements of the degree matrix, $\matvar{D}$, can be written as
 \begin{equation*}
 	 D_{ij} =
 	\begin{cases}
@@ -119,7 +119,7 @@ From definition \ref{def:degreeMatrix}, it follows that elements of the degree m
 	\label{def:unnormalisedLaplacianMatrix}
 	The matrix $\matvar{L} = \matvar{D}  - \matvar{A} $ is called the unnormalised Laplacian matrix.
 \end{definition}
-From definition \ref{def:unnormalisedLaplacianMatrix}, it follows that elements of the unnormalised Laplacian matrix of a graph $\graphvar{G} = (V,E)$, $\matvar{L}$, can be written as
+From \cref{def:unnormalisedLaplacianMatrix}, it follows that elements of the unnormalised Laplacian matrix of a graph $\graphvar{G} = (V,E)$, $\matvar{L}$, can be written as
 \begin{equation*}
 	L_{ij} =
 	\begin{cases}
@@ -130,9 +130,9 @@ From definition \ref{def:unnormalisedLaplacianMatrix}, it follows that elements 
 \end{equation*}
 \begin{definition}
 	\label{def:normalisedLaplacianMatrix}
-	The matrix $\matvar{L_{norm}} = \matvar{I}  - \matvar{D}^{-1/2}\matvar{A}\matvar{D}^{-1/2}$ is called the normalised Laplacian matrix, where $\matvar{I}$ is the $n \times n$ identity matrix.
+	The matrix $\widetilde{\matvar{L}} = \matvar{I}  - \matvar{D}^{-1/2}\matvar{A}\matvar{D}^{-1/2}$ is called the normalised Laplacian matrix, where $\matvar{I}$ is the $n \times n$ identity matrix.
 \end{definition}
-Note that from definitions \ref{def:unnormalisedLaplacianMatrix} and \ref{def:normalisedLaplacianMatrix}, the normalised Laplacian matrix can also be written as $\matvar{L_{norm}} = \matvar{D}^{-1/2}\matvar{L}\matvar{D}^{-1/2}$.
+Note that from \cref{def:unnormalisedLaplacianMatrix,def:normalisedLaplacianMatrix}, the normalised Laplacian matrix can also be written as $\widetilde{\matvar{L}} = \matvar{D}^{-1/2}\matvar{L}\matvar{D}^{-1/2}$.
 
 An important property of adjacency and Laplacian matrices is their spectra, which we will use, later in the project, to motivate and develop a spectral clustering algorithm for community detection.
 \begin{definition}
@@ -166,7 +166,7 @@ Secondly, there is a model used by Montanari \cite{DM13,Mon13}, which, for the r
 Let us define the stochastic block model following Decellle et al. \cite{DKM+13}. The stochastic block model has parameters: $k$, $n_{a}$, $\matvar{P}$. $k$ represents the number of communities (or groups), $n_{a}$ refers to the expected fraction of nodes within each group $a$, for $1 \leq a \leq k$, and a $k \times k$ matrix $\matvar{P}$ whose element $P_{ab}$ equals the probability of an edge occurring between nodes belonging to groups $a$ and $b$. It is known as the \emphT{affinity matrix}.
 We proceed to generate a random directed graph, $\graphvar{G}$, consisting of $n$ nodes.
 Firstly, though, assign, to each node $i$ of the graph, $\sigma_{i} \in \{1,\dots,k\}$, a label indicating which community the node belongs to. These labels are chose independently, where, for each node $i$, $\probability{\sigma_{i} = a} = n_{a}$.
-Let $\vecvar{\sigma} = \transpose{[\sigma_{1},\dots,\sigma_{n}]}$ be the \emphT{ground-truth node assignments} of the graph.
+Let $\vecvar{u} = \transpose{[\sigma_{1},\dots,\sigma_{n}]}$ be the \emphT{ground-truth node assignments} of the graph.
 The random graph is generated to have an adjacency matrix, $\matvar{A}$, whose elements are defined by
 \begin{equation}
 	\label{def:sbmAdjacencyMatrix}
@@ -212,7 +212,7 @@ The adjacency matrix of this graph is plotted with a pixel shaded red if the ele
 Since we know the ground truth labelling of nodes, we can, without loss of generality, reorder the rows and columns of the adjacency matrix, such that it consists of blocks of nodes associated with the node community memberships.
 This is plotted in \cref{fig:ppmLabelledAdjacencyMatrixPlot}. Note that since $k = 3$, there are $3 \times 3 = 9$ blocks, where the blocks are denser along the main diagonal since these correspond to edges between nodes belonging to the same community and $p_{in} > p_{out}$.
 
-%---   UNCOMMENT
+%---   FIGURE
 \begin{figure}
 	\centering
 	\begin{subfigure}{.5\textwidth}
@@ -232,7 +232,7 @@ This is plotted in \cref{fig:ppmLabelledAdjacencyMatrixPlot}. Note that since $k
 
 In \cref{fig:ppmExampleGraph}, we show a visualisation of an instance of a random graph generated by the planted partition model with parameters with $n = 240$, $k = 3$, $p_{in} = 0.2$, $p_{out} = 0.01$.
 
-%---   UNCOMMENT
+%---   FIGURE
 \begin{figure}
 	\centering
 	\includegraphics[width=0.6\linewidth]{figures/ppmExampleGraph.png}
@@ -281,9 +281,9 @@ An example of a random graph generated by the hidden clique model is shown in \c
 We generated the graph with $n = 300$, $k = 3$, $p_{in} = 0.8$, $p_{out} = 0.2$, $n_{1} = 50$, $n_{2} = 40$, $n_{3} = 20$.
 The adjacency matrix of this graph is plotted with a pixel shaded red if the element in the adjacency matrix, corresponding to the location of the pixel, equals 1; while a pixel is shaded white if the element equals 0.
 Since we know the ground truth labelling of nodes, we can, without loss of generality, reorder the rows and columns of the adjacency matrix, such that it consists of blocks of nodes associated with the node community memberships.
-This is plotted in \cref{fig:hcmLabelledAdjacencyMatrixPlot}. Note we can see three dense regions of size $50$, $40$ and $20$ respectively, corresponding to the three hidden communities.
+This is plotted in \cref{fig:hcmLabelledAdjacencyMatrixPlot}. We can see three dense blocks of size $50$, $40$ and $20$ respectively, corresponding to the three hidden communities.
 
-%---   UNCOMMENT
+%---   FIGURE
 \begin{figure}
 	\centering
 	\begin{subfigure}{.5\textwidth}
@@ -303,12 +303,78 @@ This is plotted in \cref{fig:hcmLabelledAdjacencyMatrixPlot}. Note we can see th
 
 In \cref{fig:hcmExampleGraph}, we show a visualisation of an instance of a random graph generated by the hidden clique model with parameters with $n = 150$, $k = 1$, $n_{1} = 30$, $p_{in} = 0.3$, $p_{out} = 0.05$.
 
-%---   UNCOMMENT
+%---   FIGURE
 \begin{figure}
 	\centering
 	\includegraphics[width=0.6\linewidth]{figures/hcmExampleGraph.png}
 	\caption[Visualisation of a graph generated by the planted partition model]{\label{fig:hcmExampleGraph} A visualisation of an instance of a random graph generated by the hidden clique model with $n = 150$, $k = 1$, $n_{1} = 30$, $p_{in} = 1.0$, $p_{out} = 0.1$. Nodes belonging to the hidden community, which in this case is in fact a clique, are coloured red whilst other nodes are coloured blue.}
 \end{figure}
+
+An interesting phase transition can also be derived for these models also. We follow the argument of Montanari \cite{DM13,Mon13} to show this. We consider the simplest case of the model with only one hidden community.
+We begin by generating a graph from the hidden clique model with $n$ nodes and one community (i.e. $k = 1$).
+Assume the $n_{1}$ nodes belonging to the hidden community make up a hidden community set, $\setvar{S}$ (i.e. $\cardinality{\setvar{S}} = n_{1}$). Define $\one_{n} \in \{1\}^{n}$ as the n-dimensional vector with every element equal to 1.
+Also let $\one_{\setvar{S}}$ be the indicator variable for nodes belonging to the hidden community.
+Denote the adjacency matrix of the graph by $\matvar{A}$, where each element is defined by
+\begin{equation}
+	\label{def:hcmAdjacencyMatrix}
+	A_{ij} \sim \bernoulli{p_{ij}}
+\end{equation}
+where 
+\begin{equation}
+	\label{def:hcmPijAdjacencyMatrix}
+	p_{ij} =	
+	\begin{cases}
+		p_{in} & \text{if } i \in \setvar{S} \text{, } j \in \setvar{S} \\
+		p_{out} & \text{otherwise}
+	\end{cases}
+\end{equation}
+Then, simply, we get the following
+\begin{equation}
+	\label{def:hcmExpectationAdjacencyMatrix}
+	\expectation{\matvar{A}} = (p_{in} - p_{out})\one_{\setvar{S}}\transpose{\one_{\setvar{S}}} + p_{out}\one_{n}\transpose{\one_{n}}
+\end{equation}
+and
+\begin{equation}
+	\label{def:hcmVarianceAdjacencyMatrix}
+	\variance{A_{ij}} = p_{out}(1-p_{out}) \text{ if } \{i,j\} \not\subseteq \setvar{S}
+\end{equation}
+Denote $\widetilde{\matvar{A}}$ as the \emphT{normalised adjacency matrix} of the graph, defined by
+\begin{equation}
+	\label{def:hcmNormlaisedAdjacencyMatrix}
+	\widetilde{\matvar{A}} \equiv \frac{1}{\sqrt{np_{out}(1-p_{out})}} (\matvar{A} - p_{out}\one_{n}\transpose{\one_{n}})
+\end{equation}
+By taking the expectation and using \cref{def:hcmExpectationAdjacencyMatrix}, we get the following
+\begin{equation}
+	\label{def:hcmExpectationNormalisedAdjacencyMatrix}
+	\expectation{\widetilde{\matvar{A}}} = \frac{1}{\sqrt{np_{out}(1-p_{out})}} (p_{in} - p_{out}) \one_{\setvar{S}}\transpose{\one_{\setvar{S}}}
+\end{equation}
+Let us write $\widetilde{\matvar{A}} = \expectation{\widetilde{\matvar{A}}} + (\widetilde{\matvar{A}} - \expectation{\widetilde{\matvar{A}}})$. Now using \cref{def:hcmExpectationNormalisedAdjacencyMatrix}, we get
+\begin{equation}
+	\label{def:hcmNormlaisedAdjacencyMatrix2}
+	\widetilde{\matvar{A}} = \frac{1}{\sqrt{np_{out}(1-p_{out})}} (p_{in} - p_{out}) \one_{\setvar{S}}\transpose{\one_{\setvar{S}}} + (\widetilde{\matvar{A}} - \expectation{\widetilde{\matvar{A}}})
+\end{equation}
+Let us now define the following
+\begin{equation}
+	\label{def:hcmLambda}
+	\lambda \equiv \frac{p_{in} - p_{out}}{\sqrt{np_{out}(1-p_{out})}}
+\end{equation}
+\begin{equation}
+	\label{def:hcmU}
+	\vecvar{u} \equiv \one_{\setvar{S}}
+\end{equation}
+\begin{equation}
+	\label{def:hcmZ}
+	\matvar{Z} \equiv \widetilde{\matvar{A}} - \expectation{\widetilde{\matvar{A}}}
+\end{equation}
+Then we can re-write \cref{def:hcmNormlaisedAdjacencyMatrix2} as
+\begin{equation}
+	\label{def:hcmNormlaisedAdjacencyMatrixDecomposed}
+	\widetilde{\matvar{A}} = \lambda \vecvar{u}\transpose{\vecvar{u}} + \matvar{Z}
+\end{equation}
+
+One can interpret $\lambda$ as a signal-to-noise ratio, $\vecvar{u}$ as a signal (i.e. the ground-truth node assignments we which to infer) and $\matvar{Z}$ as zero-mean noise with \iid entries.
+We have essentially represented the problem of inferring the hidden community from the graph by a problem of estimating a rank-1 matrix in noise. Note that for the generalisation with $k$ communities, we would get a rank-k matrix plus noise for the normalised adjacency matrix.
+
 
 %--------------------------------
 %   Financial Background Section   
@@ -366,7 +432,7 @@ Thirdly, we benefit from numerical stability since the addition of small numbers
 However, there are disadvantages to using the logarithmic return, including the issue that the derivation is only correct if the interest rate is constant \cite{QuaWp,Onn02}.
 Nonetheless, the logarithmic return is widely used in the literature (e.g. see \cite{Onn02,OCK+02,OKK03,FPM+10,FPW+11,MG13}), and hence we shall use it for the rest of the report, and the reader should note we shall use the terms `return' and `logarithmic return' interchangeably from now on. An example plot of price and logarithmic return for a stock is shown in \cref{fig:priceAndLogReturn}.
 
-%--- UNCOMMENT
+%--- FIGURE
 \begin{figure}
 	\centering
 	\includegraphics[width=0.8\linewidth]{figures/priceAndLogReturnTimeSeries.png}
@@ -475,7 +541,7 @@ We can then characterise the financial network by the correlation matrix, which 
 
 In \cref{fig:exampleCrossCorrelationMatrix}, we have plotted a correlation matrix using data of 80 stocks listed on the FTSE 100 (see \cref{app:listFTSE100Stocks} for a list) between 2011 and 2013. Notice that the main diagonal has all elements equal to one, as you would expect, and that there are very few negative elements (i.e. very few assets that are anti-correlated with one another).
 
-%--- UNCOMMENT
+%--- FIGURE
 \begin{figure}
 	\centering
 	\includegraphics[width=0.8\linewidth]{figures/correlationMatrix_FTSE100_n_80_T_2501.png}

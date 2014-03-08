@@ -91,12 +91,6 @@
 \clubpenalty=9999                 % Almost no orphans at top of page.
 \interfootnotelinepenalty=9999    % Almost never break footnotes.
 
-%\usepackage{fancyhdr}
-%\lhead[\rm\thepage]{\fancyplain{}{\sl{\rightmark}}}
-%\rhead[\fancyplain{}{\sl{\leftmark}}]{\rm\thepage}
-%\chead{}\lfoot{}\rfoot{}\cfoot{}
-%\pagestyle{fancy}
-
 \pagestyle{empty}
 
 \renewcommand{\chaptermark}[1]{\btypeout{\thechapter\space #1}\markboth{\@chapapp\ \thechapter\ #1}{\@chapapp\ \thechapter\ #1}}
@@ -107,18 +101,21 @@
 \thispagestyle{empty}
 \newpage
 \if@twocolumn\hbox{}\newpage\fi\fi\fi}
-\usepackage{amsmath,amsfonts,amssymb,amscd,amsthm,xspace}
-\theoremstyle{plain}
-\newtheorem{example}{Example}[chapter]
-\newtheorem{theorem}{Theorem}[chapter]
-\newtheorem{corollary}[theorem]{Corollary}
-\newtheorem{lemma}[theorem]{Lemma}
-\newtheorem{proposition}[theorem]{Proposition}
-\newtheorem{axiom}[theorem]{Axiom}
-\theoremstyle{definition}
-\newtheorem{definition}[theorem]{Definition}
-\theoremstyle{remark}
-\newtheorem{remark}[theorem]{Remark}
+\usepackage{amsmath,amsfonts,amssymb,amscd,xspace}
+\usepackage{amsthm}
+
+% switch comments to add/remove figures and replace with black boxes to compile faster
+\usepackage[demo]{graphicx}
+%\usepackage{graphicx}
+
+\usepackage{epstopdf}
+\usepackage{booktabs}
+\usepackage{rotating}
+\usepackage{listings}
+\usepackage{lstpatch}
+\usepackage{cite}
+%\usepackage{graphicx}
+
 \usepackage[centerlast,small,sc]{caption}
 \setlength{\captionmargin}{20pt}
 \newcommand{\fref}[1]{Figure~\ref{#1}}
@@ -137,18 +134,6 @@
 \setcounter{bottomnumber}{9}
 \setcounter{totalnumber}{20}
 \setcounter{dbltopnumber}{9}
-
-% switch comments to dd/remove figures and replace with black boxes to compile faster
-\usepackage[demo]{graphicx}
-%\usepackage{graphicx}
-
-\usepackage{epstopdf}
-\usepackage{booktabs}
-\usepackage{rotating}
-\usepackage{listings}
-\usepackage{lstpatch}
-\usepackage{cite}
-%\usepackage{graphicx}
 
 \lstset{captionpos=b,
         frame=tb,
@@ -182,7 +167,6 @@
    \let\\\space
 }
 
-
 \usepackage{cite}
 \usepackage{caption}
 \usepackage{subcaption}
@@ -190,13 +174,26 @@
 \usepackage{mathtools}
 \usepackage{amsmath}
 \usepackage{isomath}
-\usepackage{hyperref}
-\usepackage[hypcap]{caption}
-\usepackage{cleveref}
-\usepackage{xspace}
+\usepackage[hypcap]{caption} 
 \usepackage{dsfont}
 \usepackage{longtable}
+\usepackage{hyperref}
+\usepackage[noabbrev]{cleveref}
 
+\theoremstyle{plain}
+\newtheorem{example}{Example}[chapter]
+\newtheorem{theorem}{Theorem}[chapter]
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{axiom}[theorem]{Axiom}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+
+\crefname{definition}{definition}{definitions}
+\Crefname{definition}{Definition}{Definitions}
 
 \newcommand*{\supervisor}[1]{\def\supname{#1}}
 \newcommand*{\thesistitle}[1]{\def\ttitle{#1}}
