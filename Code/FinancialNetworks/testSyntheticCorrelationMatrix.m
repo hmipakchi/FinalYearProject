@@ -4,6 +4,9 @@ T = 2500;
 n = 100;
 noCommunities = 10;
 
+%noCommunities = 3;
+%sizeOfCommunities = 10;
+
 means = zeros(n,1);
 standardDeviations = ones(n,1);
 
@@ -14,6 +17,16 @@ for i=1:n
     if (mod(i,n/noCommunities)==0)
         count = count + 1;
     end
+%     if count <= sizeOfCommunities
+%         timeSeriesCommunities(i) = 1;
+%     elseif (count > sizeOfCommunities) && (count <= (2*sizeOfCommunities))
+%         timeSeriesCommunities(i) = 2;
+%     elseif (count > 2*sizeOfCommunities) && (count <= (3*sizeOfCommunities))
+%         timeSeriesCommunities(i) = 3;
+%     else
+%         timeSeriesCommunities(i) = count;
+%     end
+%     count = count + 1;
 end
 
 % SNR varies between 0 and 1
@@ -31,6 +44,14 @@ fastNewmanModifiedVariationalInformation = zeros(length(SNR),1);
 montanariCommunities = zeros(n,length(SNR));
 montanariVariationalInformation = zeros(length(SNR),1);
 
+noIterationsNLPI = 50;
+NLPICommunities = zeros(n,length(SNR));
+NLPIVariationalInformation = zeros(length(SNR),1);
+
+noIterationsAMP = 50;
+AMPCommunities = zeros(n,length(SNR));
+AMPVariationalInformation = zeros(length(SNR),1);
+
 spectralClusteringCommunities = zeros(n,length(SNR));
 spectralClusteringVariationalInformation = zeros(length(SNR),1);
 
@@ -39,10 +60,11 @@ for s=1:length(SNR)
     
     % system wide correlations
     systemWide = zeros(noCommunities,noCommunities);
+    %systemWide = zeros(n,n);
     for i=1:noCommunities
         for j=1:noCommunities
             if (mod(i,2) == 0) && mod(j,2) == 0
-                systemWide(i,j) = abs(sign((2*rand(1))-1))*0.1;
+                systemWide(i,j) = abs(sign((2*rand(1))-1))*0;
             end
         end
     end
@@ -148,7 +170,12 @@ for s=1:length(SNR)
     [montanariCommunities(:,s)] = montanari_modularity(weightedAdjacencyMatrix);
 %     montanariVariationalInformation(s) = calculateNormalisedVariationInformation(timeSeriesCommunities,montanariCommunities(:,s));
 
-    [spectralClusteringCommunities(:,s)] = financialSpectralClustering(modularityMatrix, noCommunities);
+    [NLPICommunities(:,s)] = financialSpectralClusteringNLPI(modularityMatrix,noIterationsNLPI,noCommunities);
+    
+    [AMPCommunities(:,s)] = financialSpectralClusteringAMP(modularityMatrix,noIterationsAMP,noCommunities);
+
+
+%      [spectralClusteringCommunities(:,s)] = financialSpectralClustering(modularityMatrix, noCommunities, SNR(s));
 %     spectralClusteringVariationalInformation(s) = calculateNormalisedVariationInformation(timeSeriesCommunities,spectralClusteringCommunities(:,s));
     
 end

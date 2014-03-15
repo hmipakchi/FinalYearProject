@@ -83,15 +83,15 @@ meanProductTimeAverage = calculateMeanProductTimeAverage(logReturns);
 sampleCrossCorrelationMatrix = calculateSampleCrossCorrelationMatrix(logReturns);
 
 % write sample cross-correlation returns to file
-filename_str = sprintf('../data_files/financialNetworks/crossCorrelation_n_%s_T_%s.dat',n_str,T_str);
-fileID = fopen(filename_str,'w');
-for i=1:n
-    for j=1:n
-        fprintf(fileID,'%d ',sampleCrossCorrelationMatrix(i,j));
-    end
-    fprintf(fileID,'\n');
-end
-fclose(fileID);
+% filename_str = sprintf('../data_files/financialNetworks/crossCorrelation_n_%s_T_%s.dat',n_str,T_str);
+% fileID = fopen(filename_str,'w');
+% for i=1:n
+%     for j=1:n
+%         fprintf(fileID,'%d ',sampleCrossCorrelationMatrix(i,j));
+%     end
+%     fprintf(fileID,'\n');
+% end
+% fclose(fileID);
 
 % plot density of eigenvalues of sample cross-correlation matrix
 eigenvalues = [];
