@@ -104,9 +104,11 @@
 \usepackage{amsmath,amsfonts,amssymb,amscd,xspace}
 \usepackage{amsthm}
 
+%%%
 % switch comments to add/remove figures and replace with black boxes to compile faster
 \usepackage[demo]{graphicx}
 %\usepackage{graphicx}
+%%%
 
 \usepackage{epstopdf}
 \usepackage{booktabs}
@@ -114,7 +116,6 @@
 \usepackage{listings}
 \usepackage{lstpatch}
 \usepackage{cite}
-%\usepackage{graphicx}
 
 \usepackage[centerlast,small,sc]{caption}
 \setlength{\captionmargin}{20pt}
@@ -236,7 +237,7 @@
 %-------------------------------------------------   
 \keywords{} % Keywords for your thesis - this is not currently used anywhere in the template, cite it with \keywordnames if you want it
 %-------------------------------------------------   
-\university{\texorpdfstring{\href{http://www.imperial.ac.uk} % Your university's URL
+\university{\texorpdfstring{ % Your university's URL
                 {Imperial College London}} % Your university's name - this is currently used in the title page
                 {Imperial College London}}
 %-------------------------------------------------   
@@ -244,11 +245,11 @@
                 {IMPERIAL COLLEGE LONDON}} % Your university's name in capitals - this is currently used in the abstract page
                 {IMPERIAL COLLEGE LONDON}}
 %-------------------------------------------------                
-\department{\texorpdfstring{\href{http://www.imperial.ac.uk/electricalengineering} % Your department's URL
+\department{\texorpdfstring{ % Your department's URL
                 {Department of Electrical and Electronic Engineering}} % Your department's name - used in the title page and abstract
                 {Department of Electrical and Electronic Engineering}}
 %-------------------------------------------------                
-\DEPARTMENT{\texorpdfstring{\href{http://www.imperial.ac.uk/electricalengineering} % Your department's URL
+\DEPARTMENT{\texorpdfstring{ % Your department's URL
                 {DEPARTMENT OF ELECTRICAL AND ELECTRONIC ENGINEERING}} % Your department's name in capitals - this is not currently used anywhere in the template, cite it with \DEPTNAME if you want it
                 {DEPARTMENT OF ELECTRICAL AND ELECTRONIC ENGINEERING}}
 %-------------------------------------------------                
@@ -330,7 +331,8 @@
 \newenvironment{abstract}
 {
   \btypeout{Abstract Page}
-  \thispagestyle{empty}
+  %\thispagestyle{empty}
+  \thispagestyle{plain}
   \null%\vfil
   \begin{center}
     \setlength{\parskip}{0pt}

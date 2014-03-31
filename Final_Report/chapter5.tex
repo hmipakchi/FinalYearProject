@@ -8,13 +8,151 @@
 
 In this chapter we aim to apply algorithms to detect communities within real-world financial networks.
 Firstly, we explain the process of gathering the data to create the financial networks.
-Then we investigate and apply different community detection algorithms and compare their performance on both synthetically generated and real world data.
+Then we investigate and apply different community detection algorithms and compare their performance on both synthetically generated and the real-world data.
 
 %-----------------------------------------------------
 %   Financial Data Processing Section
 %-----------------------------------------------------
 
-\section{Real-world Financial Networks}
-\label{sec:constructingRealWorldFinancialNetworks}
+\section{Constructing the Real-world Financial Network}
+\label{sec:realWorldFinancialNetwork}
 
-The dataset we use consists of daily closing prices of 80 stocks in the FTSE 100 index, which we obtained from \cite{YahFi}. The time period considered is between the beginning of 2004 to the end of 2013, a total of 2501 prices. This is the data we obtained after the removal of a few data points due to incomplete data across different stocks. The complete list of stocks is given in \cref{app:listFTSE100Stocks}. We then calculated, for each stock and for each time period, the logarithmic return. We generated a time series of these returns and associated each stock with a single time series.
+The dataset we use consists of daily closing prices of 80 stocks in the FTSE 100 index, which we obtained from \cite{YahFi}.
+The time period considered is between the beginning of 2004 to the end of 2013, a total of 2501 prices. 
+his is the data we obtained after the removal of a few data points due to incomplete data across different stocks.The complete list of stocks is given in \cref{app:listFTSE100Stocks}.
+We then calculated, for each stock and for each time period, the logarithmic return. We generated a time series of these returns and associated each stock with a single time series.
+By using the method described in \cref{subsec:financialNetworksConstructionBackground}, we proceeded to construct financial network represented by a fully-connected, undirected and weighted graph. There are 80 nodes in this network (each one representing one of the stocks), and the weights on the edges connecting any two nodes is the cross-correlation between the time series of returns associated with the stocks represented by the two nodes.
+We stress, at this point, the data of the whole period (01/01/2004 - 01/01/2013) is currently represented by one single network.
+
+%-------------------------------------------
+%   Random Matrix Theory Sub Section
+%-------------------------------------------
+
+\subsection{Random Matrix Theory}
+\label{subsec:randomMatrixTheory}
+
+The correlation matrix is representing the weighted adjacency matrix of the network, and in order to better understand the weights in the network, we wish to refer to an important result from Random Matrix Theory (RMT) that has been outlined in \cite{SM99,PGR+99,PBL05,MG13}. In particular, we wish to distinguish between random and non-random properties of empirical correlation matrices.
+
+A correlation matrix created from $n$ random time series of length $T$, in the limits $n \rightarrow +\infty$ and $T \rightarrow +\infty$ with $1 < T/n < +\infty$, has a specific distribution of eigenvalues known as the \emphT{Sengupta-Mitra distribution} \cite{SM99,PBL05,FPW+11,MG13}. This distribution is defined by 
+\begin{equation}
+	\label{def:senguptaMitraDistribution}
+	\rho(\lambda) =	
+	\begin{cases}
+		\frac{T}{n}\frac{\sqrt{(\lambda_{+} - \lambda)(\lambda - \lambda_{-})}}{2\pi\lambda}& \text{if } \lambda_{-} \leq \lambda \leq \lambda_{+} \\
+		0 & \text{otherwise}
+	\end{cases}
+\end{equation}
+where the maximum and minimum eigenvalues ($\lambda_{+}$ and $\lambda_{-}$ respectively) are given by
+\begin{equation}
+\label{eq:maxEigenvalueSM}
+	\lambda_{+} = \left(1+\sqrt{\frac{n}{T}}\right)^{2}
+\end{equation}
+and
+\begin{equation}
+\label{eq:minEigenvalueSM}
+	\lambda_{-} = \left(1-\sqrt{\frac{n}{T}}\right)^{2}
+\end{equation}
+Therefore the set of eigenvalues of an empirical correlation matrix that lies within this distribution is considered to occur purely as a result of random noise \cite{PBL05,FPW+11,MG13}. Moreover, we may regard any eigenvalue larger than $\lambda_{+}$ to represent important structure within the data \cite{PBL05,FPW+11,MG13}.
+
+Analysing the deviation of the eigenvalue spectrum of empirical correlation matrices constructed from real-world financial data from the RMT distribution constitutes an effective method to filter noise out from the data.
+For example, we constructed the correlation matrix from the FTSE 100 data set (described in \cref{sec:realWorldFinancialNetwork}) and plotted the eigenvalue spectrum for this matrix alongside the corresponding Sengupta-Mistra distribution (i.e. RMT prediction with $n = 80$ and $T = 2501$) in \cref{fig:eigenvalueSpectra}.
+We observe two interesting regions of the eigenvalue spectrum outside the RMT prediction. Firstly, the largest eigenvalue of the correlation matrix, which we shall denote by $\lambda_{m}$, is much larger than all other eigenvalues. Also, the eigenvector associated with the largest eigenvalue, denoted by $v_{m}$, has all elements positive. This has been observed in many previous studies of empirical correlation matrices, and this eigenvalue is also called the \emphT{market mode} \cite{FPW+11,MG13}, meaning this component acts as a common factor influencing all assets within the market \cite{MG13}. Secondly, we observe a few eigenvalues just outside the RMT predicted region (i.e. eigenvalues just larger than $\lambda_{+}$ and much smaller than $\lambda_{m}$. We believe these components reflect a mesoscopic level of groups of stocks within the market (i.e. neither at the level of individual stocks in the form of noise, nor at the level of the entire market in the form of the market mode eigenvalue) \cite{MG13}, hence we expect members of these groups of stocks to demonstrate similar underlying properties, such as related sector classifications.
+
+%---   FIGURE
+\begin{figure}
+	\centering
+	\begin{subfigure}{.5\textwidth}
+		\centering
+		\includegraphics[width=0.8\linewidth]{figures/eigenvalueSpectra_n_80_T_2501.png}
+		\caption{}
+		\label{fig:eigenvalueSpectrumOriginal}
+	\end{subfigure}%
+	\begin{subfigure}{.5\textwidth}
+		\centering
+		\includegraphics[width=0.8\linewidth]{figures/eigenvalueSpectraZoomed_n_80_T_2501.png}
+		\caption{}
+		\label{fig:eigenvalueSpectrumZoomed}
+	\end{subfigure}
+	\caption[Plots of empirical and RMT predicted eigenvalue spectrum]{\label{fig:eigenvalueSpectra} Plots of eigenvalue spectra for empirical correlation matrix and RMT prediction, \subref{fig:eigenvalueSpectrumOriginal}, in addition to a zoomed-in version, \subref{fig:eigenvalueSpectrumZoomed}. The empirical correlation matrix was constructed from the daily log-returns of the FTSE 100 data set, and its eigenvalue spectrum is plotted in red. The RMT prediction is the Sengupta-Mitra distribution with appropriate parameters ($n = 80$, $T = 2501$), and is plotted in blue. The zoomed-in graph identifies the existence of eigenvalues outside of the region predicted by RMT, whilst the zoomed-out graph clearly shows the maximum eigenvalue (i.e the market mode eigenvalue) with a value of about 28.}
+\end{figure}
+
+We proceed to utilise the eigenvalue spectrum observed for the data set and the RMT prediction to filter out the empirical correlation matrix to reflect a mesoscopic structure, as achieved by \cite{MG13}. Recall the correlation matrix for our FTSE 100 data set is a $80 \times 80$ matrix denoted by $\matvar{C}$m and that we denote $\lambda_{i}$ as the $i-th$ eigenvalue of $\matvar{C}$ and $\vecvar{v_{i}}$ represents the eigenvector associated with $\lambda_{i}$. We are able to decompose this matrix as the sum of three matrices
+\begin{equation}
+\label{eq:decompositionCorrelationMatrix}
+	\matvar{C} = \matvar{C}_{r} + \matvar{C}_{g} + \matvar{C}_{m}
+\end{equation}
+where $\matvar{C}_{r}$ represents the correlation matrix corresponding to the random components, defined by
+\begin{equation}
+\label{eq:randomCorrelationMatrix}
+	\matvar{C}_{r} \equiv \sum_{i:\lambda_{i}\leq\lambda_{+}} \lambda_{i} \vecvar{v_{i}} \transpose{\vecvar{v_{i}}}
+\end{equation}
+$\matvar{C}_{m}$ represents the correlation matrix corresponding to the market mode component, defined by
+\begin{equation}
+\label{eq:marketModeCorrelationMatrix}
+	\matvar{C}_{m} \equiv \lambda_{m} \vecvar{v_{m}} \transpose{\vecvar{v_{m}}}
+\end{equation}
+and $\matvar{C}_{g}$ represents the remaining correlations
+\begin{equation}
+\label{eq:remainingCorrelationMatrix}
+	\matvar{C}_{g} \equiv \sum_{i:\lambda_{+} < \lambda_{i} < \lambda_{m}} \lambda_{i} \vecvar{v_{i}} \transpose{\vecvar{v_{i}}}
+\end{equation}
+
+Therefore, we now have a representation of a filtered empirical correlation matrix, $\matvar{C}_{g}$, which represents the mesoscopic (group level) correlations of the stocks, which we shall use, crucially, as the input to several community detection algorithms (it can be thought of as a weighted adjacency matrix of a new filtered network).
+
+%-----------------------------------------------------
+%   Community Detection Algorithms Section
+%-----------------------------------------------------
+
+\section{Community Detection Algorithms}
+\label{sec:communityDetectionAlgorithms}
+
+So far we have been able to construct a financial network based on the correlations of daily log returns of stocks and, using RMT, a filtered correlation matrix that represents a new financial network with links (hopefully) representing group-level correlation.
+Although, the question still remains, given either the initial or filtered correlation matrix, how does one produce a set of groups of stocks with greater correlations within a group than between groups?
+From previous sections, we understand the notion of community detection within graphs and have analysed several algorithms that tackle this problem. However, in these problems we analysed adjacency matrices that contained binary elements (i.e. a `1' if an edge exists in the graph and a`0' otherwise), whereas, in this problem, we study a weighted adjacency matrix with elements as real numbers.
+The reader should also note the adjacency matrix studied in previous sections is directly related to the structure of the network in question, whereas in this case, it is related to the weights of links between nodes.
+This heavily points to the possibility of having to modify previously studied algorithms for this scenario.
+
+%---   ERROR
+%%% need to find section label for results of comparative study of community detection algorithms
+Given the results of our analysis in \cref{sec:???}, and that the real-world data in this case is not well represented by generative random models, we shall use the modularity optimisation as a basis of some of our algorithms, with spectral clustering also considered as a baseline method. 
+
+%-------------------------------------------
+%   Naive Modularity Methods Sub Section
+%-------------------------------------------
+
+\subsection{Modularity Optimisation Methods}
+\label{subsec:modularityOptimisationMethods}
+
+%---   ERROR
+%%% need to find section label for modularity method
+Recall in \cref{sec:???}, we introduced the notion of modularity optimisation as a method for community detection within networks.
+
+%-------------------------------------------
+%   Spectral Clustering Algorithm Sub Section
+%-------------------------------------------
+
+\subsection{Spectral Clustering Algorithm}
+\label{subsec:spectralClusteringAlgorithm}
+
+%-------------------------------------------
+%   Modified Modularity Method Sub Section
+%-------------------------------------------
+
+\subsection{Modified Modularity Optimisation Method}
+\label{subsec:modifiedModularityOptimisationMethod}
+
+
+%-----------------------------------------------------
+%   Synthetic Data Testing Section
+%-----------------------------------------------------
+
+\section{Synthetic Data Testing}
+\label{sec:syntheticDataTesting}
+
+
+%-----------------------------------------------------
+%   Application to Real-world Financial Network Section
+%-----------------------------------------------------
+
+\section{Application to Real-world Financial Network}
+\label{sec:applicationToRealWorldFinancialNetwork}

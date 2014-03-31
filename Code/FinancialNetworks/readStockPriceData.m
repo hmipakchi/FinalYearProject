@@ -119,11 +119,21 @@ while eigenvalue <= maxEmpiricalEigenvalue
     eigenvalue = eigenvalue + eigenvalueStep;
 end
 
-% nbins = 200;
+% nbins = 500;
 % [spectrum,lambda] = hist(eigenvalues,nbins);
 % plot(lambda,spectrum/trapz(lambda,spectrum),'red','LineWidth',2);
 % hold on;
 % plot(theoreticalSpectrum(:,1),theoreticalSpectrum(:,2),'blue','LineWidth',2);
+% 
+% % write eigenvalue spectra to file
+% filename_str = sprintf('../data_files/financialNetworks/eigenvalueSpectra_n_%s_T_%s.dat',n_str,T_str);
+% fileID = fopen(filename_str,'w');
+% spectrumVector = spectrum/trapz(lambda,spectrum);
+% for i=1:nbins
+%     fprintf(fileID,'%d %d %d %d',theoreticalSpectrum(i,1),theoreticalSpectrum(i,2),lambda(i),spectrumVector(i));
+%     fprintf(fileID,'\n');
+% end
+% fclose(fileID);
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 [V,D] = eig(sampleCrossCorrelationMatrix);
