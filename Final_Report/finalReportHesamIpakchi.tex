@@ -58,6 +58,12 @@
 % vector variable command
 \newcommand*\vecvar[1]{\mathbfit#1}
 
+% Euclidean norm vector command
+\newcommand{\norm}[1]{\left\lVert#1\right\rVert}
+
+% inner-products vectors command
+\newcommand{\innerP}[1]{\left\langle#1\right\rangle}
+
 % matrix variable command
 \newcommand*\matvar[1]{\mathbf#1}
 
@@ -69,6 +75,9 @@
 
 % Bernoulli distribution command
 \newcommand*\bernoulli[1]{Be(#1)}
+
+% Normal distribution command
+\newcommand*\normal[2]{\mathcal{N}(#1#2)}
 
 % i.i.d. command
 \newcommand*\iid{i.i.d.\xspace}
@@ -209,6 +218,7 @@ $\one_{\setvar{S}}$ & Indicator variable over the set $\setvar{S}$ \\
 $y$ & Scalar $y$ \\
 $\abs{y}$ & Absolute value of $y$ \\
 $\vecvar{v}$ & Vector $\vecvar{v}$ \\
+$\norm{\vecvar{v}}$ & Euclidean norm of $\vecvar{v}$ \\
 $\matvar{M}$ & Matrix $\matvar{M}$ \\
 $M_{ij}$ & The element of the matrix $\matvar{M}$ at row $i$ and column $j$\\
 $\transpose{\matvar{M}}$ & Transpose of the matrix $\matvar{M}$ \\
@@ -232,6 +242,12 @@ $\natlog(x)$ & \emphT{natural logarithm} of $x$ (logarithm to the base $\euler$)
 
 % Background
 \input{chapters/chapter2}
+
+% Community Detection Algorithms
+\input{chapters/chapter3}
+
+% Experiments on Synthetic Data
+\input{chapters/chapter4}
 
 % Community detection in financial networks
 \input{chapters/chapter5}

@@ -76,28 +76,28 @@ We observe two interesting regions of the eigenvalue spectrum outside the RMT pr
 	\caption[Plots of empirical and RMT predicted eigenvalue spectrum]{\label{fig:eigenvalueSpectra} Plots of eigenvalue spectra for empirical correlation matrix and RMT prediction, \subref{fig:eigenvalueSpectrumOriginal}, in addition to a zoomed-in version, \subref{fig:eigenvalueSpectrumZoomed}. The empirical correlation matrix was constructed from the daily log-returns of the FTSE 100 data set, and its eigenvalue spectrum is plotted in red. The RMT prediction is the Sengupta-Mitra distribution with appropriate parameters ($n = 80$, $T = 2501$), and is plotted in blue. The zoomed-in graph identifies the existence of eigenvalues outside of the region predicted by RMT, whilst the zoomed-out graph clearly shows the maximum eigenvalue (i.e the market mode eigenvalue) with a value of about 28.}
 \end{figure}
 
-We proceed to utilise the eigenvalue spectrum observed for the data set and the RMT prediction to filter out the empirical correlation matrix to reflect a mesoscopic structure, as achieved by \cite{MG13}. Recall the correlation matrix for our FTSE 100 data set is a $80 \times 80$ matrix denoted by $\matvar{C}$m and that we denote $\lambda_{i}$ as the $i-th$ eigenvalue of $\matvar{C}$ and $\vecvar{v_{i}}$ represents the eigenvector associated with $\lambda_{i}$. We are able to decompose this matrix as the sum of three matrices
+We proceed to utilise the eigenvalue spectrum observed for the data set and the RMT prediction to filter out the empirical correlation matrix to reflect a mesoscopic structure, as achieved by \cite{MG13}. Recall the correlation matrix for our FTSE 100 data set is a $80 \times 80$ matrix denoted by $\matvar{C}$ and that we denote $\lambda_{i}$ as the $i-th$ eigenvalue of $\matvar{C}$ and $\vecvar{v_{i}}$ represents the eigenvector associated with $\lambda_{i}$. We are able to decompose this matrix as the sum of three matrices
 \begin{equation}
 \label{eq:decompositionCorrelationMatrix}
-	\matvar{C} = \matvar{C}_{r} + \matvar{C}_{g} + \matvar{C}_{m}
+	\matvar{C} = \matvar{C}^{(r)} + \matvar{C}^{(g)} + \matvar{C}^{(m)}
 \end{equation}
-where $\matvar{C}_{r}$ represents the correlation matrix corresponding to the random components, defined by
+where $\matvar{C}^{(r)}$ represents the correlation matrix corresponding to the random components, defined by
 \begin{equation}
 \label{eq:randomCorrelationMatrix}
-	\matvar{C}_{r} \equiv \sum_{i:\lambda_{i}\leq\lambda_{+}} \lambda_{i} \vecvar{v_{i}} \transpose{\vecvar{v_{i}}}
+	\matvar{C}^{(r)} \equiv \sum_{i:\lambda_{i}\leq\lambda_{+}} \lambda_{i} \vecvar{v_{i}} \transpose{\vecvar{v_{i}}}
 \end{equation}
-$\matvar{C}_{m}$ represents the correlation matrix corresponding to the market mode component, defined by
+$\matvar{C}^{(m)}$ represents the correlation matrix corresponding to the market mode component, defined by
 \begin{equation}
 \label{eq:marketModeCorrelationMatrix}
-	\matvar{C}_{m} \equiv \lambda_{m} \vecvar{v_{m}} \transpose{\vecvar{v_{m}}}
+	\matvar{C}^{(m)} \equiv \lambda_{m} \vecvar{v_{m}} \transpose{\vecvar{v_{m}}}
 \end{equation}
-and $\matvar{C}_{g}$ represents the remaining correlations
+and $\matvar{C}^{(g)}$ represents the remaining correlations
 \begin{equation}
 \label{eq:remainingCorrelationMatrix}
-	\matvar{C}_{g} \equiv \sum_{i:\lambda_{+} < \lambda_{i} < \lambda_{m}} \lambda_{i} \vecvar{v_{i}} \transpose{\vecvar{v_{i}}}
+	\matvar{C}^{(g)} \equiv \sum_{i:\lambda_{+} < \lambda_{i} < \lambda_{m}} \lambda_{i} \vecvar{v_{i}} \transpose{\vecvar{v_{i}}}
 \end{equation}
 
-Therefore, we now have a representation of a filtered empirical correlation matrix, $\matvar{C}_{g}$, which represents the mesoscopic (group level) correlations of the stocks, which we shall use, crucially, as the input to several community detection algorithms (it can be thought of as a weighted adjacency matrix of a new filtered network).
+Therefore, we now have a representation of a filtered empirical correlation matrix, $\matvar{C}^{(g)}$, which represents the mesoscopic (group level) correlations of the stocks, which we shall use, crucially, as the input to several community detection algorithms (it can be thought of as a weighted adjacency matrix of a new filtered network).
 
 %-----------------------------------------------------
 %   Community Detection Algorithms Section
@@ -108,7 +108,7 @@ Therefore, we now have a representation of a filtered empirical correlation matr
 
 So far we have been able to construct a financial network based on the correlations of daily log returns of stocks and, using RMT, a filtered correlation matrix that represents a new financial network with links (hopefully) representing group-level correlation.
 Although, the question still remains, given either the initial or filtered correlation matrix, how does one produce a set of groups of stocks with greater correlations within a group than between groups?
-From previous sections, we understand the notion of community detection within graphs and have analysed several algorithms that tackle this problem. However, in these problems we analysed adjacency matrices that contained binary elements (i.e. a `1' if an edge exists in the graph and a`0' otherwise), whereas, in this problem, we study a weighted adjacency matrix with elements as real numbers.
+From previous sections, we understand the notion of community detection within graphs, which we shall also refer to as \emphT{binary networks}, and have analysed several algorithms that tackle this problem. However, in these problems we analysed adjacency matrices that contained binary elements (i.e. a `1' if an edge exists in the graph and a`0' otherwise), whereas, in this problem, we study a weighted adjacency matrix with elements as real numbers.
 The reader should also note the adjacency matrix studied in previous sections is directly related to the structure of the network in question, whereas in this case, it is related to the weights of links between nodes.
 This heavily points to the possibility of having to modify previously studied algorithms for this scenario.
 
@@ -125,7 +125,83 @@ Given the results of our analysis in \cref{sec:???}, and that the real-world dat
 
 %---   ERROR
 %%% need to find section label for modularity method
-Recall in \cref{sec:???}, we introduced the notion of modularity optimisation as a method for community detection within networks.
+Recall in \cref{sec:???}, we introduced the notion of modularity optimisation as a method for community detection within networks. We shall once more consider algorithms for modularity optimisation, but for the case of financial networks.
+
+Let us denote a partition of $n$ nodes, in the financial network, into communities/groups by the vector $\vecvar{\sigma} = \transpose{[\sigma{1},\dots,\sigma{n}]}$, where $\sigma_{i}$ denotes the group to which node $i$ belongs to. This is essentially the group to which stock $i$ belongs. We then define the modularity for this partition, $Q(\vecvar{\sigma})$, by
+\begin{equation}
+\label{eq:modularityFinancialNetworks}
+	Q(\vecvar{\sigma}) = \frac{1}{2m} \sum_{ij} \left[A_{ij} - \frac{k_{i}k_{j}}{2m} \right] \delta(\sigma_{i},\sigma_{j})
+\end{equation}
+where $\matvar{A}$ is the weighted adjacency matrix of the network, $k_{i} \equiv \sum_{j} A_{ij}$ and $2m \equiv \sum_{ij} A_{ij}$.
+Note that in the case of binary networks, $A_{ij}$ represented the presence or absence of an edge between nodes $i$ and $j$, $k_{i}$ represented the degree of node $i$ and $m$ represented the total number of edges in the networks.
+Since we are interested in financial networks, a naive approach would be to use the empirical correlation matrix, denoted by $\matvar{C}$, as the networks weighted adjacency matrix. Note that we are essentially ignoring the results of \cref{subsec:randomMatrixTheory}, and we will see in \cref{subsec:modifiedModularityOptimisationMethod} why this is not a good idea, both intuitively and mathematically.
+
+For now, though, let us use the following relationship
+\begin{equation}
+\label{eq:weightedAdjacencyMatrixFinancialNetworks}
+	A_{ij} = \frac{1}{2} \big( C_{ij}+1 \big) - \delta(i,j)
+\end{equation}
+where $\matvar{C}$ denotes the correlation matrix, and $\delta(i,j)$ removes self edges. From this definition we simply note that $A_{ij} \in [0,1]$.
+
+We now focus on finding the partition, $\vecvar{\sigma}$, that maximises the modularity. We notice that a larger value of $A_{ij}$ implies larger correlation between the stocks $i$ and $j$, whilst a smaller value implies a lower correlation.
+ Recalling how, for the case with binary networks, we sought after denser connections within groups and sparser connections between groups, we realise the modularity maximisation algorithms used on binary networks should have the same effect on financial networks.
+This is intuitive since, in both types of networks, we aim to find the partition which maximises the sum of correlations or number of edges between nodes within same community and minimises the sum of correlations or number of edges between nodes belonging to different communities.
+
+We shall select two familiar approaches, widely known in the literature, as algorithms for the modularity maximisation. Firstly we consider a greedy agglomerative method, and secondly a method that uses spectral relaxation.
+
+%---   ERROR
+%%% need to describe greedy agglomerative method for modularity maximisation
+
+
+The approach using the spectral relaxation can be summarised using the argument from \cite{DM}. Let $\matvar{B}$ denote the modularity matrix, defined by
+\begin{equation}
+\label{eq:modularityMatrixFinancialNetworks}
+	B_{ij} = A_{ij} - \frac{k_{i}k_{j}}{2m}
+\end{equation}
+where $A_{ij}$, $k_{i}$ and $m$ are defined as before.
+Also denote the set of nodes belonging to group $a$ by $\setvar{S}_{a} \equiv \{i:\sigma_{i} = a\}$.
+The algorithm iterates by attempting to split the node members of a single group in an optimal fashion by using modularity. Assume at one iteration there are $q$ groups so the partition is indexed by $[q] \equiv \{1,2,\dots,q\}$. For some $a \in [q]$, let $\matvar{B}_{a}$ denote the submatrix restricted to nodes in $\setvar{S}_{a}$. Let $\vecvar{v} \in \realsR^{\cardinality{\setvar{S}_{a}}}$ denote the sign vecotr given the algorithm operating on $\matvar{B}_{a}$. Then the change in modularity is given by
+\begin{equation}
+\label{eq:changeModularityFinancialNetworks}
+	\begin{split}
+		&\Delta Q = \frac{1}{2m} \left( \sum_{i,j \in \setvar{S}_{a}} B_{ij}\frac{(1+v_{i}v_{j})}{2} - \sum_{i,j \in \setvar{S}_{a}} B_{ij} \right) \\
+		&= \frac{1}{4m} \left( \sum_{i,j \in \setvar{S}_{a}} B_{ij}v_{i}v_{j} - \sum_{i,j \in \setvar{S}_{a}} B_{ij} \right)  \\
+		&= \frac{1}{4m} \transpose{\vecvar{v}} \widetilde{\matvar{B}}_{a} \vecvar{v}
+	\end{split}
+\end{equation}
+where $\widetilde{\matvar{B}}_{a} = \matvar{B}_{a} - diag \left( \sum_{j \in \setvar{S}_{a}} B_{ij} \right)$.
+
+The algorithm accepts the splitting of the group which maximises the modularity difference, and terminates when reaches a threshold regarding the size of the groups and the possible improvement in modularity at a given iteration. We have implemented this algorithm of \cite{DM} using MATLAB, stressing the input is defined by \cref{eq:weightedAdjacencyMatrixFinancialNetworks}.
+
+%-------------------------------------------
+%   Modified Modularity Method Sub Section
+%-------------------------------------------
+
+\subsection{Modified Modularity Optimisation Method}
+\label{subsec:modifiedModularityOptimisationMethod}
+
+We move on to understand the potential issues with the naive approach hinted in the previous section. Intuitively, the term $k_{i}k_{j}/2m$ reflects the null hypothesis that the observed network structure is wholly based on the degrees of the nodes. This idea is sound when applied to binary networks, however, these terms do not have a specific meaning when applied to financial networks since we are interested in the correlation matrix rather than the structure of the underlying graph. The quantities $k_{i} \equiv \sum_{j} C_{ij}$ and $2m \equiv \sum_{ij} C_{ij}$ do not make up a clear notion of a null model when combined.
+Moreover, \cite{MG13} have shown the naive approach is mathematically incorrect and leads to biased results.
+In order to detect communities within the correlation matrix that leads to correct results, we seek improvement in the construction of the null model for the network. We have already discussed, in \cref{subsec:randomMatrixTheory}, how to construct a filtered correlation matrix that takes into account the random noise at the level of individual stocks and a market-wide component. Therefore, this filtered matrix, which we have denoted by $\matvar{C}^{(g)}$ and defined in \cref{eq:remainingCorrelationMatrix}, can be used as a modularity matrix, since it reflects a suitable null model (i.e. random noise plus market wide correlation) subtracted from the observed correlation matrix.
+
+Our aim, here, is to use $\matvar{C}^{(g)}$ as input to an algorithm that can detect communities by maximising modularity. We hope this provides better results than the naive modularity methods discussed previously. The construction of an algorithm is not quite as straightforward, though, since we take into account the modification of the modularity matrix.
+
+We must first, though, introduce a new formulation of modularity given a partition, as used by \cite{MG13}, which we denote by $Q_{n}(\vecvar{\sigma})$
+\begin{equation}
+\label{eq:newModularityFinancialNetworks}
+	Q_{n}(\vecvar{\sigma}) = \frac{1}{C_{norm}} \sum_{ij} C^{(g)}_{ij} \delta \left( \sigma_{i},\sigma_{j} \right).
+\end{equation}
+where $C_{norm}$ is a normalisation term defined by 
+\begin{equation}
+\label{eq:newModularityNormalisationConstantFinancialNetworks}
+	C_{norm} \equiv \sum_{ij} \abs{C_{ij}}
+\end{equation}
+which just ensures the value of the newly-defined modularity lies within the interval $[-1,+1]$.
+The new formulation of modularity is specifically aimed to detect mesoscopic-level communities.
+
+%---   ERROR
+%%% need to describe modified greedy agglomerative method for modified modularity maximisation
+
 
 %-------------------------------------------
 %   Spectral Clustering Algorithm Sub Section
@@ -134,12 +210,12 @@ Recall in \cref{sec:???}, we introduced the notion of modularity optimisation as
 \subsection{Spectral Clustering Algorithm}
 \label{subsec:spectralClusteringAlgorithm}
 
-%-------------------------------------------
-%   Modified Modularity Method Sub Section
-%-------------------------------------------
+So far we have considered two methods based on modularity optimisation to detect communities within our financial network. The first is a naive approach that can be shown to produced biased results, but is based on the standard definition of modularity, whilst the second approach considered optimisation based on a modified definition of modularity. In order to compare even further the difference and benefit of the modified approach base don the results of RMT, we will consider a `baseline' method of spectral clustering.
 
-\subsection{Modified Modularity Optimisation Method}
-\label{subsec:modifiedModularityOptimisationMethod}
+%---   ERROR
+%%% need to find section label for spectral clustering community detection algorithm
+The spectral clustering algorithm is based on the exact same idea considered for binary networks considered in \cref{???}, but we shall use the filtered correlation matrix, $\matvar{C}^{(g)}$, as input.
+We simply find the eigenvectors of $\matvar{C}^{(g)}$, use them to construct the embedded vectors, which are then clustered using the familiar k-means clustering algorithm (same procedure as with binary networks). We use different (and appropriate) values for the number of groups, then the algorithm for each one and choose the partition with the best value for the re-defined modularity (\cref{eq:newModularityFinancialNetworks}).
 
 
 %-----------------------------------------------------
@@ -149,6 +225,29 @@ Recall in \cref{sec:???}, we introduced the notion of modularity optimisation as
 \section{Synthetic Data Testing}
 \label{sec:syntheticDataTesting}
 
+Before applying the four algorithms discussed previously to our financial network based on the FTSE 100 data set, we must run tests to confirm we can correctly detect correlated sets of time series in synthetically generated benchmark cases, as also outlined by \cite{MG13}.
+We consider a benchmark data set of correlation matrices with $100$ time series (i.e. we consider $n = 100$ stocks in the data set) divided into $10$ communities of $10$ correlated time series. Note the length of the time series is chosen to be $T=2500$ to reflect similar conditions to the real data set and is also prescribed by RMT (i.e. $T>n$).
+The set consists of correlation matrices generated with different levels of correlations between the groups and within a group reflecting different signal-to-noise ratios (SNR). We set the ground-truth partition, which we denote by $\vecvar{\sigma}^{*}$, to be the same across all correlation matrices.
+We considered $6$ such benchmarks within the correlation matrix set with varying SNR, and have illustrated $2$ such examples in \cref{fig:benchmarkCorrelationMatrices}.
+We confirmed that, in all the benchmarks, all four methods succeeded in identifying $\vecvar{\sigma}^{*}$.
+
+%---   FIGURE
+\begin{figure}
+	\centering
+	\begin{subfigure}{.5\textwidth}
+		\centering
+		\includegraphics[width=0.8\linewidth]{figures/syntheticCorrelationMatrices_1.png}
+		\caption{}
+		\label{fig:benchmarkCorrelationMatrix1}
+	\end{subfigure}%
+	\begin{subfigure}{.5\textwidth}
+		\centering
+		\includegraphics[width=0.8\linewidth]{figures/syntheticCorrelationMatrices_3.png}
+		\caption{}
+		\label{fig:benchmarkCorrelationMatrix3}
+	\end{subfigure}
+	\caption[Plots of synthetically generated benchmark correlation matrices]{\label{fig:benchmarkCorrelationMatrices} Plots of synthetically generated benchmark correlation matrices, one with low SNR (a value of 0.5), \subref{fig:benchmarkCorrelationMatrix1}, in addition to one with higher SNR (a value of 1), \subref{fig:benchmarkCorrelationMatrix3}. These are two examples from a set created from $100$ time series divided into $10$ communities of $10$ correlation time series. The blocks along the diagonal represent cross-correlations between members of the same group, and are thus high (i.e. close to one), whereas off-diagonal blocks represent cross-correlations between time series belonging to different communities reflecting noise (system-wide or additional inter-community correlations).}
+\end{figure}
 
 %-----------------------------------------------------
 %   Application to Real-world Financial Network Section

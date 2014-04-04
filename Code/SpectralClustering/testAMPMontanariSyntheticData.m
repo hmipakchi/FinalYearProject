@@ -22,7 +22,13 @@ lambdaVector = zeros(noLambdaPoints,1);
 scalarProductsAMP = zeros(noLambdaPoints,noLambdaPoints);
 scalarProductsAMPWithOnsager = zeros(noLambdaPoints,noLambdaPoints);
 
+noMCIterations = 1;%1
+
+for MCIt=1:noMCIterations
+    lambdaIterationNo = 1;
+
 for lambda=lambdaMin+deltaLambda:deltaLambda:(lambdaMax)
+    disp(MCIt);
     disp(lambdaIterationNo);
     
     lambdaVector(lambdaIterationNo) = lambda;
@@ -38,7 +44,8 @@ for lambda=lambdaMin+deltaLambda:deltaLambda:(lambdaMax)
         % choose communitiy for each node
         nodeCommunities = zeros(n,1);
         nodeCommunities(1:k) = 1;
-%         epsilon = k/n;
+        epsilon = k/n;
+        
 %         nodeCommunities = binornd(1,epsilon,n,1);
 
         % create adjacency matrix for this stochastic block model
@@ -68,12 +75,10 @@ for lambda=lambdaMin+deltaLambda:deltaLambda:(lambdaMax)
 %         end
 %         adjacencyMatrix = (lambda/(p-q)).*(adjacencyMatrix - (q.*ones(n,n)));
 
-%         Z = sqrt(1/n).*randn(n,n);
-%         adjacencyMatrix = (lambda/k.*(nodeCommunities * nodeCommunities')) + Z;
-        Z = randn(n,n);
-        adjacencyMatrix = ((lambda*sqrt(n)/k).*(nodeCommunities * nodeCommunities')) + Z;
+        Z = sqrt(1/n).*randn(n,n);
+        adjacencyMatrix = (lambda/k).*(nodeCommunities * nodeCommunities') + Z;
 
-        if (lambda > 0.8) && (k/n > 0.9)
+        if (lambda > 0.8) && (k/n > 0.2)
             debug = 1;
         end
 
@@ -87,11 +92,11 @@ for lambda=lambdaMin+deltaLambda:deltaLambda:(lambdaMax)
         
         % calculate scalar products of estimate
         if (norm(nodeCommunities,2) ~= 0)
-            scalarProductsAMP(lambdaIterationNo,kIterationNo) = (nodeCommunities' * communityAssignmentsAMP) / (norm(nodeCommunities,2));
-            scalarProductsAMPWithOnsager(lambdaIterationNo,kIterationNo) = (nodeCommunities' * communityAssignmentsAMPWithOnsager) / (norm(nodeCommunities,2));
-        else
-            scalarProductsAMP(lambdaIterationNo,kIterationNo) = 0;
-            scalarProductsAMPWithOnsager(lambdaIterationNo,kIterationNo) = 0;
+            scalarProductsAMP(lambdaIterationNo,kIterationNo) = scalarProductsAMP(lambdaIterationNo,kIterationNo) + (nodeCommunities' * communityAssignmentsAMP) / (norm(nodeCommunities,2));
+            scalarProductsAMPWithOnsager(lambdaIterationNo,kIterationNo) = scalarProductsAMPWithOnsager(lambdaIterationNo,kIterationNo) + (nodeCommunities' * communityAssignmentsAMPWithOnsager) / (norm(nodeCommunities,2));
+%         else
+%             scalarProductsAMP(lambdaIterationNo,kIterationNo) = 0;
+%             scalarProductsAMPWithOnsager(lambdaIterationNo,kIterationNo) = 0;
         end
 
         kIterationNo = kIterationNo + 1;
@@ -99,6 +104,11 @@ for lambda=lambdaMin+deltaLambda:deltaLambda:(lambdaMax)
     
     lambdaIterationNo = lambdaIterationNo + 1;
 end
+
+end
+
+scalarProductsAMP = scalarProductsAMP / noMCIterations;
+scalarProductsAMPWithOnsager = scalarProductsAMPWithOnsager / noMCIterations;
 
 % write algorithms scalar products to file
 filename_str = sprintf('data_files/spectralClustering/AMPMontanariSyntheticDataScalarProducts.dat');

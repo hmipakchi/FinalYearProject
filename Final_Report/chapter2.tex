@@ -6,7 +6,7 @@
 
 %----------------------------------------------------------------------------------------
 
-In this chapter we will describe all the technical background required to understand and detail the different settings we investigate for the project.
+In this chapter we will describe all the technical background required to understand and detail the different settings we investigate.
 Initially, we will highlight some basic results in graph theory.
 Then, we will outline the problem of community detection and present three models used to generate random graphs with community structure to be used as a testing playground for algorithms.
 Following this, we will discuss basic concepts within finance required to understand the behaviour of financial assets that will provide the motivation for applying community detection algorithms to financial networks.
@@ -21,41 +21,41 @@ Following this, we will discuss basic concepts within finance required to unders
 We assume the reader is familiar with some basic concepts in linear algebra such as matrix multiplication, eigenvectors and eigenvalues of matrices. Rather, we will cover some basic tools within spectral graph theory using definitions from \cite{For10,New06a, Spi12, Spi07}. Spectral graph theory is the study of graphs through the eigenvalues and eigenvectors of matrices associated with the graphs \cite{Spi12}. We begin by defining some basic notions about graphs.
 \begin{definition}
 	\label{def:graph}
-	A graph $\graphvar{G}$ is a pair of sets (V,E), where V is a set of vertices or nodes and $E \subset V^{2}$, the set of unordered pairs of elements of V. The elements of E are called edges or links.
+	A \emphT{graph} $\graphvar{G}$ is a pair of sets (V,E), where V is a set of vertices or nodes and $E \subset V^{2}$, the set of unordered pairs of elements of V. The elements of E are called edges or links.
 \end{definition}
 \begin{definition}
 	\label{def:undirectedGraph}
-	A graph $\graphvar{G} = (V,E)$ is called undirected if for all $v,w \in V$: $(v,w) \in E \iff (w,v) \in E$. Otherwise, $\graphvar{G}$ is called directed.
+	A graph $\graphvar{G} = (V,E)$ is called \emphT{undirected} if for all $v,w \in V$: $(v,w) \in E \iff (w,v) \in E$. Otherwise, $\graphvar{G}$ is called \emphT{directed}.
 \end{definition}
 \begin{definition}
 	\label{def:weightedGraph}
-	A weighted graph is a graph where a number (weight) is assigned to each edge.
+	A \emphT{weighted} graph is a graph where a number (weight) is assigned to each edge.
 \end{definition}
 We will assume, without loss of generality, that $V = \{1,\dots,n\}$. See \cref{fig:exampleGraphSmall} for an example of an undirected graph with seven vertices and eleven edges.
 \begin{definition}
 	\label{def:subGraph}
-	A graph $\graphvar{G}^{\prime} = (V^{\prime},E^{\prime})$ is a subgraph of $\graphvar{G} = (V,E)$ if $V^{\prime} \subset V$ and $E^{\prime} \subset E$. If $\graphvar{G}^{\prime}$ contains all edges of $\graphvar{G}$ that join vertices of $V^{\prime}$, one says that the subgraph $\graphvar{G}^{\prime}$ is induced or spanned by $V^{\prime}$.
+	A graph $\graphvar{G}^{\prime} = (V^{\prime},E^{\prime})$ is a \emphT{subgraph} of $\graphvar{G} = (V,E)$ if $V^{\prime} \subset V$ and $E^{\prime} \subset E$. If $\graphvar{G}^{\prime}$ contains all edges of $\graphvar{G}$ that join vertices of $V^{\prime}$, one says that the subgraph $\graphvar{G}^{\prime}$ is induced or spanned by $V^{\prime}$.
 \end{definition}
 \begin{definition}
 	\label{def:cuts}
-	A partition of the vertex set V in two subsets S and $V-S$ is called a cut. The cut size is the number of edges of $\graphvar{G}$ joining vertices of S with vertices of $V-S$.
+	A partition of the vertex set V in two subsets S and $V-S$ is called a \emphT{cut}. The cut size is the number of edges of $\graphvar{G}$ joining vertices of S with vertices of $V-S$.
 \end{definition}
 \begin{definition}
 	\label{def:neighbourhoodNode}
-	Two vertices are adjacent or neighbours if they are connected by an edge. The set of neighbours of a vertex $v$ is called neighbourhood, and denoted by $\Gamma(v)$.
+	Two vertices are \emphT{adjacent} or \emphT{neighbours} if they are connected by an edge. The set of neighbours of a vertex $v$ is called \emphT{neighbourhood}, and denoted by $\Gamma(v)$.
 \end{definition}
 \begin{definition}
 	\label{def:degreeNode}
-	The degree $d_{v}$ of a vertex $v$ is the number of its neighbours, $\abs{\Gamma(v)}$.
+	The \emphT{degree} $d_{v}$ of a vertex $v$ is the number of its neighbours, $\abs{\Gamma(v)}$.
 \end{definition}
 We will be interested in using certain graphs is the models, such as bipartite graphs.
 \begin{definition}
 	\label{def:bipartiteGraph}
-	A bipartite graph, is a graph whose vertices can be decomposed into two disjoint sets such that no two vertices within the same set are adjacent.
+	A \emphT{bipartite} graph, is a graph whose vertices can be decomposed into two disjoint sets such that no two vertices within the same set are adjacent.
 \end{definition}
 \begin{definition}
 	\label{def:clique}
-	A clique of an undirected graph is a subset of its vertices such that every pair of vertices in the subset are adjacent in the graph.
+	A \emphT{clique} of an undirected graph is a subset of its vertices such that every pair of vertices in the subset are adjacent in the graph.
 \end{definition}
 An example of an undirected bipartite graph with nine vertices and eight edges is shown in \cref{fig:exampleGraphBipartite}, whilst an example of a clique within an undirected graph is shown in \cref{fig:exampleGraphClique}.
 
@@ -86,7 +86,7 @@ An example of an undirected bipartite graph with nine vertices and eight edges i
 There is a very close connection between graphs and matrices, since the whole information about the topology of a graph can be entailed in matrix form, called the \textit{adjacency matrix}.
 \begin{definition}
 	\label{def:adjacencyMatrix}
-	The adjacency matrix, $\matvar{A} \in \{0,1\}^{n \times n}$ of a graph $\graphvar{G} = (V,E)$, is a $n\times n$ matrix whose element $A_{ij}$ equals 1 if there exists an edge joining vertices i and j in $\graphvar{G}$, and zero otherwise.
+	The \emphT{adjacency matrix}, $\matvar{A} \in \{0,1\}^{n \times n}$ of a graph $\graphvar{G} = (V,E)$, is a $n\times n$ matrix whose element $A_{ij}$ equals 1 if there exists an edge joining vertices i and j in $\graphvar{G}$, and zero otherwise.
 \end{definition}
 From \cref{def:adjacencyMatrix}, it follows that elements of the adjacency matrix, $\matvar{A}$, can be written as
 \begin{equation*}
@@ -99,13 +99,13 @@ From \cref{def:adjacencyMatrix}, it follows that elements of the adjacency matri
 Note that the sum of elements of the $i$-th row of the adjacency matrix yields the degree of node $i$ of the graph, $d_{i} = \sum_{j} A_{ij}$. Also, the adjacency matrix is symmetric if the graph is undirected.
 \begin{definition}
 	\label{def:weightedAdjacencyMatrix}
-	The weighted adjacency matrix, $\matvar{A} \in \realsR^{n \times n}$ of a weighted graph $\graphvar{G} = (V,E)$, is a $n\times n$ matrix whose element $A_{ij}$ equals the weight of the edge connecting nodes $i$ and $j$, if it exists, and zero otherwise. 
+	The \emphT{weighted adjacency matrix}, $\matvar{A} \in \realsR^{n \times n}$ of a weighted graph $\graphvar{G} = (V,E)$, is a $n\times n$ matrix whose element $A_{ij}$ equals the weight of the edge connecting nodes $i$ and $j$, if it exists, and zero otherwise. 
 \end{definition}
 
 There are other matrices that have also been studied extensively in spectral graph theory, including the Laplacian which is applied in topics such as graph partitioning, synchronisation and graph connectivity \cite{For10}.
 \begin{definition}
 	\label{def:degreeMatrix}
-	The degree matrix, $\matvar{D}$ of a graph $\graphvar{G} = (V,E)$, is a $n \times n$ diagonal matrix whose element $D_{ii}$ equals the degree of vertex $i$.
+	The \emphT{degree matrix}, $\matvar{D}$, of a graph $\graphvar{G} = (V,E)$, is a $n \times n$ diagonal matrix whose element $D_{ii}$ equals the degree of vertex $i$.
 \end{definition}
 From \cref{def:degreeMatrix}, it follows that elements of the degree matrix, $\matvar{D}$, can be written as
 \begin{equation*}
@@ -117,7 +117,7 @@ From \cref{def:degreeMatrix}, it follows that elements of the degree matrix, $\m
 \end{equation*}
 \begin{definition}
 	\label{def:unnormalisedLaplacianMatrix}
-	The matrix $\matvar{L} = \matvar{D}  - \matvar{A} $ is called the unnormalised Laplacian matrix.
+	The matrix $\matvar{L} = \matvar{D}  - \matvar{A} $ is called the \emphT{unnormalised Laplacian matrix}.
 \end{definition}
 From \cref{def:unnormalisedLaplacianMatrix}, it follows that elements of the unnormalised Laplacian matrix of a graph $\graphvar{G} = (V,E)$, $\matvar{L}$, can be written as
 \begin{equation*}
@@ -130,18 +130,18 @@ From \cref{def:unnormalisedLaplacianMatrix}, it follows that elements of the unn
 \end{equation*}
 \begin{definition}
 	\label{def:normalisedLaplacianMatrix}
-	The matrix $\widetilde{\matvar{L}} = \matvar{I}  - \matvar{D}^{-1/2}\matvar{A}\matvar{D}^{-1/2}$ is called the normalised Laplacian matrix, where $\matvar{I}$ is the $n \times n$ identity matrix.
+	The matrix $\widetilde{\matvar{L}} = \matvar{I}  - \matvar{D}^{-1/2}\matvar{A}\matvar{D}^{-1/2}$ is called the \emphT{normalised Laplacian matrix}, where $\matvar{I}$ is the $n \times n$ identity matrix.
 \end{definition}
 Note that from \cref{def:unnormalisedLaplacianMatrix,def:normalisedLaplacianMatrix}, the normalised Laplacian matrix can also be written as $\widetilde{\matvar{L}} = \matvar{D}^{-1/2}\matvar{L}\matvar{D}^{-1/2}$.
 
-An important property of adjacency and Laplacian matrices is their spectra, which we will use, later in the project, to motivate and develop a spectral clustering algorithm for community detection.
+An important property of adjacency and Laplacian matrices is their spectra, which we will use, later in the report, to motivate and develop a spectral clustering algorithm for community detection.
 \begin{definition}
 	\label{def:spectrum}
-	The spectrum of a graph $\graphvar{G}$ is the set of eigenvalues of its adjacency matrix, $\{\lambda_{1},\dots,\lambda_{n}\}$.
+	The \emphT{spectrum} of a graph $\graphvar{G}$ is the set of eigenvalues of its adjacency matrix, $\{\lambda_{1},\dots,\lambda_{n}\}$.
 \end{definition}
 \begin{definition}
 	\label{def:spectralRadius}
-	Let $\lambda_{1},\dots,\lambda_{n}$ be the eigenvalues of a matrix $\matvar{M} \in \realsR^{n \times n}$. The spectral radius is defined as $\rho(\matvar{M}) = \max\limits_{i} \abs{\lambda_{i}}$.
+	Let $\lambda_{1},\dots,\lambda_{n}$ be the eigenvalues of a matrix $\matvar{M} \in \realsR^{n \times n}$. The \emphT{spectral radius} is defined as $\rho(\matvar{M}) = \max\limits_{i} \abs{\lambda_{i}}$.
 \end{definition}
 
 
@@ -161,7 +161,7 @@ Within the literature, the terms \emphT{groups} and \emphT{clusters} are synonym
 In order to help provide a setting where different algorithms may be compared, we wish to study particular models which generate random graphs. One popular model is called the stochastic block model.
 Many special cases of this model have been studied, but we consider two versions, available in the literature.
 Firstly, there is a model considered by Decellle et al. \cite{DKM+13} and Nadakuditi et al. \cite{NN12}, also known as the \emphT{planted partition model}.
-Secondly, there is a model used by Montanari \cite{DM13,Mon13}, which, for the remainder of the report, we will refer to as the \emphT{hidden clique model}. We emphasise that we do not exclusively focus on detecting cliques for the latter model, but the name is simply used for association.
+Secondly, there is a model used by Montanari \cite{DM13,Mon13}, which we will refer to as the \emphT{hidden clique model}. We emphasise that we do not exclusively focus on detecting cliques for the latter model, but the name is simply convenient for reference in this report.
 
 Let us define the stochastic block model following Decellle et al. \cite{DKM+13}. The stochastic block model has parameters: $k$, $n_{a}$, $\matvar{P}$. $k$ represents the number of communities (or groups), $n_{a}$ refers to the expected fraction of nodes within each group $a$, for $1 \leq a \leq k$, and a $k \times k$ matrix $\matvar{P}$ whose element $P_{ab}$ equals the probability of an edge occurring between nodes belonging to groups $a$ and $b$. It is known as the \emphT{affinity matrix}.
 We proceed to generate a random directed graph, $\graphvar{G}$, consisting of $n$ nodes.
@@ -185,9 +185,15 @@ The framework for testing community detection algorithms, which we will use, can
 Firstly, we generate synthetic datasets, by creating random graphs from the models described in \cref{subsec:plantedPartitionModel,subsec:hiddenCliqueModel}, with varying parameters and known underlying ground-truth node assignments.
 Then we use the synthetically-generated graphs as an input to various algorithms (an appropriate model is chosen for each algorithm), which provides, as output, an estimate to the community assignments.
 Finally, for each algorithm, we compare the estimated community assignments to the ground-truth values.
-This provides a notion of performance and accuracy to compare between the algorithms. This process is explained in detail in \cref{cha:comparingCommunityDetectionSyntheticData}.
+This provides a notion of performance and accuracy to compare between the algorithms.
 
 We now describe two models; one is a special case of the stochastic block model, created by imposing specific properties on the parameters, and the other a slightly modified version.
+
+We also stress to the reader that we are only considering \emphT{non-overlapping communities}, where each node may only belong to one particular community.
+
+%-----------------------------------
+%   Planted Partition Model Sub Section
+%-----------------------------------
 
 \subsection{Planted Partition Model}
 \label{subsec:plantedPartitionModel}
@@ -256,8 +262,12 @@ In particular, let us consider the case where $k = 2$, so we find a transition a
 \end{equation}
 Mossel, Neeman and Sly \cite{MNS12} proved the undetectable phase region of the conjecture given by equation \cref{eq:ppmPhaseTransitionK=2} (that is to say, it is impossible to meaningfully recover the node assignments when $ c_{in} - c_{out} < \sqrt{2(c_{in} + c_{out})}$.
 Massouli\'e \cite{Mas13} and then, independently using a different proof, Mossel et al. \cite{MNS13b} proved the detectable phase region of the conjecture, meaning it is possible to recover node assignments positively correlated with the ground-truth when $ c_{in} - c_{out} > \sqrt{2(c_{in} + c_{out})}$.
-The techniques used to prove these results are beyond the scope of the project, however these results provide a very important limit on the ability of algorithms to detect communities.
+The techniques used to prove these results are beyond the scope of this report, however these results provide a very important limit on the ability of algorithms to detect communities.
 This motivates the development of algorithms which can efficiently (in nearly linear time) detect communities, in the sparse regime, up to the limit.
+
+%--------------------------------
+%   Hidden Clique Model Sub Section
+%--------------------------------
 
 \subsection{Hidden Clique Model}
 \label{subsec:hiddenCliqueModel}
@@ -274,7 +284,7 @@ We proceed to generate a graph with $n$ nodes and $k$ communities but with the a
 	\end{cases}
 \end{equation}
 Another tweak is that we now consider the variable $n_{a}$ to represent the number of nodes within community $a$ (rather than the expected fraction of nodes). Note that the number of nodes within each community does not necessarily sum to $n$, since we consider them to be `hidden' within the graph.
-Also, we are interested in the regime where the size of these communities is small relative to the size of the graph (and are not necessarily of the same size either).
+Also, we are interested in the regime where the size of these communities is small relative to the size of the graph.
 Once more, we assume assortative structure within the hidden communities so that $p_{in} > p_{out}$.
 
 An example of a random graph generated by the hidden clique model is shown in \cref{fig:hcmUnlabelledAdjacencyMatrixPlot}.
@@ -307,7 +317,7 @@ In \cref{fig:hcmExampleGraph}, we show a visualisation of an instance of a rando
 \begin{figure}
 	\centering
 	\includegraphics[width=0.6\linewidth]{figures/hcmExampleGraph.png}
-	\caption[Visualisation of a graph generated by the planted partition model]{\label{fig:hcmExampleGraph} A visualisation of an instance of a random graph generated by the hidden clique model with $n = 150$, $k = 1$, $n_{1} = 30$, $p_{in} = 1.0$, $p_{out} = 0.1$. Nodes belonging to the hidden community, which in this case is in fact a clique, are coloured red whilst other nodes are coloured blue.}
+	\caption[Visualisation of a graph generated by the hidden clique model]{\label{fig:hcmExampleGraph} A visualisation of an instance of a random graph generated by the hidden clique model with $n = 150$, $k = 1$, $n_{1} = 30$, $p_{in} = 1.0$, $p_{out} = 0.1$. Nodes belonging to the hidden community, which in this case is in fact a clique, are coloured red whilst other nodes are coloured blue.}
 \end{figure}
 
 An interesting phase transition can also be derived for these models also. We follow the argument of Montanari \cite{DM13,Mon13} to show this. We consider the simplest case of the model with only one hidden community.
@@ -373,7 +383,7 @@ Then we can re-write \cref{def:hcmNormlaisedAdjacencyMatrix2} as
 \end{equation}
 
 One can interpret $\lambda$ as a signal-to-noise ratio, $\vecvar{u}$ as a signal (i.e. the ground-truth node assignments we which to infer) and $\matvar{Z}$ as zero-mean noise with \iid entries.
-We have essentially represented the problem of inferring the hidden community from the graph by a problem of estimating a rank-1 matrix in noise. Note that for the generalisation with $k$ communities, we would get a rank-k matrix plus noise for the normalised adjacency matrix.
+We have essentially represented the problem of inferring the hidden community from the graph by a problem of estimating a rank-1 matrix in noise. Notice that for the generalisation with $k$ communities, we would get a rank-k matrix plus noise for the normalised adjacency matrix.
 
 
 %--------------------------------
@@ -383,13 +393,17 @@ We have essentially represented the problem of inferring the hidden community fr
 \section{Financial Networks}
 \label{sec:financialNetworksBackground}
 
+%-------------------------------------------
+%   Prices Returns Financial Assets Sub Section
+%-------------------------------------------
+
 \subsection{Prices and Returns of Financial Assets}
 \label{subsec:financialAssetsBackground}
 
 Financial assets are instruments claiming to have monetary value that can be bought and sold. Financial assets can be separated into broad classes, with examples including stocks, bonds or real estate \cite{Kuh12d,BKM13}.
 The values of these assets is reflected in their price, which varies with time. Investors may wish to decide between which asset classes to invest in at any time, a process known as \emphT{asset allocation} \cite{BKM13}.
 Also, within a particular asset class, an investor wishes to allocate money to specific assets, a process known as \emphT{portfolio selection} \cite{BKM13}.
-For this project, we will focus on portfolio selection of stocks in our application of community detection algorithms, due to available data constraints; however a very similar scheme may be used to tackle asset allocation also.
+For this report, we will focus on portfolio selection of stocks in our application of community detection algorithms, due to available data constraints; however a very similar scheme may be used to tackle asset allocation also.
 
 Investors tend not to consider the prices of assets they have invested in, but rather the \emphT{return} generated. Let us consider a financial asset whose price at time $t$ is $p(t)$. One popular measure of return is called the \emphT{rate of return} \cite{Kuh12e,BKM13} at a time $t$, denoted by $r(t)$, which is defined as
 \begin{equation}
@@ -421,7 +435,7 @@ We have arrived at another measure for return, called the \emphT{logarithmic ret
 where, once more, we can interpret $t_{1}$ as the time when the investor sold the asset, and $t_{0}$ as the time when the investor bought the asset.
 
 There are several advantages to using logarithmic returns, as explained in \cite{QuaWp}, which we will briefly summarise.
-Firstly, if we assume asset prices have a \emphT{log normal} distribution, then the logarithmic returns are conveniently normally distributed \cite{QuaWp}. The reasons why assuming a log normal distribution may be appropriate for dynamic pricing of assets is beyond the scope of this project.
+Firstly, if we assume asset prices have a \emphT{log normal} distribution, then the logarithmic returns are conveniently normally distributed \cite{QuaWp}. The reasons why assuming a log normal distribution may be appropriate for dynamic pricing of assets is beyond the scope of this report.
 Secondly, for small rates of return, the logarithmic return is approximately equal to the rate of return \cite{QuaWp}. To see this, consider the following approximation combined with \cref{eq:rateOfReturn} and \cref{eq:logarithmicReturn}
 \begin{equation}
 	\label{eq:logarithApproximation}
@@ -439,42 +453,53 @@ Nonetheless, the logarithmic return is widely used in the literature (e.g. see \
 	\caption[Example plot for price and logarithmic return]{\label{fig:priceAndLogReturn} Plots of prices and logarithmic returns for Anglo American plc (AAL) between 2004 and 2014}
 \end{figure}
 
+%-------------------------------------------
+%   Mean Variance Portfolio Theory Sub Section
+%-------------------------------------------
+
 \subsection{Mean-Variance Portfolio Theory}
 \label{subsec:portfolioTheoryBackground}
 
 The term \emphT{portfolio} relates to a investing in a combination of different assets. We can characterise a portfolio by \emphT{portfolio weights}, where the weight of an asset within the portfolio is given by the ratio of the value of the position in the asset divided by the total value of the portfolio.
 We are particularly interested in the return of the portfolio, which is related to the mean of the returns of the individual assets that make up the portfolio, as we will see, and the risk of the portfolio, which is related to the variance of the returns of the individual assets. This is the source of the term mean-variance portfolio theory.
-The reader should realise the inherit trade-off between risk and return; if the investor wishes to realise a larger return, he must bear a higher risk. A more detailed explanation of this relationship is given in \cite{Lue98,Kuh12e}, but is not crucial for the purposes of this project.
+The reader should realise the inherit trade-off between risk and return; if the investor wishes to realise a larger return, he must bear a higher risk. A more detailed explanation of this relationship is given in \cite{Lue98,Kuh12e}.
 Rather we are simply interested in finding the most efficient, or \emphT{minimum-variance portfolio} for a given requested portfolio return (that is to say, the investor requests a specific expected return, and wishes to form a portfolio that has the lowest variance of all possible portfolio that can deliver the specified expected return).
 We can formalise the mean-variance portfolio setting in the following way, which summarises the explanations from \cite{Onn02,Lue98,Kuh12e}.
 
-Let $p$ be a portfolio comprising of $n$ assets, where the return of the portfolio is denoted by $r_{p}$ and the variance of the portfolio is denoted by $\sigma^{2}_{p} = \variance{r_{p}}$. Denote the return of asset $i$ by $r_{i}$, the variance of the asset's return by $\sigma^{2}_{i} = \variance{r_{i}}$, and the weight of asset $i$ in the portfolio by $w_{i}$.
-Let the portfolio weights be defined using
+Let $P$ be a portfolio comprising of $n$ assets, where the return of the portfolio is denoted by $r_{P}$ and the variance of the portfolio is denoted by $\sigma^{2}_{P}$.
+Denote the return of asset $i$ by $r_{i}$, the variance of the asset's return by $\sigma^{2}_{i} \equiv \variance{r_{i}}$, and the weight of asset $i$ in the portfolio by $w_{i}$.
+Also let $X_{0}$ denote the total amount invested in the portfolio (i.e. initial investment in the portfolio by the investor) and $X_{0i}$ represent the the amount invested in asset $i$.
+We select the amounts in the assets forming the portfolio such that
+\begin{equation}
+	\label{eq:portfolioAmounts}
+	\sum_{i=1}^{n} X_{0i} = X_{0}
+\end{equation}
+We define the portfolio weights using
 \begin{equation}
 	\label{eq:portfolioWeights}
-	w_{i} = \frac{\text{amount invested in asset }i}{\text{total amount invested in portfolio}}
+	w_{i} = \frac{X_{0i}}{X_{0}} \text{, } i = 1,\dots,n
 \end{equation}
-Clearly,
+and clearly
 \begin{equation}
 	\label{eq:portfolioWeightsSum}
 	\sum_{i=1}^{n} w_{i} = 1
 \end{equation}
-Note that a negative weight indicates a \emphT{short position} in that asset, and that the returns of the individual assets and portfolio are random variables.
+Notice that a negative weight indicates a \emphT{short position} in that asset, and that the returns of the individual assets and portfolio are random variables.
 
 In particular we can represent the return of the portfolio by
 \begin{equation}
 	\label{eq:portfolioReturn}
-	r_{p} = \sum_{i=1}^{n} w_{i} r_{i}
+	r_{P} = \sum_{i=1}^{n} w_{i} r_{i}
 \end{equation}
 By using \cref{eq:portfolioReturn}, we obtain the expected return of the portfolio
 \begin{equation}
 	\label{eq:portfolioExpectedReturn}
-	\expectation{r_{p}} = \sum_{i=1}^{n} w_{i} \expectation{r_{i}}
+	\expectation{r_{P}} = \sum_{i=1}^{n} w_{i} \expectation{r_{i}}
 \end{equation}
 and the variance of the portfolio return
 \begin{equation}
 	\label{eq:portfolioVariance}
-	\variance{r_{p}} = \sigma^{2}_{p}  = \sum_{i=1}^{n} \sum_{j=1}^{n} w_{i} w_{j} \rho_{ij} \sigma_{i} \sigma_{j}
+	\variance{r_{P}} \equiv \sigma^{2}_{P}  = \sum_{i=1}^{n} \sum_{j=1}^{n} w_{i} w_{j} \rho_{ij} \sigma_{i} \sigma_{j}
 \end{equation}
 where $\rho_{ij}$ is the correlation coefficient of the returns of assets $i$ and $j$, defined as
 \begin{equation}
@@ -483,18 +508,21 @@ where $\rho_{ij}$ is the correlation coefficient of the returns of assets $i$ an
 \end{equation}
 Note that the standard deviation of the returns of the portfolio (or any asset) is often called its \emphT{volatility}.
 
-This serves a key question, given estimates of each assets returns, variances and covariances (which one can obtain from historical data), how does one pick a selection of these assets, for any given time period, in order to form the best portfolio for the investor?
-We see in \cref{eq:portfolioVariance}, that by simply investing in assets which have a lower correlation with one another (i.e. lower value of $\rho_{ij}$), we can reduce the variance, and thus risk, of the portfolio. This process is called \emphT{diversification}.
+This formulation serves a key question, given estimates of each assets returns, variances and covariances (which one can obtain from historical data), how does one pick a selection of these assets, for any given time period, in order to form the best portfolio for the investor?
+We see in \cref{eq:portfolioVariance}, that by simply investing in assets which have a lower correlation with one another (i.e. a lower value of $\rho_{ij}$), we can reduce the variance, and thus risk, of the portfolio. This process is called \emphT{diversification}.
 Thus, for any given time period (and possibly dynamically), finding groups of assets, where the returns have higher correlation within groups and lower correlation between groups would help by presenting `baskets' of assets that the investor can pick from knowing selecting from a range of baskets would be beneficial (of course which assets to select from inside the basket relates to the risk-return trade off). This serves as the main motivation for the application of community detection algorithms within financial networks, as we formalise in \cref{subsec:financialNetworksConstructionBackground}.
 
+%-------------------------------------------
+%   Constructing Financial Networks Sub Section
+%-------------------------------------------
 
 \subsection{Constructing Financial Networks}
 \label{subsec:financialNetworksConstructionBackground}
 
-From \cref{subsec:portfolioTheoryBackground} we understand that one way to help minimise risk in constructing portfolios is to analyse the correlation coefficients between returns of two assets.
+From \cref{subsec:portfolioTheoryBackground} we understand one way to help minimise risk in constructing portfolios involves analysing the correlation coefficients of returns between two assets.
 In order to study all possible correlations between all available assets, we construct a weighted, undirected and fully-connected network of assets, which we call the \emphT{financial network}. The following model has been considered by \cite{PGR+99,OCK+02,OKK03,FPM+10,MG13}.
 
-Let us consider the situation where the investors if faced with $n$ financial assets, and has access to historical price data for all these assets for $T$ time steps. The time steps may be trading days, or weeks, for instance and the appropriate choice will depend on the type of assets available.
+Let us consider the situation where the investor is faced with $n$ financial assets, and has access to historical price data for all these assets for $T$ time steps. The time steps may be trading days, or weeks, for instance, and the appropriate choice will depend on the type of assets available.
 
 We proceed to construct a graph with $n$ nodes, where each nodes represents an asset, and assign to the $i$-th node a single time series, denoted by $X_{i}$, which is defined as
 \begin{equation}
@@ -521,7 +549,7 @@ where the $\mean{\cdots}$ notation denotes a time average, so that
 	\label{eq:temporalMeanProduct}
 	\mean{X_{i}X_{j}} = \frac{1}{T} \sum_{t=1}^{T} x_{i}(t)x_{j}(t)
 \end{equation}
-We also assume each time series $X_{i}$ has been standardised (i.e. before computing cross correlations) by using
+We also assume each time series $X_{i}$ has been standardised (before assigning to the node) by using
 \begin{equation}
 	\label{eq:standardiseTimeSeries}
 	X_{i} \coloneqq \frac{X_{i} - \mean{X_{i}}}{\sqrt{\mean{X_{i}^{2}} - \mean{X_{i}}^{2}}}
@@ -544,10 +572,10 @@ In \cref{fig:exampleCrossCorrelationMatrix}, we have plotted a correlation matri
 %--- FIGURE
 \begin{figure}
 	\centering
-	\includegraphics[width=0.8\linewidth]{figures/correlationMatrix_FTSE100_n_80_T_2501.png}
+	\includegraphics[width=0.6\linewidth]{figures/correlationMatrix_FTSE100_n_80_T_2501.png}
 	\caption[Example plot for a correlation matrix]{\label{fig:exampleCrossCorrelationMatrix} Example of a correlation matrix. Evaluated from an ensemble of 80 stocks listed on the FTSE 100 (see \cref{app:listFTSE100Stocks} for a list) using data between 01/01/2011 and 01/01/2013.}
 \end{figure}
 
-The problem statement can now summarised. Given a financial network, how can we group nodes into communities where correlations are higher within the communities and lower between the communities.
+The problem statement can now summarised. Given a financial network, how can we group nodes into communities where correlations are higher within the communities and lower between the communities?
 Contrary to graphs with community structure described in \cref{sec:communityStructureBackground}, the weights of the edges rather than the topology of the network are crucial in determining community memberships. In other words, we focus solely on the weighted adjacency matrix of the graph.
 Also the reader should note that the correlations between asset returns will vary over time, and thus representing this relationship dynamically (rather than over a one long period of time) is very important since investors wish to change their positions in order to react to the dynamics of market conditions.

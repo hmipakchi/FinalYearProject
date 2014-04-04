@@ -1,0 +1,111 @@
+% Chapter 3
+
+\chapter{Community Detection Algorithms}
+
+\label{cha:communityDetectionAlgorithms}
+
+%----------------------------------------------------------------------------------------
+
+In this chapter we introduce several community detection algorithms present in the literature that can be used to detect communities based upon different approaches.
+We introduce spectral clustering, modularity-based optimisation, non-linear power iteration method and message-passing algorithms, with specific reference to the application on generative block models.
+
+%-----------------------------------------------------
+%   NLPI and AMP Algorithms Section
+%-----------------------------------------------------
+
+\section{NLPI and AMP Algorithms}
+\label{sec:NLPIAndAMPAlgorithmsCommunityDetection}
+
+We turn our attention to detecting a hidden community within the hidden clique model described in \cref{subsec:hiddenCliqueModel}.
+In particular we generate a network associated with a normalised adjacency matrix, $\widetilde{\matvar{A}}$, defined in \cref{def:hcmNormlaisedAdjacencyMatrixDecomposed} and are interested in reconstructing the vector of node assignments, denoted by $\vecvar{u}$, which we noted is the eigenvector of a rank-1 matrix. This problem has been investigated in many application under the guise of `Low-rank deformation of Wigner matrices' \cite{Mon13}. Moreover much is known about the eigenvalue spectrum of such matrices.
+Recall the SNR is denoted by $\lambda$. There is a very important spectral phase transition that exists \cite{Mon13}; if $\lambda < 1$, the top eigenvector of $\matvar{A}$ is orthogonal to the vector we wish to reconstruct (i.e. $\innerP{\vecvar{v}_{1}(\matvar{A}),\vecvar{u} } \approx 0$), whereas, if $\lambda > 1$, the top eigenvector of $\matvar{A}$ is correlated with the vector we wish to reconstruct and $\innerP{\vecvar{v}_{1}(\matvar{A}),\vecvar{u}} \approx (1 - \lambda^{-2})$.
+In the latter regime, one eigenvector pops out of the semicircle lobe, as illustrated in \cref{fig:spectralPhaseTransitionWignerPlots}.
+This particular eigenvector is associated with the eigenvalue $\lambda + \lambda^{-1}$ \cite{Mon13}.
+
+%---   FIGURE
+\begin{figure}
+	\centering
+	\begin{subfigure}{.5\textwidth}
+		\centering
+		\includegraphics[width=0.8\linewidth]{figures/spectralPhaseTransitionWigner.png}
+		\caption{}
+		\label{fig:spectralPhaseTransitionWigner}
+	\end{subfigure}%
+	\begin{subfigure}{.5\textwidth}
+		\centering
+		\includegraphics[width=0.8\linewidth]{figures/spectralPhaseTransitionWigner2.png}
+		\caption{}
+		\label{fig:spectralPhaseTransitionWigner2}
+	\end{subfigure}
+	\caption[Plots illustrating spectral phase transition of Wigner Matrices]{\label{fig:spectralPhaseTransitionWignerPlots} We plot the limiting spectral density of the normalised adjacency matrix under two regimes. We illustrate the case where $\lambda < 1$, in \subref{fig:spectralPhaseTransitionWigner} and the case where $\lambda > 1$, in \subref{fig:spectralPhaseTransitionWigner2}. The blue dot in \subref{fig:spectralPhaseTransitionWigner2} represents the eigenvalue ($\lambda + \lambda^{-1}$) associated with he eigenvector that pops-out of the main semicircle lobe. Both figures obtained from \cite{Mon13}.}
+\end{figure}
+
+This result is key since it specifically describes a threshold where traditional spectral methods such as standard Principal Component Analysis (PCA) will not work (i.e. when $\lambda < 1$) and when it will produce a reconstructed vector correlated with the ground-truth (i.e. when $\lambda > 1$).
+Moreover we now have sufficient motivation to investigate methods where we can do better; more specifically we wish to study algorithms where we can essentially `beat' this spectral threshold by producing a reconstructed vector correlated with the ground-truth in the regime where $\lambda < 1$.
+There is hope of achieving the improvement over standard PCA since we observe the structure of the principal eigenvector of the matrix has two special properties, it is \emphT{non-negative} (since the elements are node assignments or indicator variables and are thus either zero or one) and \emphT{sparse} (since we are interested in the regime where the size of the hidden community or clique is small relative to the size of the graph).
+
+%-------------------------------------------
+%   Non-linear Power Iteration Sub Section
+%-------------------------------------------
+
+\subsection{Non-linear Power Iteration}
+\label{subsec:nonLinearPowerIteration}
+
+The intuition behind the non-linear power iteration (NLPI) method is fairly straightforward. We use the standard power iteration algorithm with one extra step; we additionally apply a separable non-linear function that acts component-wise.
+We choose the non-linear function to force the reconstructed vector to adhere to one of the properties desired. In particular we can apply `positive-part thresholding' \cite{Mon13}, where we keep only the positive elements of the vector (and set the negative elements to zero) at each iteration.
+The following is a recursive definition of one iteration of the general approach, where $t$ indexes the iteration
+\begin{equation}
+	\label{eq:NLPIAlgorithm}
+	\begin{split}
+		&\vecvar{z}^{t+1} = \widetilde{\matvar{A}} \widehat{\vecvar{u}}^{t} \\
+		&\widehat{\vecvar{u}}^{t} = f_{t}(\vecvar{z}^{t})
+	\end{split}
+\end{equation}
+where
+\begin{equation}
+	\label{eq:NLPIAlgorithmConditions}
+	\begin{split}
+		&\widehat{\vecvar{u}}^{0} = \transpose{[1,\dots,1]} \\
+		&\vecvar{z} = \transpose{[z_{1},\dots,z_{n}]} \\
+		&f_{t}(\vecvar{z}) = \transpose{[f_{t}(z_{1}),\dots,f_{t}(z_{n})]}
+	\end{split}
+\end{equation}
+since we consider positive-part thresholding, for all $i=1,\dots,n$
+\begin{equation}
+	\label{eq:NLPIAlgorithmThresholding}
+	f_{t}(z_{i}) =
+	\begin{cases}
+		z_{i}& \text{if } z_{i} > 0\\
+		0 & \text{otherwise}
+	\end{cases}
+\end{equation}
+We will test this algorithm empirically for synthetically generated networks for varying SNR and sizes of the hidden community in \cref{sec:NLPIAndAMPAlgorithms}, but it is also important to analyse the algorithm theoretically, for instance by quantifying the (possible) improvement over spectral methods.
+Unfortunately, analysing this algorithm in terms of precise asymptotics is very difficult since there are dependencies existent after any number of iterations \cite{Mon13}.
+
+%-------------------------------------------
+%   Approximate Message Passing Sub Section
+%-------------------------------------------
+
+\subsection{Approximate Message Passing}
+\label{subsec:approximateMessagePassing}
+
+Although the NLPI method works well in practice (and we shall show this empirically later), we still seek an algorithm that can also be analysed. The approximate message passing (AMP) algorithm involves one modification to the NLPI, where a memory term is subtracted.
+The following is a recursive definition of one iteration of the general approach, where $t$ again indexes the iteration
+\begin{equation}
+	\label{eq:AMPAlgorithm}
+	\begin{split}
+		&\vecvar{z}^{t+1} = \widetilde{\matvar{A}} \widehat{\vecvar{u}}^{t} - b_{t}\widehat{\vecvar{u}}^{t-1}\\
+		&\widehat{\vecvar{u}}^{t} = f_{t}(\vecvar{z}^{t})
+	\end{split}
+\end{equation}
+where we additionally (as well as those in \cref{eq:NLPIAlgorithmConditions}) define
+\begin{equation}
+	\label{eq:AMPAlgorithmConditions}
+	\begin{split}
+		&\widehat{\vecvar{u}}^{-1} = \transpose{[0,\dots,0]} \\
+		&b_{t} \equiv \frac{1}{n}\sum_{i=1}^{n}f_{t}^{'}(z_{i})
+	\end{split}
+\end{equation}
+and we again consider positive-part thresholding.
+We remark that the explicit formula for $b_{t}$ is chosen since it cancels the statistical bias (i.e. decorrelates) on $\widehat{\vecvar{u}}^{t+1}_{i}$ due to $\widehat{\vecvar{u}}^{\leq t}_{i}$.
+The explanation for this result is beyond the scope of this report, but we refer the reader to \cite{DMM09,MDM10,BM11,Mon11,BKS13} for details.
