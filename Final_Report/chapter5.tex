@@ -123,14 +123,12 @@ Given the results of our analysis in \cref{sec:???}, and that the real-world dat
 \subsection{Modularity Optimisation Methods}
 \label{subsec:modularityOptimisationMethods}
 
-%---   ERROR
-%%% need to find section label for modularity method
-Recall in \cref{sec:???}, we introduced the notion of modularity optimisation as a method for community detection within networks. We shall once more consider algorithms for modularity optimisation, but for the case of financial networks.
+Recall in \cref{sec:modularityBasedOptimisation}, we introduced the notion of modularity optimisation as a method for community detection within networks. We shall once more consider algorithms for modularity optimisation, but for the case of financial networks.
 
-Let us denote a partition of $n$ nodes, in the financial network, into communities/groups by the vector $\vecvar{\sigma} = \transpose{[\sigma{1},\dots,\sigma{n}]}$, where $\sigma_{i}$ denotes the group to which node $i$ belongs to. This is essentially the group to which stock $i$ belongs. We then define the modularity for this partition, $Q(\vecvar{\sigma})$, by
+Let us denote a partition of $n$ nodes, in the financial network, into communities/groups by the vector $\vecvar{\sigma} = \transpose{[\sigma_{1},\dots,\sigma_{n}]}$, where $\sigma_{i}$ denotes the group to which node $i$ belongs to. This is essentially the group to which stock $i$ belongs. We then define the modularity for this partition, $Q(\vecvar{\sigma})$, by
 \begin{equation}
 \label{eq:modularityFinancialNetworks}
-	Q(\vecvar{\sigma}) = \frac{1}{2m} \sum_{ij} \left[A_{ij} - \frac{k_{i}k_{j}}{2m} \right] \delta(\sigma_{i},\sigma_{j})
+	Q(\vecvar{\sigma}) = \frac{1}{2m} \sum_{ij} \left(A_{ij} - \frac{k_{i}k_{j}}{2m} \right) \delta(\sigma_{i},\sigma_{j})
 \end{equation}
 where $\matvar{A}$ is the weighted adjacency matrix of the network, $k_{i} \equiv \sum_{j} A_{ij}$ and $2m \equiv \sum_{ij} A_{ij}$.
 Note that in the case of binary networks, $A_{ij}$ represented the presence or absence of an edge between nodes $i$ and $j$, $k_{i}$ represented the degree of node $i$ and $m$ represented the total number of edges in the networks.
@@ -147,11 +145,10 @@ We now focus on finding the partition, $\vecvar{\sigma}$, that maximises the mod
  Recalling how, for the case with binary networks, we sought after denser connections within groups and sparser connections between groups, we realise the modularity maximisation algorithms used on binary networks should have the same effect on financial networks.
 This is intuitive since, in both types of networks, we aim to find the partition which maximises the sum of correlations or number of edges between nodes within same community and minimises the sum of correlations or number of edges between nodes belonging to different communities.
 
-We shall select two familiar approaches, widely known in the literature, as algorithms for the modularity maximisation. Firstly we consider a greedy agglomerative method, and secondly a method that uses spectral relaxation.
+We shall select two familiar approaches, widely known in the literature, as algorithms for the modularity maximisation. Firstly we consider a greedy agglomerative method discussed earlier in the report, and secondly a method that uses spectral relaxation.
 
-%---   ERROR
-%%% need to describe greedy agglomerative method for modularity maximisation
-
+We consider the same greedy agglomerative method described in \cref{subsec:greedyAlgorithm}, which we noted is also applicable in this case of weighted networks.
+The implementation code for this algorithm is in MATLAB and has been taken from \cite{ELM}.
 
 The approach using the spectral relaxation can be summarised using the argument from \cite{DM}. Let $\matvar{B}$ denote the modularity matrix, defined by
 \begin{equation}
@@ -160,7 +157,10 @@ The approach using the spectral relaxation can be summarised using the argument 
 \end{equation}
 where $A_{ij}$, $k_{i}$ and $m$ are defined as before.
 Also denote the set of nodes belonging to group $a$ by $\setvar{S}_{a} \equiv \{i:\sigma_{i} = a\}$.
-The algorithm iterates by attempting to split the node members of a single group in an optimal fashion by using modularity. Assume at one iteration there are $q$ groups so the partition is indexed by $[q] \equiv \{1,2,\dots,q\}$. For some $a \in [q]$, let $\matvar{B}_{a}$ denote the submatrix restricted to nodes in $\setvar{S}_{a}$. Let $\vecvar{v} \in \realsR^{\cardinality{\setvar{S}_{a}}}$ denote the sign vecotr given the algorithm operating on $\matvar{B}_{a}$. Then the change in modularity is given by
+The algorithm iterates by attempting to split the node members of a single group in an optimal fashion by using modularity.
+Assume at one iteration there are $q$ groups so the partition is indexed by $[q] \equiv \{1,2,\dots,q\}$.
+For some $a \in [q]$, let $\matvar{B}_{a}$ denote the submatrix restricted to nodes in $\setvar{S}_{a}$.
+Let $\vecvar{v} \in \realsR^{\cardinality{\setvar{S}_{a}}}$ denote the sign vector given the algorithm operating on $\matvar{B}_{a}$. Then the change in modularity is given by
 \begin{equation}
 \label{eq:changeModularityFinancialNetworks}
 	\begin{split}
@@ -171,7 +171,8 @@ The algorithm iterates by attempting to split the node members of a single group
 \end{equation}
 where $\widetilde{\matvar{B}}_{a} = \matvar{B}_{a} - diag \left( \sum_{j \in \setvar{S}_{a}} B_{ij} \right)$.
 
-The algorithm accepts the splitting of the group which maximises the modularity difference, and terminates when reaches a threshold regarding the size of the groups and the possible improvement in modularity at a given iteration. We have implemented this algorithm of \cite{DM} using MATLAB, stressing the input is defined by \cref{eq:weightedAdjacencyMatrixFinancialNetworks}.
+The algorithm accepts the splitting of the group which maximises the modularity difference, and terminates when reaches a threshold regarding the size of the groups and the possible improvement in modularity at a given iteration.
+We have implemented this algorithm of \cite{DM} using MATLAB, stressing the input is defined by \cref{eq:weightedAdjacencyMatrixFinancialNetworks}.
 
 %-------------------------------------------
 %   Modified Modularity Method Sub Section
@@ -180,9 +181,13 @@ The algorithm accepts the splitting of the group which maximises the modularity 
 \subsection{Modified Modularity Optimisation Method}
 \label{subsec:modifiedModularityOptimisationMethod}
 
-We move on to understand the potential issues with the naive approach hinted in the previous section. Intuitively, the term $k_{i}k_{j}/2m$ reflects the null hypothesis that the observed network structure is wholly based on the degrees of the nodes. This idea is sound when applied to binary networks, however, these terms do not have a specific meaning when applied to financial networks since we are interested in the correlation matrix rather than the structure of the underlying graph. The quantities $k_{i} \equiv \sum_{j} C_{ij}$ and $2m \equiv \sum_{ij} C_{ij}$ do not make up a clear notion of a null model when combined.
+We move on to understand the potential issues with the naive approach hinted in the previous section. Intuitively, the term $k_{i}k_{j}/2m$ reflects the null hypothesis that the observed network structure is wholly based on the degrees of the nodes.
+This idea is sound when applied to binary networks, however, these terms do not have a specific meaning when applied to financial networks since we are interested in the correlation matrix rather than the structure of the underlying graph.
+The quantities $k_{i} \equiv \sum_{j} C_{ij}$ and $2m \equiv \sum_{ij} C_{ij}$ do not make up a clear notion of a null model when combined.
 Moreover, \cite{MG13} have shown the naive approach is mathematically incorrect and leads to biased results.
-In order to detect communities within the correlation matrix that leads to correct results, we seek improvement in the construction of the null model for the network. We have already discussed, in \cref{subsec:randomMatrixTheory}, how to construct a filtered correlation matrix that takes into account the random noise at the level of individual stocks and a market-wide component. Therefore, this filtered matrix, which we have denoted by $\matvar{C}^{(g)}$ and defined in \cref{eq:remainingCorrelationMatrix}, can be used as a modularity matrix, since it reflects a suitable null model (i.e. random noise plus market wide correlation) subtracted from the observed correlation matrix.
+In order to detect communities within the correlation matrix that leads to correct results, we seek improvement in the construction of the null model for the network.
+We have already discussed, in \cref{subsec:randomMatrixTheory}, how to construct a filtered correlation matrix that takes into account the random noise at the level of individual stocks and a market-wide component.
+Therefore, this filtered matrix, which we have denoted by $\matvar{C}^{(g)}$ and defined in \cref{eq:remainingCorrelationMatrix}, can be used as a modularity matrix, since it reflects a suitable null model (i.e. random noise plus market wide correlation) subtracted from the observed correlation matrix.
 
 Our aim, here, is to use $\matvar{C}^{(g)}$ as input to an algorithm that can detect communities by maximising modularity. We hope this provides better results than the naive modularity methods discussed previously. The construction of an algorithm is not quite as straightforward, though, since we take into account the modification of the modularity matrix.
 
@@ -212,10 +217,9 @@ The new formulation of modularity is specifically aimed to detect mesoscopic-lev
 
 So far we have considered two methods based on modularity optimisation to detect communities within our financial network. The first is a naive approach that can be shown to produced biased results, but is based on the standard definition of modularity, whilst the second approach considered optimisation based on a modified definition of modularity. In order to compare even further the difference and benefit of the modified approach base don the results of RMT, we will consider a `baseline' method of spectral clustering.
 
-%---   ERROR
-%%% need to find section label for spectral clustering community detection algorithm
-The spectral clustering algorithm is based on the exact same idea considered for binary networks considered in \cref{???}, but we shall use the filtered correlation matrix, $\matvar{C}^{(g)}$, as input.
-We simply find the eigenvectors of $\matvar{C}^{(g)}$, use them to construct the embedded vectors, which are then clustered using the familiar k-means clustering algorithm (same procedure as with binary networks). We use different (and appropriate) values for the number of groups, then the algorithm for each one and choose the partition with the best value for the re-defined modularity (\cref{eq:newModularityFinancialNetworks}).
+The spectral clustering algorithm is based on the exact same idea considered for binary networks considered in \cref{subsec:spectralClustering}, but we shall use the filtered correlation matrix, $\matvar{C}^{(g)}$, as input.
+We simply find the eigenvectors of $\matvar{C}^{(g)}$, use them to construct the embedded vectors, which are then clustered using the familiar k-means clustering algorithm (same procedure as with binary networks).
+We use different (and appropriate) values for the number of groups, then run the algorithm for each one and choose the partition with the best value for the re-defined modularity (\cref{eq:newModularityFinancialNetworks}).
 
 
 %-----------------------------------------------------
