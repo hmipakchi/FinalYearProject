@@ -10,8 +10,125 @@ In this chapter we aim to experiment with community detection algorithms on synt
 We shall consider each algorithm described in the previous chapter, and experiment with data created from the appropriate generative model.
 The goal of the experiments on synthetic data is to understand how the underlying
 network structure, and the variation of parameters therein, affects the performance of different algorithms \cite{RLK12}.
-In general the experiments will proceed as follows. We generate a network with the appropriate block model and specified parameters, with an underlying ground-truth node assignments. We then measure the accuracy of the specific algorithm investigated as we vary model parameters. This then allows us to draw conclusions regarding the relative performance of community detection algorithms in controlled conditions given by networks with common properties.
-We conclude by discussing the advantages and issues with all the algorithms investigated and provide recommendations for their use in certain circumstances.
+In general the experiments will proceed as follows.
+We generate a network with the appropriate block model and specified parameters, with an underlying ground-truth node assignments.
+We then measure the accuracy of the specific algorithm investigated as we vary model parameters.
+This then allows us to draw conclusions regarding the relative performance of community detection algorithms in controlled conditions given by networks with common properties.
+We conclude by comparing all the algorithms investigated and provide recommendations for their use in certain circumstances.
+
+%----------------------------------------------------------------
+%   Spectral Clustering and Modularity-Optimisation Algorithms Section
+%----------------------------------------------------------------
+
+\section{Spectral Clustering and Modularity-Optimisation Algorithms}
+\label{sec:spectralClusteringModularityOptimisationAlgorithms}
+
+We shall test the spectral clustering algorithm of \cref{sec:spectralClustering} and the greedy modularity optimisation method of \cref{subsec:greedyAlgorithm} using identical synthetic data generated using the planted partition model described in \cref{subsec:plantedPartitionModel}.
+The goals are to, firstly, understand the quality of the partitions (i.e. accuracy) generated from the two algorithms as we vary both the sparsity of the network and the edge occurrence probabilities.
+Secondly, we wish to empirically test how close we can reliably detect communities up to the phase transition point.
+We assume assortative community structure throughout also.
+We apply each of generated networks as input to the Laplacian spectral clustering and greedy modularity method, and measure the accuracy of reconstruction of the node assignments by computing the \emphT{overlap} defined below \cite{DKM+11}.
+Denote the overlap by $T$, and let the estimated node assignments given by $\{s_{i}\}$ with ground-truth node assignments given by $\{\sigma_{i}\}$, then we define $T$ by
+\begin{equation}
+	\label{eq:overlap}
+	T = \max_{\pi} \frac{\frac{1}{n} \sum_{i} \delta(\sigma_{i},\pi(s_{i})) - \frac{1}{k}}{1 - \frac{1}{k}}
+\end{equation}
+where $\pi$ ranges over the permutations on $s$ elements and $k$ represents the number of clusters.
+This definition means that $0 \le T \le 1$ with a higher value implying improved reconstruction and more accurate results, and an overlap of 0 meaning the algorithm is, on average, no better than random uniform guessing of node assignments.
+
+The traditional spectral clustering algorithm  has been implemented in MATLAB based on the derivation in \cref{sec:spectralClustering}, whilst the MATLAB implementation for the greedy modularity algorithm has been obtained from \cite{ELM}.
+
+We begin by considering the dense regime and generating 100 networks from the planted partition model with common parameters $n=200$, $k=2$, $p_{in}=0.9$.
+However, we vary $p_{out}$ for each of the 100 networks to get a different value for the ratio $c_{out}/c_{in}$, so this signifies the variation in the edge occurrence probabilities.
+The results are shown in \cref{fig:syntheticDataResultsPin0.9}, where the overlap is plotted in the vertical axis and the horizontal axis is the value for the ratio $c_{out}/c_{in}$.
+
+%---   FIGURE
+\begin{figure}
+	\centering
+	\includegraphics[width=0.9\linewidth]{figures/spectralClusteringSyntheticDataErrors_pin_0_9.png}
+	\caption[Plot of overlap for spectral clustering and modularity methods in the dense regime.]{\label{fig:syntheticDataResultsPin0.9} A plot for the overlap of reconstructed node assignments of the Laplacian spectral clustering (blue) and greedy modularity optimisation methods (red) as the relative edge occurrence probabilities ($c_{out}/c_{in}$) are varied. 100 networks were generated with common parameters, $n=200$, $k=2$, $p_{in}=0.9$. Both algorithms perform very similarly in this regime and we can clearly identify the detectable and undetectable phases since the there is a very sharp drop in the overlap values for both algorithms.}
+\end{figure}
+
+We see very similar performance for both algorithms in this regime and can also identify the phase transition region described in \cref{subsec:plantedPartitionModel}, since there is a very sharp drop in overlap for a value of $c_{out}/c_{in} \approx 0.85$.
+Overlap values for both algorithms for $c_{out}/c_{in} < 0.85$ are approximately 1 implying perfect reconstruction of the ground-truth node assignments, whilst for $c_{out}/c_{in} > 0.85$, the overlap drops very sharply towards 0.
+
+Let us now consider a sparser regime, where we again generate 100 networks from the planted partition model but now with common parameters $n=200$, $k=2$, $p_{in}=0.6$.
+The results are shown in \cref{fig:syntheticDataResultsPin0.6}
+
+%---   FIGURE
+\begin{figure}
+	\centering
+	\includegraphics[width=0.9\linewidth]{figures/spectralClusteringSyntheticDataErrors_pin_0_6.png}
+	\caption[Plot of overlap for spectral clustering and modularity methods in the sparse regime.]{\label{fig:syntheticDataResultsPin0.6} A plot for the overlap of reconstructed node assignments of the Laplacian spectral clustering (blue) and greedy modularity optimisation methods (red) as the relative edge occurrence probabilities ($c_{out}/c_{in}$) are varied. 100 networks were generated with common parameters, $n=200$, $k=2$, $p_{in}=0.6$. Both algorithms perform similarly for $c_{out}/c_{in} < 0.5$ but the modularity method seems to perform better until we get the sharp drop in overlap values due to the phase transition.}
+\end{figure}
+
+Notice that both algorithms perform similarly for $c_{out}/c_{in} < 0.5$ but the modularity method seems to perform better until we get the sharp drop in overlap values.
+This is a very important observation to note, that the sharp drop in overlap values, for both algorithms, occurs at $c_{out}/c_{in} \approx 0.75$ which is lower than that for the case where $p_{in}=0.9$.
+The theoretical phase transition point is the same for both cases, therefore this suggests that, as the network gets sparser, both algorithms performance declines with respect to performing perfect reconstruction within the detectable phase.
+These observations should not be a surprise given the derivation of the algorithms, and we will now explain known issues with both these algorithms that cause the decline in accuracy.
+
+Recall the spectral clustering algorithm requires applying a k-means algorithm to the embedded vectors in a $k-1$ dimensional plane.
+For the case with dense graphs, the eigenvalue spectrum of the Laplacian is separated and the embedded vectors can be seen to be arbitrarily well separated also.
+However, for the case where the graph is sparse, the eigenvector elements (i.e. coordinates in the plane) are very similar, and the k-means algorithm performance will be very poor, results in much lower accuracy for the spectral clustering algorithm.
+This observation is summarised as an illustration in \cref{fig:spectralClusteringEmbeddingVisualisationPlots}.
+
+%---   FIGURE
+\begin{figure}
+	\centering
+	\begin{subfigure}{.5\textwidth}
+		\centering
+		\includegraphics[width=0.8\linewidth]{figures/embeddedVectorsModularityMethod_pin_0_8_pout_0_2.png}
+		\caption{}
+		\label{fig:spectralClusteringEmbeddingVisualisationPin08}
+	\end{subfigure}%
+	\begin{subfigure}{.5\textwidth}
+		\centering
+		\includegraphics[width=0.8\linewidth]{figures/embeddedVectorsModularityMethod_pin_0_08_pout_0_02.png}
+		\caption{}
+		\label{fig:spectralClusteringEmbeddingVisualisationPin008}
+	\end{subfigure}
+	\caption[Visualisation of spectral clustering embedding in sparse and dense regimes]{\label{fig:spectralClusteringEmbeddingVisualisationPlots} A visualisation of the embedding for the spectral clustering algorithm in the dense, \subref{fig:spectralClusteringEmbeddingVisualisationPin08}, and sparse, \subref{fig:spectralClusteringEmbeddingVisualisationPin008}, regimes. The ground truth graph for the dense regime was generated using the planted partition model with $n=150$, $k=3$, $p_{in}=0.8$ and $p_{out}=0.2$, whilst the graph for the sparse regime was generated using the same values of $n$ and $k$ but with $p_{in}=0.08$ and $p_{out}=0.02$. We label the ground-truth node assignments by colour (i.e. points with the same colour represent nodes belonging to the same community in the graph). Notice that, for the dense regime, all data points with different colours are well separated so the k-means algorithm can accurately recover the cluster memberships. However, for the sparse regime, every data (red green and blue) are concentrated in the same region in the 2-dimensional embedding space, so the k-means algorithm cannot recover the cluster memberships accurately at all. This illustrates an issue with the Laplacian spectral clustering method.}
+\end{figure}
+
+For the dense regime, we generate a network from the planted partition model with $n=150$, $k=3$, $p_{in}=0.8$ and $p_{out}=0.2$, whilst for the sparse regime, we generate a network with the same values for $n$ and $k$, but $p_{in}=0.08$ and $p_{out}=0.02$.
+Note the important regulation that, for this illustration, the ratio $c_{out}/c_{in}$ is identical for both regimes, and is below the theoretical phase transition (i.e. we are in the detectable region).
+We see that, for the dense regime, all data points belonging to different communities are well separated, and points belonging to the same community are clustered together, so the k-means algorithm can accurately recover the cluster memberships.
+However, for the sparse regime, all data points are clustered together, so the k-means algorithm cannot recover the cluster memberships accurately, and the overlap for the spectral clustering method will be very low indeed.
+
+We now consider an issue associated with modularity optimisation algorithms (including the greedy method we have used), known as the \emphT{resolution limit} \cite{GMC10,For10}.
+Communities that are small when compared to the whole graph may not be distinguished even though they are well defined communities or even cliques, and therefore this problem has an impact on practical applications \cite{For10}.
+As \cite{GMC10,For10} explains, if the change in modularity, $\Delta Q$, arising by merging two communities is positive, then the two groups will be clustered together.
+Let $e_{i}$ be the number of edges within community $i$ and $e_{ij}$ be the number of edge between communities $i$ and $j$.
+The expression for the change in modularity is then given by
+\begin{equation}
+	\label{eq:resolutionLimit}
+	\Delta Q_{ij} = \frac{e_{ij}}{m} -2 \left( \frac{d_{i}}{2m} \right) \left( \frac{d_{j}}{2m} \right)
+\end{equation}
+where $d_{i}$ is the sum of the degrees of the vertices that belong to community $i$.
+Notice that $\Delta Q_{ij} > 0$ (and therefore the two communities are merged) if and only if $e_{ij} > \frac{d_{i}d_{j}}{2m}$ \cite{GMC10}.
+This is problematic because of the null model considered, the modularity tends to expect a value of $e_{ij} < 1$, which makes just a single edge between the communities (i.e. $e_{ij}=1$) unexpected, so that two communities will be merged even though there is just one edge between them \cite{GMC10}.
+
+Another problem with modularity optimisation is known as \emphT{extreme near-degeneracy} \cite{GMC10,For10}.
+Good et al. \cite{GMC10} explain that both the number of partitions with near-optimal modularity (i.e close with respect to the global maximum modularity value) grows exponentially with the number of nodes in the network \cite{For10}.
+This results in extreme degeneracies in the modularity which causes problems in determining the partition which maximises modularity as well as finding high modularity partitions, since partitions that have similar high modularity values associated are not necessarily similar to one another \cite{For10,GMC10}.
+This means that, the more modular a network is (i.e. the more communities it contains), it is actually becomes more difficult to determine the optimum partition among the suboptimal ones, which is a counter-intuitive result \cite{GMC10}.
+
+To summarise both spectral clustering and modularity optimisation algorithms can detect communities up to the phase transition in the dense regime.
+However, we have seen how the performance declines as the ground-truth network gets sparser for both algorithms.
+We have explained some of the issues observed that can account for the disappointing results although there is no deep understanding regarding the modularity optimisation methods \cite{For10}.
+Describing the behaviour of the modularity methods is important, though, and there have been many situations where the algorithm works well in practical applications \cite{New06a,New06b,For10,GMC10}.
+This should not be startling given how the synthetic data we have used for our experimental tests are, in general, not well representative of real-world networks considered in practice.
+Since the greedy algorithm is very fast and can be applied to larger scale networks, we would recommend using this algorithm instead of other modularity optimisation methods as well as traditional spectral clustering as it achieves similar or better accuracy with faster run time.
+For the case of smaller size networks, the pragmatic option seems most suitable, where these different algorithms may be run and then compared in training cases, with the best one evaluated used for further investigation in test applications.
+We notify the reader, we shall revisit modularity optimisation algorithms as they are useful for a particular application of financial networks, further studied in \cref{cha:communityDetectionFinancialNetworks}.
+For the moment, nevertheless, we wish to find a class of algorithms that, empirically, seem to reliably detect communities up to the phase transition in the sparse regime also.
+
+%----------------------------------------------------------------
+%   Belief Propagation Algorithm Section
+%----------------------------------------------------------------
+
+\section{Belief Propagation Algorithm}
+\label{sec:beliefPropagationAlgorithmTest}
 
 %-----------------------------------------------------
 %   NLPI and AMP Algorithms Section
@@ -21,8 +138,9 @@ We conclude by discussing the advantages and issues with all the algorithms inve
 \label{sec:NLPIAndAMPAlgorithms}
 
 We shall use the procedure outlined in \cite{Mon13} to test the NLPI and AMP algorithms, where the synthetic data used is simply an instance of a normalised adjacency matrix. Recall \cref{def:hcmNormlaisedAdjacencyMatrixDecomposed}, where we decomposed the matrix into signal (weighted by a signal-to-noise ratio term) plus noise.
-We will consider the case of a network generated by the hidden clique model with $n$ nodes and one hidden community consisting of $k$ nodes. We may choose the community memberships arbitrarily. Using previous notation, let us denote $\vecvar{u}$ as the indicator variable for nodes belonging to the hidden community (i.e. so that precisely $k$ elements of $\vecvar{u}$ are equal to one and the rest equal zero), $lambda$ as the SNR and $\matvar{Z}$ as the noise term.
-We set the elements of $\matvar{Z}$ to be $Z_{ij} \sim \normal{0,1/n}$ i.i.d. entries. Therefore given a value of $\lambda$ and our ground-truth community assignments, we can construct the normalised adjacency matrix, once more denoted by $\widetilde{\matvar{A}}$, using \cref{def:hcmNormlaisedAdjacencyMatrixDecomposed}.
+We will consider the case of a network generated by the hidden clique model with $n$ nodes and one hidden community consisting of $k$ nodes.
+We may choose the community memberships arbitrarily. Using previous notation, let us denote $\vecvar{u}$ as the indicator variable for nodes belonging to the hidden community (i.e. so that precisely $k$ elements of $\vecvar{u}$ are equal to one and the rest equal zero), $lambda$ as the SNR and $\matvar{Z}$ as the noise term.
+We set the elements of $\matvar{Z}$ to be $Z_{ij} \sim \normal{0,1/n}$ i.i.d. entries. Therefore given a value of $\lambda$ and our ground-truth community assignments, we can construct the normalised adjacency matrix, denoted by $\widetilde{\matvar{A}}$, using \cref{def:hcmNormlaisedAdjacencyMatrixDecomposed}.
 This matrix will serve as input to the NLPI and AMP algorithms, which produce an output representing their reconstructed node assignments, which we shall denote by $\widehat{\vecvar{u}}$.
 We shall represent the accuracy of the algorithms by the inner product of the ground-truth and reconstructed node assignments, $\innerP{\vecvar{u},\widehat{\vecvar{u}}}$.
 Notice this value lies between 0 and 1, and a larger number indicating improved reconstruction and better accuracy.

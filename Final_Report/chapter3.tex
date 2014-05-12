@@ -40,7 +40,7 @@ We labelled the ground-truth node assignments by colour in the figure (i.e. poin
 %---   FIGURE
 \begin{figure}
 	\centering
-	\includegraphics[width=0.9\linewidth]{figures/embeddedVectorsModularityMethod_pin_0_8_pout_0_2.png}
+	\includegraphics[width=0.7\linewidth]{figures/embeddedVectorsModularityMethod_pin_0_8_pout_0_2.png}
 	\caption[Visualisation of spectral clustering embedding]{\label{fig:SpectralClusteringEmbeddingVisualisation} A visualisation of the embedding for the spectral clustering algorithm. The ground truth graph was generated using the planted partition model with $n=150$, $k=3$, $p_{in}=0.8$ and $p_{out}=0.2$. We have chosen $3$ distinct communities since we can easily display the embedding in a 2-dimensional space. The coordinates for each point are the corresponding entries in the 2 eigenvectors of the Laplacian matrix considered. We label the ground-truth node assignments by colour (i.e. points with the same colour represent nodes belonging to the same community in the graph), and we can see that a k-means clustering algorithm would be applied to return cluster memberships that match the true community memberships.}
 \end{figure}
 
@@ -79,6 +79,10 @@ Thus, we seek to describe approximate methods for maximising modularity.
 In the literature, there exists a variety of approximation algorithms for accurate and fast modularity optimisation, such as greedy algorithms, simulated annealing, spectral algorithms and extremal optimisation \cite{For10}.
 Within this report, we shall describe all these algorithms but only implement and test the greedy agglomerative method, since we consider it to be a faster version whilst maintaining similar accuracy to others.
 
+%-------------------------------------------
+%   Greedy Algorithms Sub Section
+%-------------------------------------------
+
 \subsection{Greedy Algorithm}
 \label{subsec:greedyAlgorithm}
 
@@ -100,6 +104,10 @@ In the second phase, two communities are connected if an edge exists between any
 	\caption[Illustration of greedy algorithm for modularity optimisation]{\label{fig:LouvainMethodIllustration} Illustration of the two phases of the greedy method of \cite{BGL+08}. The first phase involves optimisation of modularity using local changes, and the second phase aggregates the nodes into communities. The two phases are repeated until no further improvement of modularity is possible. For this example, only two passes are required until termination. This figure is reprinted from the Blondel et al. reference \cite{BGL+08}.}
 \end{figure}
 
+%-------------------------------------------
+%   Simulated Annealing Sub Section
+%-------------------------------------------
+
 \subsection{Simulated Annealing}
 \label{subsec:simulatedAnnealing}
 
@@ -114,10 +122,14 @@ Within the individual step, an individual node is moved to community at random, 
 Typically, each iteration involves $n^{2}$ individual steps and $n$ collective steps, where $n$ represents the number of nodes in the network \cite{For10}.
 This method can approximate the true maximum of modularity very accurately, and note that due to the variation of parameter selection (such as initial temperature and inverse-temperature chosen), an exact complexity cannot be estimated, but it is typically very slow and can only be used for small graphs \cite{For10}.
 
+%-------------------------------------------
+%   Extremal Optimisation Sub Section
+%-------------------------------------------
+
 \subsection{Extremal Optimisation}
 \label{subsec:extremalOptimisation}
 
-The extremal optimisation algorithm of Duch and Arenas \cref{DA05} is a heuristic search method that involves recursively bi-partitioning the network \cref{DA05,For10}.
+The extremal optimisation algorithm of Duch and Arenas \cite{DA05} is a heuristic search method that involves recursively bi-partitioning the network \cite{DA05,For10}.
 It begins with a random partition and uses the contribution of each node to the modularity as a fitness measure with the movement of nodes with the lowest fitness value.
 The fitness function value of a node $i$ is given by
 \begin{equation}
@@ -137,6 +149,10 @@ At each iteration of the algorithm, we calculate $\rho_{i}$ for every node $i$ a
 Note that this transition alters the overall partition so that the values of the fitness need to be re-evaluated \cite{DA05,For10}.
 We repeat this process until no further improvement in the modularity is possible \cite{DA05,For10}.
 Extremal optimisation has empirically shown to achieve similar accuracy to simulated annealing but with a fast run time.
+
+%-------------------------------------------
+%   Spectral Algorithm Sub Section
+%-------------------------------------------
 
 \subsection{Spectral Algorithm}
 \label{subsec:spectralAlgorithm}
@@ -176,7 +192,6 @@ As we need to repeatedly partition the network in order to optimise the modulari
 Typically, in practice $d \approx \natlog{n}$, so that for sparse graphs, the total time taken for this spectral algorithm is approximately $\bigO{n^{2}\natlog{n}}$.
 The spectral method is faster than simulated annealing and extremal optimisation, although not as fast empirically as the greedy algorithm \cite{For10}.
 An added benefit is the extensibility of the spectral method with the application to weighted networks.
-One such possible application are financial networks, which we address later in this report.
 
 %-----------------------------------------------------
 %   Belief Propagation Algorithm Section
@@ -192,6 +207,8 @@ One such possible application are financial networks, which we address later in 
 
 \section{NLPI and AMP Algorithms}
 \label{sec:NLPIAndAMPAlgorithmsCommunityDetection}
+
+The following algorithms aim to partition networks based upon networks generated from the hidden clique model described in \cref{subsec:hiddenCliqueModel}.
 
 %-------------------------------------------
 %   Non-linear Power Iteration Sub Section
