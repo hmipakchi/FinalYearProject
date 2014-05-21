@@ -2,7 +2,7 @@ clear;
 
 T = 2500;
 n = 100;
-noCommunities = 10;
+noCommunities = 10;%10
 
 %noCommunities = 3;
 %sizeOfCommunities = 10;
@@ -30,11 +30,12 @@ for i=1:n
 end
 
 % SNR varies between 0 and 1
-% SNR = [0.1; 0.2; 0.3; 0.4; 0.5; 0.6; 0.7; 0.8; 0.9; 1.0;];
-SNR = [0.5; 0.7; 1.0;];
+SNR = [0.5; 0.6; 0.7; 0.8; 0.9; 1.0;];
+% SNR = [0.5; 0.7; 1.0;];
 
 fastNewmanCommunities = zeros(n,length(SNR));
 fastNewmanModularities = zeros(length(SNR),1);
+fastNewmanModularitiesNew = zeros(length(SNR),1);
 fastNewmanVariationalInformation = zeros(length(SNR),1);
 
 fastNewmanModifiedCommunities = zeros(n,length(SNR));
@@ -42,6 +43,7 @@ fastNewmanModifiedModularities = zeros(length(SNR),1);
 fastNewmanModifiedVariationalInformation = zeros(length(SNR),1);
 
 montanariCommunities = zeros(n,length(SNR));
+montanariModularitiesNew = zeros(length(SNR),1);
 montanariVariationalInformation = zeros(length(SNR),1);
 
 noIterationsNLPI = 50;
@@ -60,11 +62,11 @@ for s=1:length(SNR)
     
     % system wide correlations
     systemWide = zeros(noCommunities,noCommunities);
-    %systemWide = zeros(n,n);
     for i=1:noCommunities
         for j=1:noCommunities
-            if (mod(i,2) == 0) && mod(j,2) == 0
-                systemWide(i,j) = abs(sign((2*rand(1))-1))*0;
+            systemWide(i,j) = -1*abs(rand(1))*0.1;
+            if (i > j)
+                systemWide(i,j) = systemWide(j,i);
             end
         end
     end
@@ -74,8 +76,10 @@ for s=1:length(SNR)
         for j=1:n
             if (timeSeriesCommunities(i) == timeSeriesCommunities(j))
                 correlationMatrix(i,j) = SNR(s) + systemWide(timeSeriesCommunities(i),timeSeriesCommunities(j));
-            else
+            elseif (mod(timeSeriesCommunities(i),2) == 0) && (mod(timeSeriesCommunities(j),2) == 0)
                 correlationMatrix(i,j) = 0 + systemWide(timeSeriesCommunities(i),timeSeriesCommunities(j));
+            else
+               correlationMatrix(i,j) = 0 - systemWide(timeSeriesCommunities(i),timeSeriesCommunities(j));
             end
             if abs(correlationMatrix(i,j)) > 1
                 correlationMatrix(i,j) = sign(correlationMatrix(i,j));
@@ -160,6 +164,8 @@ for s=1:length(SNR)
             modularityMatrix = modularityMatrix + (eigenvalues(i).*(V(:,i)*V(:,i)'));
         end
     end
+    
+    dummyFinancialSpectralClusteringAssignments = financialSpectralClustering(modularityMatrix, n, 0);
 
     [fastNewmanCommunities(:,s),fastNewmanModularities(s)] = fast_newman(weightedAdjacencyMatrix);
 %     fastNewmanVariationalInformation(s) = calculateNormalisedVariationInformation(timeSeriesCommunities,fastNewmanCommunities(:,s));
@@ -170,12 +176,15 @@ for s=1:length(SNR)
     [montanariCommunities(:,s)] = montanari_modularity(weightedAdjacencyMatrix);
 %     montanariVariationalInformation(s) = calculateNormalisedVariationInformation(timeSeriesCommunities,montanariCommunities(:,s));
 
-    [NLPICommunities(:,s)] = financialSpectralClusteringNLPI(modularityMatrix,noIterationsNLPI,noCommunities);
+    %[NLPICommunities(:,s)] = financialSpectralClusteringNLPI(modularityMatrix,noIterationsNLPI,noCommunities);
+    [NLPICommunities(:,s)] = financialSpectralClusteringNLPI(sampleCrossCorrelationMatrix,noIterationsNLPI,noCommunities);
     
     [AMPCommunities(:,s)] = financialSpectralClusteringAMP(modularityMatrix,noIterationsAMP,noCommunities);
 
-
 %      [spectralClusteringCommunities(:,s)] = financialSpectralClustering(modularityMatrix, noCommunities, SNR(s));
 %     spectralClusteringVariationalInformation(s) = calculateNormalisedVariationInformation(timeSeriesCommunities,spectralClusteringCommunities(:,s));
+
+    fastNewmanModularitiesNew(s) = computeModularityForPartition(weightedAdjacencyMatrix,fastNewmanCommunities(:,s));
+    montanariModularitiesNew(s) = computeModularityForPartition(weightedAdjacencyMatrix,montanariCommunities(:,s));
     
 end

@@ -17,25 +17,25 @@ We introduce spectral clustering, modularity-based optimisation, non-linear powe
 \label{sec:spectralClustering}
 
 The basis of all spectral clustering algorithms is the transformation of a set of variables into the set of points in space whose coordinates are elements of eigenvectors of a matrix, and then the clustering of these points using well-known clustering algorithms \cite{Lux06,For10}.
-We consider the spectral clustering algorithm described in \cite{Lux06,For10}, but we do not aim to justify the intuition behind the algorithm since it requires results spectral graph theory that is beyond the scope of this report.
-Nevertheless, the reader may refer to \cite{Lux06,Spi07,For10} for the details.
+We consider the spectral clustering algorithm described in \cite{Lux06,For10}, but we do not aim to justify the intuition behind the algorithm since it requires results from spectral graph theory that is beyond the scope of this report.
+Nevertheless, the reader may wish to refer to \cite{Lux06,Spi07,For10} for more details.
 
-Firstly we compute the Laplacian matrix of the network, using \cref{def:unnormalisedLaplacianMatrix} where we assume $n$ nodes in the graph.
+Firstly, we compute the Laplacian matrix of the network, using \cref{def:unnormalisedLaplacianMatrix} where we assume $n$ nodes in the graph, as usual.
 Then we compute the $k$ eigenvectors of the Laplacian matrix associated with the $k$ largest eigenvalues.
 Denote the eigenvectors by $\vecvar{u}_{1},\dots,\vecvar{u}_{k}$ and the eigenvalues by $\lambda_{1},\dots,\lambda_{k}$.
 The eigenvectors represent a $k$-tuple of real numbers associated with each vertex in the graph. 
 We think of this association as a mapping from the vertices into a $k$-dimensional space.
 This embedding is characterised by $F : V \rightarrow \realsR^{k}$ where $F(i) = (\vecvar{u}_{1}^{(i)},\dots,\vecvar{u}_{k}^{(i)})$ and $\vecvar{u}_{j}^{(i)}$ denotes the $i$-th element of the $j$-th eigenvector.
 We have essentially represented node $i$ of the graph as a point in a $k$-dimensional space where the coordinates are the $i$-th elements of all the top $k$ eigenvectors of the Laplacian matrix.
-Finally, we apply the embedding as input to the popular k-means clustering algorithm.
-The clusters memberships of the $n$ data points are the node assignments for the initial network.
-Notice, from the definition of the Laplacian matrix, that the vector of all ones is the principal eigenvector, meaning the elements of this remains the same for all nodes.
+Finally, we apply the embedding as input to the popular \emphT{k-means clustering} algorithm.
+The cluster memberships of the $n$ data points are precisely the node assignments for the initial network.
+Notice, from the definition of the Laplacian matrix, that the vector of all ones (i.e. a vector with every element equal to one) is the principal eigenvector, so these embedded values remain the same for all nodes.
 Therefore, knowledge of this eigenvector does not help discriminate between different vertices, and hence the information is not useful.
-Hence we only apply the embedding to $k-1$ eigenvectors (i.e. the top $k$ eigenvectors excluding the all-ones vector), and can thus represent the mapping in a $k-1$ dimensional space.
+Thus we shall only apply the embedding to the top $k-1$ eigenvectors (i.e. the top $k$ eigenvectors excluding the all-ones vector), and can therefore represent the mapping in a $k-1$ dimensional space.
 
-To visualise what such an embedding looks like, refer to \cref{fig:SpectralClusteringEmbeddingVisualisation}, where we generated an example graph using the planted partition model and 3 communities (this is selected so the reader can easily see the embedding in a 2-dimensional space).
+To visualise what such an embedding looks like, refer to \cref{fig:SpectralClusteringEmbeddingVisualisation}, where we generated an example graph using the planted partition model and 3 communities (this is purposely chosen so we can easily identify the embedding in a 2-dimensional space).
 The coordinates for each point are the corresponding entries in the 2 eigenvectors of the Laplacian matrix considered.
-We labelled the ground-truth node assignments by colour in the figure (i.e. points with the same colour represent nodes belonging to the same community in the graph), and we can see that a k-means clustering algorithm would be applied to return cluster memberships that match the ground-truth.
+We labelled the ground-truth node assignments by colour in the figure (i.e. points with the same colour represent nodes belonging to the same community in the underlying graph), and we can see that a k-means clustering algorithm would be applied to return cluster memberships that match the ground-truth, since the data points corresponding to different clusters are well separated.
 
 %---   FIGURE
 \begin{figure}
@@ -45,7 +45,7 @@ We labelled the ground-truth node assignments by colour in the figure (i.e. poin
 \end{figure}
 
 Note that the algorithm does require to compute $k$ eigenvectors of a matrix, and this can be achieved using the power method.
-Also, the accuracy of the algorithm will largely depend on the k-means algorithm which has been shown to converge to local minima in a cost measure (rather than global), but despite this, it seems to work well in practical applications \cite{Lux06,For10}.
+Also, the accuracy of the algorithm will largely depend on the k-means algorithm which has been shown to converge to local minima in a cost measure (rather than global), but despite this, it has been shown to work well in practical applications \cite{Lux06,For10}.
 
 %-----------------------------------------------------
 %   Modularity-based Optimisation Section
@@ -54,30 +54,30 @@ Also, the accuracy of the algorithm will largely depend on the k-means algorithm
 \section{Modularity-based Optimisation}
 \label{sec:modularityBasedOptimisation}
  
-We introduce these algorithms, first considered by \cite{New06a,New06b}, by explaining the intuition behind `good' community partitions.
-In particular, the key ingredient involves determining partitions of the network where there are fewer edges between nodes belonging to different communities than expected.
-For instance, if the number of links between nodes associated between different communities is approximately the same as what one would expect to find given random placement of links within the network, then it is unlikely this provides a notion of meaningful community structure \cite{New06b}.
-Equivalently, we can consider partitions where there are more edges between nodes belonging to the same community than expected.
+We introduce these algorithms, introduced by \cite{New06a,New06b}, by first explaining the intuition behind `good' community partitions.
+In essence, the key ingredient involves determining partitions of the network where there are fewer edges \emphT{than expected} between nodes belonging to different communities.
+For instance, if the number of links between nodes associated between different communities is approximately the same as what one would expect to find given random assignment of edges within the network, then it is unlikely this provides evidence of meaningful community structure \cite{New06b}.
+Moreover, we can also consider partitions where there are more edges than expected between nodes belonging to the same community.
 \begin{definition}
 	\label{def:nullModel}
-	The \emphT{null model} with respect to a network, whose adjacency matrix is given by  $\matvar{A}$, is the random graph denoted by $\graphvar{G}$, where each edge has a probability of $\frac{d_{i}d_{j}}{2m}$ of occurring, $d_{i}$ is the degree of node $i$ and $2m \equiv \sum_{ij} A_{ij}$.
+	The \emphT{null model} with respect to a network, whose adjacency matrix is given by  $\matvar{A}$, is the random graph denoted by $\graphvar{G}$, where each edge has a probability of $\frac{d_{i}d_{j}}{2m}$ of occurring. $d_{i}$ is the degree of node $i$ and $2m \equiv \sum_{ij} A_{ij}$.
 \end{definition}
 The null model defined above is proposed as a baseline distribution if edges were randomly placed within the network.
 \begin{definition}
 	\label{def:modularity}
-	Given a partition, $\vecvar{\sigma}$, of a network, the \emphT{modularity} is given by: $Q(\vecvar{\sigma}) = \frac{1}{2m} \sum_{ij} \left(A_{ij} - \frac{d_{i}d_{j}}{2m} \right) \delta(\sigma_{i},\sigma_{j})$.
+	Given a partition, $\vecvar{\sigma}$, of a network, the \emphT{modularity} is defined as: $Q(\vecvar{\sigma}) = \frac{1}{2m} \sum_{ij} \left(A_{ij} - \frac{d_{i}d_{j}}{2m} \right) \delta(\sigma_{i},\sigma_{j})$.
 \end{definition}
 The modularity is therefore considered a cost function for a partition of the network where larger modularity values indicate stronger community structure \cite{New06a}.
 \begin{definition}
 	\label{def:modularityMatrix}
-	The \emphT{modularity matrix} is given by $\matvar{B}$, whose elements $B_{ij}$ are defined by $B_{ij} = A_{ij} - \frac{d_{i}d_{j}}{2m}$.
+	The \emphT{modularity matrix} is denoted by $\matvar{B}$, whose elements $B_{ij}$ are defined by $B_{ij} = A_{ij} - \frac{d_{i}d_{j}}{2m}$.
 \end{definition}
-The aim of modularity optimisation algorithms is to find a partition of the network with the maximum value of modularity.
+The aim of modularity optimisation algorithms is to find a partition of the network with the maximum value of modularity associated.
 Since searching over all possible partitions is exponential in the number of nodes of the network, the problem is NP-hard computationally \cite{New06b}.
-Thus, we seek to describe approximate methods for maximising modularity.
+Thus, we seek approximate methods that provide near-optimal solutions.
 
 In the literature, there exists a variety of approximation algorithms for accurate and fast modularity optimisation, such as greedy algorithms, simulated annealing, spectral algorithms and extremal optimisation \cite{For10}.
-Within this report, we shall describe all these algorithms but only implement and test the greedy agglomerative method, since we consider it to be a faster version whilst maintaining similar accuracy to others.
+Within this report, we describe all these algorithms but only implement and test the greedy agglomerative method on synthetic data, since we consider it to be a faster version whilst maintaining similar accuracy to other modularity optimisation algorithms as we shall discuss.
 
 %-------------------------------------------
 %   Greedy Algorithms Sub Section
@@ -87,21 +87,21 @@ Within this report, we shall describe all these algorithms but only implement an
 \label{subsec:greedyAlgorithm}
 
 The greedy algorithm of Clauset et al. \cite{CNM04} starts with all nodes as single groups and successively mergers two groups to form a larger community such that the modularity of the new partition increases after the joining \cite{CNM04,For10}.
-Moreover, the algorithm keeps permanently, the merger with the largest increase in modularity (hence at each step we compute $\Delta Q$, the change in modularity, using \cref{def:modularity}).
+Moreover, the algorithm keeps, permanently, the merger with the largest increase in modularity (hence at each step we compute $\Delta Q$, the change in modularity, using \cref{def:modularity}).
 This is iterated until no further increase in modularity is possible \cite{CNM04}.
-Note that for a network with $n$ nodes and $m$ edges, the algorithm has complexity $\bigO{(m+n)n}$, or $\bigO{n^{2}}$ on a sparse graph \cite{For10}.
+Note that for a network with $n$ nodes and $m$ edges, the algorithm has complexity $\bigO{(m+n)n}$, or $\bigO{n^{2}}$ for a sparse graph \cite{For10}.
 
 A different greedy algorithm has been proposed by Blondel et al. \cite{BGL+08}, that is also applicable for weighted networks \cite{For10}.
 We initialise each node to belong to an individual community, and then repeat the following two phases until there is no further increase in modularity possible.
 In the first phase, we sequentially consider each node, and given node $i$, we compute the increase in modularity, $\Delta Q$, that results from moving node $i$ into a neighbour community, and then permanently select the transition that yields the greatest increase in modularity \cite{BGL+08,For10}.
 In the second phase, two communities are connected if an edge exists between any node belonging to the communities \cite{BGL+08,For10}.
-\Cref{fig:LouvainMethodIllustration} illustrates the two phases of the algorithm on an example network. This figure is taken from the Blondel et al. reference \cite{BGL+08}.
+\Cref{fig:LouvainMethodIllustration} illustrates the two phases of the algorithm on an example network. This figure is taken from the Blondel et al., reference \cite{BGL+08}.
 
 %---   FIGURE
 \begin{figure}
 	\centering
 	\includegraphics[width=0.9\linewidth]{figures/louvainMethodIllustration.png}
-	\caption[Illustration of greedy algorithm for modularity optimisation]{\label{fig:LouvainMethodIllustration} Illustration of the two phases of the greedy method of \cite{BGL+08}. The first phase involves optimisation of modularity using local changes, and the second phase aggregates the nodes into communities. The two phases are repeated until no further improvement of modularity is possible. For this example, only two passes are required until termination. This figure is reprinted from the Blondel et al. reference \cite{BGL+08}.}
+	\caption[Illustration of greedy algorithm for modularity optimisation]{\label{fig:LouvainMethodIllustration} Illustration of the two phases of the greedy method of \cite{BGL+08}. The first phase involves optimisation of modularity using local changes, and the second phase aggregates the nodes into communities. The two phases are repeated until no further improvement of modularity is possible. For this example, only two passes are required until termination. This figure is reprinted from the Blondel et al., reference \cite{BGL+08}.}
 \end{figure}
 
 %-------------------------------------------
@@ -117,10 +117,10 @@ Otherwise, the update is only accepted with a small probability $\exp(-\beta \De
 The idea behind accepting a transition that results in a decrease in modularity with a small probability is to increase the chance of finding the global maximum (i.e. decrease the chance of converging towards local maxima) \cite{For10}.
 The algorithm converges to a stable state at some point, depending on the number of states explored and how $\beta$ is varied, but it can be a good approximation for $Q$.
 
-A more recent implementation by \cite{GSA04} consists of iterations that involve both individual and collective steps.
-Within the individual step, an individual node is moved to community at random, whilst the collective step consists of merging two communities or splitting one community \cite{GSA04}.
+A more recent implementation by Guimera et al. \cite{GSA04} consists of iterations that involve both individual and collective steps.
+Within the individual step, an individual node is moved to a community at random, whilst the collective step consists of merging two communities or splitting one community \cite{GSA04}.
 Typically, each iteration involves $n^{2}$ individual steps and $n$ collective steps, where $n$ represents the number of nodes in the network \cite{For10}.
-This method can approximate the true maximum of modularity very accurately, and note that due to the variation of parameter selection (such as initial temperature and inverse-temperature chosen), an exact complexity cannot be estimated, but it is typically very slow and can only be used for small graphs \cite{For10}.
+This method can approximate the true maximum of modularity very accurately, and note that, due to the variation of parameter selection (such as initial temperature and inverse-temperature chosen), an exact complexity cannot be estimated, but it is typically very slow and hence should only be used for small graphs \cite{For10}.
 
 %-------------------------------------------
 %   Extremal Optimisation Sub Section
@@ -136,7 +136,7 @@ The fitness function value of a node $i$ is given by
 	\label{eq:fitnessFunction}
 	q_{i} = \kappa_{\sigma(i)} - d_{i}e_{\sigma(i)}
 \end{equation}
-where $d_{i}$ is the degree of node $i$, $\kappa_{\sigma(i)}$ is the number of neighbours node $i$ has in the community it belongs to, and $e_{\sigma(i)}$ is the fraction of edges in the network that connects at least one node which belongs to node $i$'s community.
+where $d_{i}$ is the degree of node $i$, $\kappa_{\sigma(i)}$ is the number of neighbours node $i$ has in the community it belongs to, and $e_{\sigma(i)}$ is the fraction of edges in the network that connects at least one node which belongs to the community of node $i$.
 Using this notation, one can re-write the modularity by $Q = \frac{1}{2m} \sum_{i} q_{i}$.
 We also normalise the variables $q_{i}$ by dividing by $d_{i}$ to obtain
 \begin{equation}
@@ -144,11 +144,11 @@ We also normalise the variables $q_{i}$ by dividing by $d_{i}$ to obtain
 	\rho_{i} = \frac{\kappa_{\sigma(i)}}{d_{i}} - e_{\sigma(i)}
 \end{equation}
 so that $-1 \leq \rho_{i}  \leq 1$ for all $i$.
-Therefore we have expressed the global cost function in terms of a sum over all vertices (through the local variables $\rho_{i}$), and, hence, we can optimise the global variable, $Q$, by optimising over the local variables \cite{For10}.
-At each iteration of the algorithm, we calculate $\rho_{i}$ for every node $i$ and move the node with the lowest value moved to the other community.
-Note that this transition alters the overall partition so that the values of the fitness need to be re-evaluated \cite{DA05,For10}.
+Therefore we have expressed the global cost function in terms of a sum over all vertices (through the local variables $\rho_{i}$) and, hence, we can optimise the global variable, $Q$, by optimising over the local variables \cite{For10}.
+At each iteration of the algorithm we calculate $\rho_{i}$ for every node $i$ and move the node with the lowest value to the other community.
+Note that this transition alters the overall partition so the fitness values need to be re-evaluated \cite{DA05,For10}.
 We repeat this process until no further improvement in the modularity is possible \cite{DA05,For10}.
-Extremal optimisation has empirically shown to achieve similar accuracy to simulated annealing but with a fast run time.
+Extremal optimisation has empirically shown to achieve similar accuracy to simulated annealing but with a fast run time \cite{For10}.
 
 %-------------------------------------------
 %   Spectral Algorithm Sub Section
@@ -157,7 +157,7 @@ Extremal optimisation has empirically shown to achieve similar accuracy to simul
 \subsection{Spectral Algorithm}
 \label{subsec:spectralAlgorithm}
 
-We shall describe the spectral method of \cite{New06a} using the derivation explained in \cite{New06a,New06b,For10}.
+We shall describe the spectral method of \cite{New06a} using the derivation explained in \cite{New06a,New06b,For10}, and by firstly considering networks with two communities.
 Recall the notation used for modularity and the modularity matrix in \cref{def:modularity,def:modularityMatrix}, and let $\vecvar{\sigma}$ represent the vector of node assignments, where $\sigma_{i} = 1$ if node $i$ belongs to class 1 and $\sigma_{i} = -1$ if it belongs to class 2.
 Then the modularity can be written as
 \begin{equation}
@@ -169,7 +169,7 @@ Then the modularity can be written as
 		&= \frac{1}{4m} \transpose{\vecvar{\sigma}} \matvar{B} \vecvar{\sigma}
 	\end{split}
 \end{equation}
-We can rewrite $\vecvar{\sigma}$ as a linear combination of the eigenvectors of $\matvar{B}$, which we denote by $\vecvar{u}_{1},\dots,\vecvar{u}_{n}$ (where we label in decreasing order corresponding to the associated eigenvalue), so that
+We can rewrite $\vecvar{\sigma}$ as a linear combination of the eigenvectors of $\matvar{B}$, which we denote by $\vecvar{u}_{1},\dots,\vecvar{u}_{n}$ (where we label in decreasing order corresponding to the magnitude of its associated eigenvalue), so that
 \begin{equation}
 	\label{eq:rewriteNodeAssignments}
 	\vecvar{\sigma} = \sum_{i=1}^{n} (\transpose{\vecvar{u}_{i}} \vecvar{\sigma}) \vecvar{u}_{i}
@@ -180,18 +180,19 @@ Using this result in \cref{eq:rewriteModularity} yields
 	Q = \sum_{i} (\transpose{\vecvar{u}_{i}} \vecvar{\sigma}) \transpose{\vecvar{u}_{i}} \matvar{B} \sum_{j} (\transpose{\vecvar{u}_{j}} \vecvar{\sigma}) \vecvar{u}_{j} = \sum_{i=1}^{n} (\transpose{\vecvar{u}_{i}} \vecvar{\sigma})^{2} \lambda_{i}
 \end{equation}
 where $\lambda_{i}$ is the eigenvalue of $\matvar{B}$ associated with the eigenvector $\vecvar{u}_{i}$.
-We aim to maximise the modularity by choosing the elements of $\vecvar{\sigma}$. From \cref{eq:rewriteModularity2}, we see this can be achieved by aiming to increase the weights of the largest (i.e. most positive) eigenvalues.
-We cannot just set $\vecvar{\sigma}$ to be proportional to the largest eigenvector, $\vecvar{u}_{1}$, as we imposed each element to be either +1 or -1.
+We aim to maximise the modularity by choosing the elements of $\vecvar{\sigma}$. From \cref{eq:rewriteModularity2}, we see this can be achieved by increasing the weights of the largest (i.e. most positive) eigenvalues.
+However, we cannot just set $\vecvar{\sigma}$ to be proportional to the largest eigenvector, $\vecvar{u}_{1}$, as we imposed each element to be either +1 or -1.
 Instead, we seek an approximate method, where we proceed to set the values of $\sigma_{i}$ based upon the sign of the $i$-th component of $\vecvar{u}_{1}$.
 Essentially, the algorithm involves computing the leading eigenvector of the modularity matrix and then partitioning the nodes of the network into two groups according to the signs of the corresponding elements in the eigenvector.
-We repeat this procedure for dividing any one community into two communities until no further sub-division increases the value of modularity, when the algorithm shall terminate.
+
+In order to extend this approach for networks which contain more than two communities, we repeat this procedure for dividing any one community into two communities until no further sub-division increases the value of modularity, at which point the algorithm terminates.
 
 The spectral method for optimising modularity is quite fast, since computing the leading eigenvector of the modularity matrix can be computed using the well-known power method.
 Due to the special structure of the modularity matrix, the computation of the leading eigenvector takes $\bigO{m+n}$ time, so that one partition of the network takes $\bigO{n(m+n)}$ time or $\bigO{n^{2}}$ for a sparse graph \cite{For10}.
 As we need to repeatedly partition the network in order to optimise the modularity, the overall complexity is $\bigO{dn(m+n)}$ where $d$ represents the depth of the hierarchical division.
 Typically, in practice $d \approx \natlog{n}$, so that for sparse graphs, the total time taken for this spectral algorithm is approximately $\bigO{n^{2}\natlog{n}}$.
-The spectral method is faster than simulated annealing and extremal optimisation, although not as fast empirically as the greedy algorithm \cite{For10}.
-An added benefit is the extensibility of the spectral method with the application to weighted networks.
+The spectral method is faster than simulated annealing and extremal optimisation, although not as fast as the greedy algorithm, based on empirical results \cite{For10}.
+An added benefit is the extensibility of the spectral method to applications with weighted networks.
 
 %-----------------------------------------------------
 %   Belief Propagation Algorithm Section
@@ -208,7 +209,7 @@ An added benefit is the extensibility of the spectral method with the applicatio
 \section{NLPI and AMP Algorithms}
 \label{sec:NLPIAndAMPAlgorithmsCommunityDetection}
 
-The following algorithms aim to partition networks based upon networks generated from the hidden clique model described in \cref{subsec:hiddenCliqueModel}.
+The following algorithms aim to partition networks based upon the hidden clique model described in \cref{subsec:hiddenCliqueModel}, in order to identify the hidden community.
 
 %-------------------------------------------
 %   Non-linear Power Iteration Sub Section

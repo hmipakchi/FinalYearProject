@@ -23,6 +23,14 @@ his is the data we obtained after the removal of a few data points due to incomp
 We then calculated, for each stock and for each time period, the logarithmic return. We generated a time series of these returns and associated each stock with a single time series.
 By using the method described in \cref{subsec:financialNetworksConstructionBackground}, we proceeded to construct financial network represented by a fully-connected, undirected and weighted graph. There are 80 nodes in this network (each one representing one of the stocks), and the weights on the edges connecting any two nodes is the cross-correlation between the time series of returns associated with the stocks represented by the two nodes.
 We stress, at this point, the data of the whole period (01/01/2004 - 01/01/2013) is currently represented by one single network.
+\Cref{fig:expectedReturnsAndVolatility} shows a plot of the expected return against the volatility for each stock considered during this period.
+
+%---   FIGURE
+\begin{figure}
+	\centering
+	\includegraphics[width=0.6\linewidth]{figures/expectedReturnsAndVolatility.png}
+	\caption[Plot of expected return against volatility for 80 FTSE 100 stocks]{\label{fig:expectedReturnsAndVolatility} A plot of expected return against volatility of the 80 stocks in the FTSE 100 index considered. Data points obtained from price data during the period 01/01/2004 - 01/01/2013.}
+\end{figure}
 
 %-------------------------------------------
 %   Random Matrix Theory Sub Section
@@ -110,9 +118,9 @@ So far we have been able to construct a financial network based on the correlati
 Although, the question still remains, given either the initial or filtered correlation matrix, how does one produce a set of groups of stocks with greater correlations within a group than between groups?
 From previous sections, we understand the notion of community detection within graphs, which we shall also refer to as \emphT{binary networks}, and have analysed several algorithms that tackle this problem. However, in these problems we analysed adjacency matrices that contained binary elements (i.e. a `1' if an edge exists in the graph and a`0' otherwise), whereas, in this problem, we study a weighted adjacency matrix with elements as real numbers.
 The reader should also note the adjacency matrix studied in previous sections is directly related to the structure of the network in question, whereas in this case, it is related to the weights of links between nodes.
-This heavily points to the possibility of having to modify previously studied algorithms for this scenario.
+This suggests the possibility of having to modify previously studied algorithms for this scenario.
 
-Given the conclusions of our analysis in \cref{sec:cha:communityDetectionAlgorithms}, and that the real-world data in this case is not well represented by generative random models, we shall use the modularity optimisation as a basis of some of our algorithms, with spectral clustering also considered as a baseline method. 
+Given the conclusions of our analysis in \cref{cha:communityDetectionAlgorithms}, and that the real-world data in this case is not well represented by generative random models, we shall use the modularity optimisation as a basis of some of our algorithms.
 
 %-------------------------------------------
 %   Naive Modularity Methods Sub Section
@@ -129,7 +137,7 @@ Let us denote a partition of $n$ nodes, in the financial network, into communiti
 	Q(\vecvar{\sigma}) = \frac{1}{2m} \sum_{ij} \left(A_{ij} - \frac{k_{i}k_{j}}{2m} \right) \delta(\sigma_{i},\sigma_{j})
 \end{equation}
 where $\matvar{A}$ is the weighted adjacency matrix of the network, $k_{i} \equiv \sum_{j} A_{ij}$ and $2m \equiv \sum_{ij} A_{ij}$.
-Note that in the case of binary networks, $A_{ij}$ represented the presence or absence of an edge between nodes $i$ and $j$, $k_{i}$ represented the degree of node $i$ and $m$ represented the total number of edges in the networks.
+Note that in the case of binary networks, $A_{ij}$ represented the presence or absence of an edge between nodes $i$ and $j$, $d_{i}$ represented the degree of node $i$ and $m$ represented the total number of edges in the networks.
 Since we are interested in financial networks, a naive approach would be to use the empirical correlation matrix, denoted by $\matvar{C}$, as the networks weighted adjacency matrix. Note that we are essentially ignoring the results of \cref{subsec:randomMatrixTheory}, and we will see in \cref{subsec:modifiedModularityOptimisationMethod} why this is not a good idea, both intuitively and mathematically.
 
 For now, though, let us use the following relationship
@@ -151,9 +159,9 @@ The implementation code for this algorithm is in MATLAB and has been taken from 
 The approach using the spectral relaxation can be summarised using the argument from \cite{DM}. Let $\matvar{B}$ denote the modularity matrix, defined by
 \begin{equation}
 \label{eq:modularityMatrixFinancialNetworks}
-	B_{ij} = A_{ij} - \frac{k_{i}k_{j}}{2m}
+	B_{ij} = A_{ij} - \frac{d_{i}d_{j}}{2m}
 \end{equation}
-where $A_{ij}$, $k_{i}$ and $m$ are defined as before.
+where $A_{ij}$, $d_{i}$ and $m$ are defined as before.
 Also denote the set of nodes belonging to group $a$ by $\setvar{S}_{a} \equiv \{i:\sigma_{i} = a\}$.
 The algorithm iterates by attempting to split the node members of a single group in an optimal fashion by using modularity.
 Assume at one iteration there are $q$ groups so the partition is indexed by $[q] \equiv \{1,2,\dots,q\}$.
@@ -179,9 +187,9 @@ We have implemented this algorithm of \cite{DM} using MATLAB, stressing the inpu
 \subsection{Modified Modularity Optimisation Method}
 \label{subsec:modifiedModularityOptimisationMethod}
 
-We move on to understand the potential issues with the naive approach hinted in the previous section. Intuitively, the term $k_{i}k_{j}/2m$ reflects the null hypothesis that the observed network structure is wholly based on the degrees of the nodes.
+We move on to understand the potential issues with the naive approach hinted in the previous section. Intuitively, the term $d_{i}d_{j}/2m$ reflects the null hypothesis that the observed network structure is wholly based on the degrees of the nodes.
 This idea is sound when applied to binary networks, however, these terms do not have a specific meaning when applied to financial networks since we are interested in the correlation matrix rather than the structure of the underlying graph.
-The quantities $k_{i} \equiv \sum_{j} C_{ij}$ and $2m \equiv \sum_{ij} C_{ij}$ do not make up a clear notion of a null model when combined.
+The quantities $d_{i} \equiv \sum_{j} C_{ij}$ and $2m \equiv \sum_{ij} C_{ij}$ do not make up a clear notion of a null model when combined.
 Moreover, \cite{MG13} have shown the naive approach is mathematically incorrect and leads to biased results.
 In order to detect communities within the correlation matrix that leads to correct results, we seek improvement in the construction of the null model for the network.
 We have already discussed, in \cref{subsec:randomMatrixTheory}, how to construct a filtered correlation matrix that takes into account the random noise at the level of individual stocks and a market-wide component.
@@ -202,22 +210,12 @@ where $C_{norm}$ is a normalisation term defined by
 which just ensures the value of the newly-defined modularity lies within the interval $[-1,+1]$.
 The new formulation of modularity is specifically aimed to detect mesoscopic-level communities.
 
-%---   ERROR
-%%% need to describe modified greedy agglomerative method for modified modularity maximisation
-
-
-%-------------------------------------------
-%   Spectral Clustering Algorithm Sub Section
-%-------------------------------------------
-
-\subsection{Spectral Clustering Algorithm}
-\label{subsec:spectralClusteringAlgorithm}
-
-So far we have considered two methods based on modularity optimisation to detect communities within our financial network. The first is a naive approach that can be shown to produced biased results, but is based on the standard definition of modularity, whilst the second approach considered optimisation based on a modified definition of modularity. In order to compare even further the difference and benefit of the modified approach base don the results of RMT, we will consider a `baseline' method of spectral clustering.
-
-The spectral clustering algorithm is based on the exact same idea considered for binary networks considered in \cref{subsec:spectralClustering}, but we shall use the filtered correlation matrix, $\matvar{C}^{(g)}$, as input.
+The `modified' modualirty method is a spectral clustering algorithm based on the exact same technique considered for binary networks considered in \cref{sec:spectralClustering}, but instead we shall use the filtered correlation matrix, $\matvar{C}^{(g)}$, as input.
 We simply find the eigenvectors of $\matvar{C}^{(g)}$, use them to construct the embedded vectors, which are then clustered using the familiar k-means clustering algorithm (same procedure as with binary networks).
 We use different (and appropriate) values for the number of groups, then run the algorithm for each one and choose the partition with the best value for the re-defined modularity (\cref{eq:newModularityFinancialNetworks}).
+
+%---   ERROR
+%%% need to describe modified greedy agglomerative method for modified modularity maximisation
 
 
 %-----------------------------------------------------
@@ -257,3 +255,27 @@ We confirmed that, in all the benchmarks, all four methods succeeded in identify
 
 \section{Application to Real-world Financial Network}
 \label{sec:applicationToRealWorldFinancialNetwork}
+
+We now apply the three modularity optimisation methods discussed in \cref{sec:communityDetectionAlgorithms} to the FTSE 100 data collected.
+The result of the greedy algorithm application is shown in \cref{fig:outputCommunitiesGreedy}.
+
+%---   FIGURE
+\begin{figure}
+	\centering
+	\includegraphics[width=0.6\linewidth]{figures/outputFTSE100FastNewmanMethod.png}
+	\caption[Communities of the FTSE 100 data generated using the greedy algorithm.]{\label{fig:outputCommunitiesGreedy} Communities of the FTSE 100 generated using the greedy algorithm. The name of each label represents the associated stock's ticker (see \cref{app:listFTSE100Stocks}) whilst the colour of the label represents community memberships. For this algorithm, two distinct communities were generated.}
+\end{figure}
+
+%---   FIGURE
+\begin{figure}
+	\centering
+	\includegraphics[width=0.6\linewidth]{figures/outputFTSE100MontanariMethod.png}
+	\caption[Communities of the FTSE 100 data generated using the spectral relaxation method.]{\label{fig:outputCommunitiesSpectralRelaxation} Communities of the FTSE 100 generated using the spectral relaxation method. The name of each label represents the associated stock's ticker (see \cref{app:listFTSE100Stocks}) whilst the colour of the label represents community memberships. For this method, two distinct communities were generated.}
+\end{figure}
+
+%---   FIGURE
+\begin{figure}
+	\centering
+	\includegraphics[width=0.6\linewidth]{figures/outputFTSE100FinancialSpectralClusteringMethod.png}
+	\caption[Communities of the FTSE 100 data generated using the spectral clustering algorithm based on the modified modularity matrix.]{\label{fig:outputCommunitiesSpectralRelaxation} Communities of the FTSE 100 data generated using the spectral clustering algorithm based on the modified modularity matrix. The name of each label represents the associated stock's ticker (see \cref{app:listFTSE100Stocks}) whilst the colour of the label represents community memberships. For this method, four distinct communities were generated.}
+\end{figure}

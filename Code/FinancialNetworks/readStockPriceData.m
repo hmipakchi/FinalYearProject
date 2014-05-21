@@ -25,7 +25,7 @@ rowsToDelete = [11;25;36;64;65;76;79];
 for candidateRow=1:size(rowsToDelete,1)
     priceMatrix(rowsToDelete(candidateRow)-candidateRow+1, :) = [];
 %     ICBIndustriesVector{rowsToDelete(candidateRow)-candidateRow+1,1} = [];
-    tickersVector{1,1}{rowsToDelete(candidateRow)} = [];
+    tickersVector{1,1}(rowsToDelete(candidateRow)) = [];
 end
 
 [n,T] = size(priceMatrix);
@@ -152,25 +152,38 @@ for i=1:n
         weightedAdjacencyMatrix(i,j) = 0.5*(sampleCrossCorrelationMatrix(i,j)+1) - delta(i,j);
     end
 end
+
+% dummyFinancialSpectralClusteringAssignments = financialSpectralClustering(modularityMatrix, n, 0);
+
 [fastNewmanCommunities,fastNewmanModularity] = fast_newman(weightedAdjacencyMatrix);
 [montanariCommunities] = montanari_modularity(weightedAdjacencyMatrix);
+
+financialSpectralClusteringCommunities = readFinancialSpectralClusteringCommunitiesFromFile(n);
+
+% fastNewmanModularityNew = computeModularityForPartition(weightedAdjacencyMatrix,fastNewmanCommunities);
+% montanariModularityNew = computeModularityForPartition(weightedAdjacencyMatrix,montanariCommunities);
 
 fastNewmanModifiedMethod_filename_str = '../data_files/financialNetworks/outputFTSE100FastNewmanModifiedMethod.gexf';
 fastNewmanMethod_filename_str = '../data_files/financialNetworks/outputFTSE100FastNewmanMethod.gexf';
 montanariMethod_filename_str = '../data_files/financialNetworks/outputFTSE100MontanariMethod.gexf';
+financialSpectralClustering_filename_str = '../data_files/financialNetworks/outputFTSE100FinancialSpectralClusteringMethod.gexf';
 
-% writeGroupedCommunitiesByTickersToGexfFile(fastNewmanModifiedMethod_filename_str, fastNewmanModifiedCommunities, tickersVector);
-% writeGroupedCommunitiesByTickersToGexfFile(fastNewmanMethod_filename_str, fastNewmanCommunities, tickersVector);
-% writeGroupedCommunitiesByTickersToGexfFile(montanariMethod_filename_str, montanariCommunities, tickersVector);
+writeGroupedCommunitiesByTickersToGexfFile(fastNewmanModifiedMethod_filename_str, fastNewmanModifiedCommunities, tickersVector);
+writeGroupedCommunitiesByTickersToGexfFile(fastNewmanMethod_filename_str, fastNewmanCommunities, tickersVector);
+writeGroupedCommunitiesByTickersToGexfFile(montanariMethod_filename_str, montanariCommunities, tickersVector);
+writeGroupedCommunitiesByTickersToGexfFile(financialSpectralClustering_filename_str, financialSpectralClusteringCommunities, tickersVector);
 
 fastNewmanModifiedMethod_Industries_filename_str = '../data_files/financialNetworks/outputFTSE100IndustriesFastNewmanModifiedMethod.gexf';
 fastNewmanMethod_Industries_filename_str = '../data_files/financialNetworks/outputFTSE100IndustriesFastNewmanMethod.gexf';
 montanariMethod_Industries_filename_str = '../data_files/financialNetworks/outputFTSE100IndustriesMontanariMethod.gexf';
+financialSpectralClusteringMethod_Industries_filename_str = '../data_files/financialNetworks/outputFTSE100IndustriesFinancialSpectralClusteringMethod.gexf';
 
-% writeGroupedCommunitiesByIndustriesToGexfFile(fastNewmanModifiedMethod_Industries_filename_str , fastNewmanModifiedCommunities, ICBIndustriesVector);
-% writeGroupedCommunitiesByIndustriesToGexfFile(fastNewmanMethod_Industries_filename_str , fastNewmanCommunities, ICBIndustriesVector);
-% writeGroupedCommunitiesByIndustriesToGexfFile(montanariMethod_Industries_filename_str , montanariCommunities, ICBIndustriesVector);
+writeGroupedCommunitiesByIndustriesToGexfFile(fastNewmanModifiedMethod_Industries_filename_str , fastNewmanModifiedCommunities, ICBIndustriesVector);
+writeGroupedCommunitiesByIndustriesToGexfFile(fastNewmanMethod_Industries_filename_str , fastNewmanCommunities, ICBIndustriesVector);
+writeGroupedCommunitiesByIndustriesToGexfFile(montanariMethod_Industries_filename_str , montanariCommunities, ICBIndustriesVector);
+writeGroupedCommunitiesByIndustriesToGexfFile(financialSpectralClusteringMethod_Industries_filename_str , financialSpectralClusteringCommunities, ICBIndustriesVector);
 
 fastNewmanModifiedRenormalisedFilteredCorrelation = calculateRenormalisedFilteredCorrelationMatrix(modularityMatrix, fastNewmanModifiedCommunities);
 fastNewmanRenormalisedFilteredCorrelation = calculateRenormalisedFilteredCorrelationMatrix(modularityMatrix, fastNewmanCommunities);
 montanariRenormalisedFilteredCorrelation = calculateRenormalisedFilteredCorrelationMatrix(modularityMatrix, montanariCommunities);
+financialSpectralClusteringRenormalisedFilteredCorrelation = calculateRenormalisedFilteredCorrelationMatrix(modularityMatrix, financialSpectralClusteringCommunities);

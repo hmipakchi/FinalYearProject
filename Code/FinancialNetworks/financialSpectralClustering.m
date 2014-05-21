@@ -1,4 +1,4 @@
-function [ communityAssignments ] = financialSpectralClustering( adjacencyMatrix, k )
+function [ communityAssignments ] = financialSpectralClustering( adjacencyMatrix, k, SNR )
     n = size(adjacencyMatrix, 1);
     deg = full(sum(adjacencyMatrix)');
     m = sum(deg)/2;
@@ -15,28 +15,36 @@ function [ communityAssignments ] = financialSpectralClustering( adjacencyMatrix
     eigVal = zeros(k,1);
 
     for i = 1:k
-        eigVec(:,k-i+1) = eigVecM(:,n-i+1);
-        eigVal(k-i+1,k-i+1) = eigValM(n-i+1,n-i+1);
+%         eigVec(:,k-i+1) = eigVecM(:,n-i+1);
+%         eigVal(k-i+1,k-i+1) = eigValM(n-i+1,n-i+1);
+        eigVec(:,i) = eigVecM(:,n-i+1);
+        eigVal(i,i) = eigValM(n-i+1,n-i+1);
     end
 
     % create embedded vectors and plot graph
     embedVec = eigVec';
     
-    k_str = num2str(k);
-    filename = sprintf('../data_files/financialNetworks/syntheticCorrelationMatrices_ModularityMatrix_Eigenvectors_top_%s.dat',k_str);
+    filename = sprintf('../data_files/financialNetworks/syntheticCorrelationMatrices_ModularityMatrix_Eigenvectors_top_%s.dat',num2str(k));
+%     filename = sprintf('../data_files/financialNetworks/financialSpectralClustering_ModularityMatrix_Eigenvectors_top_%s.dat',num2str(k));
     fileID = fopen(filename,'w');
     for i=1:n
         for j=1:k
-            fprintf(fileID,'%d ',eigVec(i,j));
+            if (j ~= k)
+                fprintf(fileID,'%d ',eigVec(i,j));
+            else
+                fprintf(fileID,'%d',eigVec(i,j));
+            end
         end
-        fprintf(fileID,'\n');
+        if (i ~= n)
+            fprintf(fileID,'\n');
+        end
     end
     fclose(fileID);
 
-    communityAssignments = kmeans(embedVec',k,'distance','cityblock');
+    [communityAssignments,clusterCentres] = kmeans(embedVec',k,'distance','cityblock');
     
 %     [indicators, clusterCentres] = testKMeansClustering(embedVec', k);
-% 
+
 %     [noDataPoints, noClusters] = size(indicators);
 %     for i=1:noDataPoints
 %         for j=1:noClusters
