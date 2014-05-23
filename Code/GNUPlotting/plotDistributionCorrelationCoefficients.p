@@ -24,7 +24,9 @@ set style line 2 lc rgb '#FF0000' lt 1 lw 1.5 ps 1.5
 # style for T = 200 time window length
 set style line 3 lc rgb '#000000' lt 1 lw 1.5 ps 1.5
 
-set multiplot layout 3,1
+set multiplot layout 3,1 
+
+set key outside center bottom horizontal font "sans-serif, 18"
 
 set xlabel "Time (year)"
 set ylabel "Mean"
@@ -36,14 +38,14 @@ plot 'varianceCorrelationCoefficientsRollover_30.dat' using 1:2 notitle with lin
 
 set xlabel "Time (year)"
 set ylabel "Skewness"
-plot 'skewnessCorrelationCoefficientsRollover_30.dat' using 1:2 notitle with lines ls 1, 'skewnessCorrelationCoefficientsRollover_30.dat' using 3:4 notitle with lines ls 2, 'skewnessCorrelationCoefficientsRollover_30.dat' using 5:6 notitle with lines ls 3
+plot 'skewnessCorrelationCoefficientsRollover_30.dat' using 1:2 title 'T=100' with lines ls 1, 'skewnessCorrelationCoefficientsRollover_30.dat' using 3:4 title 'T=150' with lines ls 2, 'skewnessCorrelationCoefficientsRollover_30.dat' using 5:6 title 'T=200' with lines ls 3
 
 unset multiplot
 
 
 ##########################################################################################
 ###                                                                                    ###
-###   Plot Mean, Variance, Skewness of Correlation Coefficients with 5 day rollover   ###
+###   Plot Mean, Variance, Skewness of Correlation Coefficients with 5 day rollover    ###
 ###                                                                                    ###
 ##########################################################################################
 
@@ -69,6 +71,8 @@ set style line 3 lc rgb '#000000' lt 1 lw 1.5 ps 1.5
 
 set multiplot layout 3,1
 
+set key outside center bottom horizontal font "sans-serif, 18"
+
 set xlabel "Time (year)"
 set ylabel "Mean"
 plot 'meanCorrelationCoefficientsRollover_5.dat' using 1:2 notitle with lines ls 1, 'meanCorrelationCoefficientsRollover_5.dat' using 3:4 notitle with lines ls 2, 'meanCorrelationCoefficientsRollover_5.dat' using 5:6 notitle with lines ls 3
@@ -79,6 +83,6 @@ plot 'varianceCorrelationCoefficientsRollover_5.dat' using 1:2 notitle with line
 
 set xlabel "Time (year)"
 set ylabel "Skewness"
-plot 'skewnessCorrelationCoefficientsRollover_5.dat' using 1:2 notitle with lines ls 1, 'skewnessCorrelationCoefficientsRollover_5.dat' using 3:4 notitle with lines ls 2, 'skewnessCorrelationCoefficientsRollover_5.dat' using 5:6 notitle with lines ls 3
+plot 'skewnessCorrelationCoefficientsRollover_5.dat' using 1:2 title 'T=100' with lines ls 1, 'skewnessCorrelationCoefficientsRollover_5.dat' using 3:4 title 'T=150' with lines ls 2, 'skewnessCorrelationCoefficientsRollover_5.dat' using 5:6 title 'T=200' with lines ls 3
 
 unset multiplot

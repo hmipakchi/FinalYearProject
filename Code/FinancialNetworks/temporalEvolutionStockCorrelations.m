@@ -41,8 +41,10 @@ lengthTimeWindowVector = [100;];
 
 nolengthTimeWindows = length(lengthTimeWindowVector);
 % rolloverPeriod = 5; % uncomment for testing
-rolloverPeriod = 30;
+rolloverPeriod = 30;%30
 rolloverPeriod_str = num2str(rolloverPeriod);
+
+noRolloverTimeWindowsPerLengthtimeWindows = zeros(nolengthTimeWindows,1);
 
 timeIndexMatrix = zeros(nolengthTimeWindows,floor((T-min(lengthTimeWindowVector))/rolloverPeriod));
 
@@ -50,13 +52,15 @@ meanCorrelationCoefficientsMatrix = -100.*ones(nolengthTimeWindows,floor((T-min(
 varianceCorrelationCoefficientsMatrix = -100.*ones(nolengthTimeWindows,floor((T-min(lengthTimeWindowVector))/rolloverPeriod));
 skewnessCorrelationCoefficientsMatrix = -100.*ones(nolengthTimeWindows,floor((T-min(lengthTimeWindowVector))/rolloverPeriod));
 
-noRolloverTimeWindowsPerLengthtimeWindows = zeros(nolengthTimeWindows,1);
+numberPCAnalysed = 5;
 
 for i=1:nolengthTimeWindows
     
     lengthTimeWindow = lengthTimeWindowVector(i);
     noRolloverTimeWindows = floor((T-lengthTimeWindow)/rolloverPeriod);
     noRolloverTimeWindowsPerLengthtimeWindows(i,1) = noRolloverTimeWindows;
+    
+    eigenvalueContributionPCMatrix = zeros(noRolloverTimeWindowsPerLengthtimeWindows(1),numberPCAnalysed);
     
     for j=1:noRolloverTimeWindows
         
@@ -78,9 +82,16 @@ for i=1:nolengthTimeWindows
         meanProductTimeAverage = calculateMeanProductTimeAverage(windowedLogReturns);
         sampleCrossCorrelationMatrix = calculateSampleCrossCorrelationMatrix(windowedLogReturns);
         
-        meanCorrelationCoefficientsMatrix(i,j) = calculateMeanCorrelationValue(sampleCrossCorrelationMatrix);
-        varianceCorrelationCoefficientsMatrix(i,j) = calculateVarianceCorrelationValue(sampleCrossCorrelationMatrix);
-        skewnessCorrelationCoefficientsMatrix(i,j) = calculateSkewnessCorrelationValue(sampleCrossCorrelationMatrix);
+        % calculate mean, variance and skewness of correlation coefficients
+%         meanCorrelationCoefficientsMatrix(i,j) = calculateMeanCorrelationValue(sampleCrossCorrelationMatrix);
+%         varianceCorrelationCoefficientsMatrix(i,j) = calculateVarianceCorrelationValue(sampleCrossCorrelationMatrix);
+%         skewnessCorrelationCoefficientsMatrix(i,j) = calculateSkewnessCorrelationValue(sampleCrossCorrelationMatrix);
+
+        [eigenvalues] = eig(sampleCrossCorrelationMatrix);
+        eigenvalues = sort(eigenvalues,'descend');
+        for k=1:numberPCAnalysed
+            eigenvalueContributionPCMatrix(j,k) = eigenvalues(k)/n;
+        end
     end
 end
 
@@ -121,6 +132,20 @@ end
 %         if (j <= noRolloverTimeWindowsPerLengthtimeWindows(i))
 %             fprintf(fileID,'%s %d ',datestr(testableDatesVector{1,1}{timeIndexMatrix(i,j)},dateFormat),skewnessCorrelationCoefficientsMatrix(i,j));
 %         end
+%     end
+%     fprintf(fileID,'\n');
+% end
+% fclose(fileID);
+
+% % write eigenvalue contributions of kth PC to file
+% filename_str = sprintf('../data_files/financialNetworks/eigenvalueContributionsPC.dat');
+% timeWindowLengthIndex = 1;
+% dateFormat = 'yyyy-mm-dd';
+% fileID = fopen(filename_str,'w');
+% for j=1:noRolloverTimeWindowsPerLengthtimeWindows(timeWindowLengthIndex)
+%     fprintf(fileID,'%s ',datestr(testableDatesVector{1,1}{timeIndexMatrix(timeWindowLengthIndex,j)},dateFormat));
+%     for k=1:numberPCAnalysed
+%         fprintf(fileID,'%d ',eigenvalueContributionPCMatrix(j,k));
 %     end
 %     fprintf(fileID,'\n');
 % end

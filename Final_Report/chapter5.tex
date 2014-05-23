@@ -19,7 +19,7 @@ Then we investigate and apply different community detection algorithms and compa
 
 The dataset we use consists of daily closing prices of 80 stocks in the FTSE 100 index, which we obtained from \cite{YahFi}.
 The time period considered is between the beginning of 2004 to the end of 2013, a total of 2501 prices. 
-his is the data we obtained after the removal of a few data points due to incomplete data across different stocks.The complete list of stocks is given in \cref{app:listFTSE100Stocks}.
+This is the data we obtained after the removal of a few data points due to incomplete data across different stocks.The complete list of stocks is given in \cref{app:listFTSE100Stocks}.
 We then calculated, for each stock and for each time period, the logarithmic return. We generated a time series of these returns and associated each stock with a single time series.
 By using the method described in \cref{subsec:financialNetworksConstructionBackground}, we proceeded to construct financial network represented by a fully-connected, undirected and weighted graph. There are 80 nodes in this network (each one representing one of the stocks), and the weights on the edges connecting any two nodes is the cross-correlation between the time series of returns associated with the stocks represented by the two nodes.
 We stress, at this point, the data of the whole period (01/01/2004 - 01/01/2013) is currently represented by one single network.
@@ -28,8 +28,8 @@ We stress, at this point, the data of the whole period (01/01/2004 - 01/01/2013)
 %---   FIGURE
 \begin{figure}
 	\centering
-	\includegraphics[width=0.6\linewidth]{figures/expectedReturnsAndVolatility.png}
-	\caption[Plot of expected return against volatility for 80 FTSE 100 stocks]{\label{fig:expectedReturnsAndVolatility} A plot of expected return against volatility of the 80 stocks in the FTSE 100 index considered. Data points obtained from price data during the period 01/01/2004 - 01/01/2013.}
+	\includegraphics[width=0.7\linewidth]{figures/expectedReturnsAndVolatility.png}
+	\caption[Plot of expected return against volatility for 80 FTSE 100 stocks.]{\label{fig:expectedReturnsAndVolatility} A plot of expected return against volatility of the 80 stocks in the FTSE 100 index considered. Data points obtained from price data during the period 01/01/2004 - 01/01/2013.}
 \end{figure}
 
 %-------------------------------------------
@@ -298,7 +298,7 @@ We note that the actual sizes of the pie charts do not provide any information, 
 
 %---   TABLE
 \begin{table}
-	\caption{Colour representation for 10 industry sectors used to classify FTSE 100 stocks, to be used as a legend in conjunction with \cref{fig:outputFTSE100PieCharts}.}
+	\caption{Colour representation for 10 industry sectors used to classify FTSE 100 stocks, to be used as a legend.}
 	\label{tab:outputFTSE100PieChartsColourLegend}
 	\centering
 	\includegraphics[width=.6\linewidth]{figures/outputFTSE100PieChartsColourLegend.png}

@@ -1,0 +1,79 @@
+% Chapter 6
+
+\chapter{Temporal Evolution of Financial Networks}
+
+\label{cha:temporalEvolutionFinancialNetworks}
+
+%----------------------------------------------------------------------------------------
+
+In this chapter we aim to understand the temporal evolution of a financial network with respect to the evolving correlation structure of the constituting assets.
+In \cref{cha:communityDetectionFinancialNetworks} we considered a static financial network, where the weight of an edge represents the correlation coefficient between the two time series associated with the nodes connected by the edge, considering the entire time period to construct one financial network.
+We then applied community detection techniques to uncover groups of stocks from the FTSE 100 that were correlated more than a null hypothesis suggests.
+An issue with this approach is the static nature of the network, since investors wish to understand the strength of correlations in price movements in order to dynamically manage investment risk in their portfolios \cite{FPW+11}.
+We build on the results given in \cref{cha:communityDetectionFinancialNetworks} and investigate community dynamics utilising time-dependent correlation structures with application to the same FTSE 100 data set, complementing the work of \cite{OCK+02,OKK03,BD10,FPM+10,FPW+11}.
+This approach enables us to identify major changes in the underlying financial market, and the same ideas may be applied to other financial markets and asset classes (by use of other available data sets), underlining the potential utility of the techniques considered.
+
+%-----------------------------------------------------
+%   Financial Data Processing Section
+%-----------------------------------------------------
+
+\section{Constructing Time-evolving Financial Networks}
+\label{sec:timeEvolvingFinancialNetwork}
+
+Once more we consider the same FTSE 100 data set used earlier in the report, but we move away from using the data of the whole period to construct one single network.
+Instead, we examine the data for several, overlapping, time windows that collectively cover the whole period.
+We generate one financial network for each time window in the following way, also used by \cite{OCK+02,OKK03,BD10,FPM+10,FPW+11}.
+Recall from \cref{subsec:financialNetworksConstructionBackground} each node in the network (i.e. asset) is associated with a single time series consisting of the daily logarithmic return.
+We now let the number of time steps considered, $T$, equal the length of each time window rather than the length of the whole time period.
+Proceeding to create a correlation matrix based upon the standardised time series, as before, we have developed one correlation matrix for each time window.
+As previously, each correlation coefficient (i.e. entry in the correlation matrix) between any two time series is the weight of the edge connecting the nodes associated with the ties series in the network.
+We have created a sequence financial networks by rolling the time windows of returns through the whole data set, with each network describing the underlying correlation structure of the market at a particular time interval.
+By shifting the time window there is an overlap in data in the consecutive windows, but this allows us to track the evolution of correlations and identify changes in the behaviour of the market at many different times during the whole time period \cite{FPW+11}.
+This is particularly consequential given that the data set (01/01/2004 - 01/01/2013) includes some of the most significant periods for the state of developed economics worldwide in recent timed, a point we will address later on in this section.
+
+Immediately, though, there is the requirement of deciding upon both the window length and the length of the overlap (i.e. the duration of time any one window has data overlapped with the preceding time window).
+Any particular choice of $T$ is a compromise between overly noisy and overly smoothed correlation coefficients \cite{OCK+02,FPW+11}.
+We study the distribution of correlation coefficients for different choices of the parameters to decide on appropriate values.
+For instance, \cref{fig:distributionCorrelationCoefficientsRollover5} compares the distribution of the correlation coefficients for three different values of the time window length, $T=100$, $150$ and $200$ (days), whilst fixing the overlap period to 5 (days).
+Here we plot the mean, variance and skewness to characterise the distribution and realise these signals are quite noisy.
+
+%---   FIGURE
+\begin{figure}
+	\centering
+	\includegraphics[width=0.8\linewidth]{figures/distributionCorrelationCoefficientsRollover_5.png}
+	\caption[Plots characterising the distribution of correlation coefficients for a fixed roll-over period of 5 days and varying window lengths.]{\label{fig:distributionCorrelationCoefficientsRollover5} Plots characterising the distribution of correlation coefficients over time for a fixed roll-over period of 5 days and varying window lengths, $T=100$, $150$ and $200$. The top graph plots the mean value, the centre graph plots the variance whilst the bottom graph plots the skewness all against the whole time period for the FTSE 100 data set.}
+\end{figure}
+
+Whereas, \cref{fig:distributionCorrelationCoefficientsRollover30} compares the distribution of the correlation coefficients for three different values of the time window length, $T=100$, $150$ and $200$ (days), whilst fixing the overlap period to 30 (days).
+Once more we plot the mean, variance and skewness to characterise the distribution, but now realise these signals are smoother.
+
+%---   FIGURE
+\begin{figure}
+	\centering
+	\includegraphics[width=0.8\linewidth]{figures/distributionCorrelationCoefficientsRollover_30.png}
+	\caption[Plots characterising the distribution of correlation coefficients for a fixed roll-over period of 30 days and varying window lengths.]{\label{fig:distributionCorrelationCoefficientsRollover30} Plots characterising the distribution of correlation coefficients over time for a fixed roll-over period of 30 days and varying window lengths, $T=100$, $150$ and $200$. The top graph plots the mean value, the centre graph plots the variance whilst the bottom graph plots the skewness all against the whole time period for the FTSE 100 data set.}
+\end{figure}
+
+We decide to trade-off the over-smoothing of shorter window lengths with the longer overlap period, and proceed with $T=100$ and a value of overlap period equal to 30 days.
+These choices results, for our data, in 80 correlation matrices (and hence financial networks) spanning the period between 01/01/2004 and 01/01/2013.
+This completes the construction of time evolving financial networks, which we can now use as an empirical test basis for our proceeding analysis.
+
+
+%-----------------------------------------------------
+%   Temporal Evolution of Correlation Section
+%-----------------------------------------------------
+
+\section{Temporal Evolution of Asset Correlation}
+\label{sec:temporalEvolutionAssetCorrelation}
+
+We have seen in \cref{subsec:randomMatrixTheory}, how the eigenvalue spectrum of the empirical correlation matrix generated by the aggregate at set indicated correlations not compatible with the null model of a combination of random and market-wide components.
+This result became a justification for seeking mesoscopic level communities by discovering patterns in the correlation structure of the financial network, and was a building block of our modified modularity approach.
+We now wish to investigate the temporal evolution of the correlations between the stocks by analysing the behaviour of the respective correlation matrix eigenvalues and eigenvectors at each time window.
+Having previously used tools from RMT, we now utilise a closely linked \cite{FPW+11} and widely used technique, known as principal component analysis (PCA).
+PCA is a statistical technique in data analysis that uses an orthogonal transformation to generate a lower-dimensional representation of multi-variate data, whilst preserving as much information to best represent the original set of variables \cite{Jol02,FPW+11}.
+
+Let us denote the matrix with entries consisting of the standardised logarithmic returns by $\matvar{X}$.
+The empirical correlation matrix, also equal to the covariance matrix of $\matvar{X}$, is denoted by $\matvar{R}$ and defined as
+
+
+

@@ -87,7 +87,7 @@ This observation is summarised as an illustration in \cref{fig:spectralClusterin
 		\caption{}
 		\label{fig:spectralClusteringEmbeddingVisualisationPin008}
 	\end{subfigure}
-	\caption[Visualisation of spectral clustering embedding in sparse and dense regimes]{\label{fig:spectralClusteringEmbeddingVisualisationPlots} A visualisation of the embedding for the spectral clustering algorithm in the dense, \subref{fig:spectralClusteringEmbeddingVisualisationPin08}, and sparse, \subref{fig:spectralClusteringEmbeddingVisualisationPin008}, regimes. The ground truth graph for the dense regime was generated using the planted partition model with $n=150$, $k=3$, $p_{in}=0.8$ and $p_{out}=0.2$, whilst the graph for the sparse regime was generated using the same values of $n$ and $k$ but with $p_{in}=0.08$ and $p_{out}=0.02$. We label the ground-truth node assignments by colour (i.e. points with the same colour represent nodes belonging to the same community in the graph). Notice that, for the dense regime, all data points with different colours are well separated so the k-means algorithm can accurately recover the cluster memberships. However, for the sparse regime, every data (red green and blue) are concentrated in the same region in the 2-dimensional embedding space, so the k-means algorithm cannot recover the cluster memberships accurately at all. This illustrates an issue with the Laplacian spectral clustering method.}
+	\caption[Visualisation of spectral clustering embedding in sparse and dense regimes.]{\label{fig:spectralClusteringEmbeddingVisualisationPlots} A visualisation of the embedding for the spectral clustering algorithm in the dense, \subref{fig:spectralClusteringEmbeddingVisualisationPin08}, and sparse, \subref{fig:spectralClusteringEmbeddingVisualisationPin008}, regimes. The ground truth graph for the dense regime was generated using the planted partition model with $n=150$, $k=3$, $p_{in}=0.8$ and $p_{out}=0.2$, whilst the graph for the sparse regime was generated using the same values of $n$ and $k$ but with $p_{in}=0.08$ and $p_{out}=0.02$. We label the ground-truth node assignments by colour (i.e. points with the same colour represent nodes belonging to the same community in the graph). Notice that, for the dense regime, all data points with different colours are well separated so the k-means algorithm can accurately recover the cluster memberships. However, for the sparse regime, every data (red green and blue) are concentrated in the same region in the 2-dimensional embedding space, so the k-means algorithm cannot recover the cluster memberships accurately at all. This illustrates an issue with the Laplacian spectral clustering method.}
 \end{figure}
 
 For the dense regime, we generate a network from the planted partition model with $n=150$, $k=3$, $p_{in}=0.8$ and $p_{out}=0.2$, whilst for the sparse regime, we generate a network with the same values for $n$ and $k$, but $p_{in}=0.08$ and $p_{out}=0.02$.
@@ -154,8 +154,8 @@ Utilising this approach with $n=500$ nodes, varying $\lambda$ between 0 and 1.2,
 %---   FIGURE
 \begin{figure}
 	\centering
-	\includegraphics[width=0.9\linewidth]{figures/NLPIMontanariSyntheticDataScalarProducts.png}
-	\caption[Plot of accuracy for NLPI algorithm]{\label{fig:NLPIAccuracyPlot} A plot of $\innerP{\vecvar{u},\widehat{\vecvar{u}}}$ for the NLPI algorithm for different values of $\lambda$ and $\varepsilon$. The synthetic data is generated from a network with $n=500$ nodes and a grid with resolution 100, whilst the algorithm is run for 50 iterations.}
+	\includegraphics[width=0.8\linewidth]{figures/NLPIMontanariSyntheticDataScalarProducts.png}
+	\caption[Plot of accuracy for NLPI algorithm.]{\label{fig:NLPIAccuracyPlot} A plot of $\innerP{\vecvar{u},\widehat{\vecvar{u}}}$ for the NLPI algorithm for different values of $\lambda$ and $\varepsilon$. The synthetic data is generated from a network with $n=500$ nodes and a grid with resolution 100, whilst the algorithm is run for 50 iterations.}
 \end{figure}
 
 The motivation for the NLPI algorithm is to detect the node assignments more accurately than standard PCA for small-sized hidden communities. The results can be analysed by focusing on the accuracy for small values of $\varepsilon$ and all ranges of $\lambda$.
@@ -174,8 +174,8 @@ We have plotted the accuracy for the AMP algorithm in \cref{fig:AMPAccuracyPlot}
 %---   FIGURE
 \begin{figure}
 	\centering
-	\includegraphics[width=0.9\linewidth]{figures/AMPMontanariSyntheticDataScalarProducts.png}
-	\caption[Plot of accuracy for AMP algorithm]{\label{fig:AMPAccuracyPlot} A plot of $\innerP{\vecvar{u},\widehat{\vecvar{u}}}$ for the AMP algorithm for different values of $\lambda$ and $\varepsilon$. The synthetic data is generated from the same network with $n=500$ nodes as used in \cref{fig:NLPIAccuracyPlot}, and a grid with resolution 100, whilst the algorithm is run for 50 iterations.}
+	\includegraphics[width=0.8\linewidth]{figures/AMPMontanariSyntheticDataScalarProducts.png}
+	\caption[Plot of accuracy for AMP algorithm.]{\label{fig:AMPAccuracyPlot} A plot of $\innerP{\vecvar{u},\widehat{\vecvar{u}}}$ for the AMP algorithm for different values of $\lambda$ and $\varepsilon$. The synthetic data is generated from the same network with $n=500$ nodes as used in \cref{fig:NLPIAccuracyPlot}, and a grid with resolution 100, whilst the algorithm is run for 50 iterations.}
 \end{figure}
 
 \Cref{fig:AMPAccuracyPlot} illustrates that for small values of $\varepsilon$ (e.g. between 0 and 0.2), the reconstructed vector is correlated with ground-truth.

@@ -48,7 +48,7 @@ We will assume, without loss of generality, that $V = \{1,\dots,n\}$. See \cref{
 	\label{def:degreeNode}
 	The \emphT{degree} $d_{v}$ of a vertex $v$ is the number of its neighbours, $\abs{\Gamma(v)}$.
 \end{definition}
-We will be interested in using certain graphs is the models, such as bipartite graphs.
+We will be interested in using certain graphs in the models, such as bipartite graphs.
 \begin{definition}
 	\label{def:bipartiteGraph}
 	A \emphT{bipartite} graph, is a graph whose vertices can be decomposed into two disjoint sets such that no two vertices within the same set are adjacent.
@@ -80,7 +80,7 @@ An example of an undirected bipartite graph with nine vertices and eight edges i
 		\caption{}
 		\label{fig:exampleGraphClique}
 	\end{subfigure}
-	\caption[Visualisations of example undirected graphs]{\label{fig:exampleGraphs} A set of visualisations of undirected graphs. In \subref{fig:exampleGraphSmall}, the graph has seven nodes and eleven edges. In \subref{fig:exampleGraphBipartite}, a bipartite graph, with nine nodes (elements of disjoint sets are coloured black and red denoting membership) and eight edges, is shown. In \subref{fig:exampleGraphClique}, an undirected graph, with six nodes and six edges is shown, where the nodes coloured red form a clique within the graph.}
+	\caption[Visualisations of example undirected graphs.]{\label{fig:exampleGraphs} A set of visualisations of undirected graphs. In \subref{fig:exampleGraphSmall}, the graph has seven nodes and eleven edges. In \subref{fig:exampleGraphBipartite}, a bipartite graph, with nine nodes (elements of disjoint sets are coloured black and red denoting membership) and eight edges, is shown. In \subref{fig:exampleGraphClique}, an undirected graph, with six nodes and six edges is shown, where the nodes coloured red form a clique within the graph.}
 \end{figure}
 
 There is a very close connection between graphs and matrices, since the whole information about the topology of a graph can be entailed in matrix form, called the \textit{adjacency matrix}.
@@ -152,20 +152,27 @@ An important property of adjacency and Laplacian matrices is their spectra, whic
 \section{Community Structure in Networks}
 \label{sec:communityStructureBackground}
 
-An intuitive notion of communities within graphs involves the assignment of nodes to communities such that there are denser connections between nodes belonging to the same community, and sparser connections between nodes belonging to different communities. If a graph exhibits this property, it is said to contain assortative community structure \cite{New06a,DKM+13,For10,New06b}.
-For instance, within social networks where nodes are users and edges between nodes represent interactions between the users, community structure within the graph corresponds to real-life communities consisting of the users.
-The aim of community detection algorithms is to estimate or recover the node assignments. The algorithms need to be efficient due to the large size of graphs in real-world networks, so we require the computationally complexity to not be worse than nearly linear in the number of edges in the graph (approximately $\bigO{n^{2}\natlog n}$ where $n$ represents the number of nodes in the graph).
+An intuitive notion of communities within graphs involves the assignment of nodes to communities such that there are denser connections between nodes belonging to the same community, and sparser connections between nodes belonging to different communities.
+If a graph exhibits this property, it is said to contain assortative community structure \cite{New06a,DKM+13,For10,New06b}.
+For instance, within social networks, where nodes are users and edges between nodes represent interactions between the users, community structure within the graph corresponds to real-life communities consisting of the users and friendship circles.
+The aim of community detection algorithms is to estimate or recover the node assignments.
+The algorithms need to be efficient due to the large size of graphs realised in real-world applications, so we require the computationally complexity to not be worse than nearly linear in the number of edges in the graph (approximately $\bigO{n^{2}\natlog n}$ where $n$ represents the number of nodes in the graph).
 
 Within the literature, the terms \emphT{groups} and \emphT{clusters} are synonymous with communities, and as such we will use all three terms interchangeably through the report; so the reader should note all these terms refer to the same notion of communities in graphs.
+Moreover we also refer to the process of estimating node assignments as partitioning the network.
 
-In order to help provide a setting where different algorithms may be compared, we wish to study particular models which generate random graphs. One popular model is called the stochastic block model.
+In order to help provide a setting where different algorithms may be compared, we wish to study particular models which generate random graphs.
+One popular model is called the stochastic block model.
 Many special cases of this model have been studied, but we consider two versions, available in the literature.
 Firstly, there is a model considered by Decellle et al. \cite{DKM+13} and Nadakuditi et al. \cite{NN12}, also known as the \emphT{planted partition model}.
-Secondly, there is a model used by Montanari \cite{DM13,Mon13}, which we will refer to as the \emphT{hidden clique model}. We emphasise that we do not exclusively focus on detecting cliques for the latter model, but the name is simply convenient for reference in this report.
+Secondly, there is a model used by Montanari \cite{DM13,Mon13}, which we will refer to as the \emphT{hidden clique model}. 
+We emphasise that we do not exclusively focus on detecting cliques for the latter model, but the name is simply convenient for reference in this report.
 
-Let us define the stochastic block model following Decellle et al. \cite{DKM+13}. The stochastic block model has parameters: $k$, $n_{a}$, $\matvar{P}$. $k$ represents the number of communities (or groups), $n_{a}$ refers to the expected fraction of nodes within each group $a$, for $1 \leq a \leq k$, and a $k \times k$ matrix $\matvar{P}$ whose element $P_{ab}$ equals the probability of an edge occurring between nodes belonging to groups $a$ and $b$. It is known as the \emphT{affinity matrix}.
+Let us define the stochastic block model following Decellle et al. \cite{DKM+13}.
+The stochastic block model has parameters: $k$, $n_{a}$, $\matvar{P}$. $k$ represents the number of communities (or groups), $n_{a}$ refers to the expected fraction of nodes within each group $a$, for $1 \leq a \leq k$, and a $k \times k$ matrix $\matvar{P}$ whose element $P_{ab}$ equals the probability of an edge occurring between nodes belonging to groups $a$ and $b$. It is known as the \emphT{affinity matrix}.
 We proceed to generate a random directed graph, $\graphvar{G}$, consisting of $n$ nodes.
-Firstly, though, assign, to each node $i$ of the graph, $\sigma_{i} \in \{1,\dots,k\}$, a label indicating which community the node belongs to. These labels are chose independently, where, for each node $i$, $\probability{\sigma_{i} = a} = n_{a}$.
+Firstly, though, assign, to each node $i$ of the graph, $\sigma_{i} \in \{1,\dots,k\}$, a label indicating which community the node belongs to.
+These labels are chose independently, where, for each node $i$, $\probability{\sigma_{i} = a} = n_{a}$.
 Let $\vecvar{u} = \transpose{[\sigma_{1},\dots,\sigma_{n}]}$ be the \emphT{ground-truth node assignments} of the graph.
 The random graph is generated to have an adjacency matrix, $\matvar{A}$, whose elements are defined by
 \begin{equation}
@@ -183,7 +190,7 @@ Note, also, that we do not allow self-loops.
 
 The framework for testing community detection algorithms, which we will use, can now be summarised.
 Firstly, we generate synthetic datasets, by creating random graphs from the models described in \cref{subsec:plantedPartitionModel,subsec:hiddenCliqueModel}, with varying parameters and known underlying ground-truth node assignments.
-Then we use the synthetically-generated graphs as an input to various algorithms (an appropriate model is chosen for each algorithm), which provides, as output, an estimate to the community assignments.
+Then we use the synthetically-generated graphs as input to various algorithms (an appropriate model is chosen for each algorithm), which provides, as output, an estimate to the community assignments.
 Finally, for each algorithm, we compare the estimated community assignments to the ground-truth values.
 This provides a notion of performance and accuracy to compare between the algorithms.
 
@@ -210,6 +217,7 @@ To construct the planted partition model, we consider the stochastic block model
 \end{equation}
 These properties essentially result approximately equal number of nodes and edges within each community.
 From this definition, $p_{in}$ represents the probability of an edge occurring between two nodes belonging to the same community and $p_{out}$ represents the probability of an edge occurring between two nodes belonging to the different communities.
+From now on, we refer to $p_{in}$ and $p_{out}$ as the \emphT{edge occurrence probabilities} for this model.
 We assume assortative structure so that $p_{in} > p_{out}$. This just matches the intuition of edges more likely to appear between nodes belonging to the same community than between nodes belonging to different communities.
 
 An example of a random graph generated by the planted partition model is shown in \cref{fig:ppmUnlabelledAdjacencyMatrixPlot}.
@@ -233,7 +241,7 @@ This is plotted in \cref{fig:ppmLabelledAdjacencyMatrixPlot}. Note that since $k
 		\caption{}
 		\label{fig:ppmLabelledAdjacencyMatrixPlot}
 	\end{subfigure}
-	\caption[Plots of adjacency matrices of graph generated by planted partition model]{\label{fig:ppmAdjacencyMatricesPlots} A set of plots for unlabelled, \subref{fig:ppmUnlabelledAdjacencyMatrixPlot}, and labelled, \subref{fig:ppmLabelledAdjacencyMatrixPlot}, adjacency matrices for random graph generated by planted partition model. The graphs were generated with $n = 300$, $k = 3$, $p_{in} = 0.7$ and $p_{out} = 0.3$.}
+	\caption[Plots of adjacency matrices of graph generated by planted partition model.]{\label{fig:ppmAdjacencyMatricesPlots} A set of plots for unlabelled, \subref{fig:ppmUnlabelledAdjacencyMatrixPlot}, and labelled, \subref{fig:ppmLabelledAdjacencyMatrixPlot}, adjacency matrices for random graph generated by planted partition model. The graphs were generated with $n = 300$, $k = 3$, $p_{in} = 0.7$ and $p_{out} = 0.3$.}
 \end{figure}
 
 In \cref{fig:ppmExampleGraph}, we show a visualisation of an instance of a random graph generated by the planted partition model with parameters with $n = 240$, $k = 3$, $p_{in} = 0.2$, $p_{out} = 0.01$.
@@ -242,7 +250,7 @@ In \cref{fig:ppmExampleGraph}, we show a visualisation of an instance of a rando
 \begin{figure}
 	\centering
 	\includegraphics[width=0.6\linewidth]{figures/ppmExampleGraph.png}
-	\caption[Visualisation of a graph generated by the planted partition model]{\label{fig:ppmExampleGraph} A visualisation of an instance of a random graph generated by the planted partition model with $n = 240$, $k = 3$, $p_{in} = 0.2$ and $p_{out} = 0.01$.}
+	\caption[Visualisation of a graph generated by the planted partition model.]{\label{fig:ppmExampleGraph} A visualisation of an instance of a random graph generated by the planted partition model with $n = 240$, $k = 3$, $p_{in} = 0.2$ and $p_{out} = 0.01$.}
 \end{figure}
 
 Decelle et al. \cite{DKM+11} conjectured a phase transition for sparse graphs generated from the planted partition model, using non-rigorous ideas from statistical physics \cite{MNS12}.
@@ -308,7 +316,7 @@ This is plotted in \cref{fig:hcmLabelledAdjacencyMatrixPlot}. We can see three d
 		\caption{}
 		\label{fig:hcmLabelledAdjacencyMatrixPlot}
 	\end{subfigure}
-	\caption[Plots of adjacency matrices of graph generated by hidden clique model]{\label{fig:hcmAdjacencyMatricesPlots} A set of plots for unlabelled, \subref{fig:hcmUnlabelledAdjacencyMatrixPlot}, and labelled, \subref{fig:hcmLabelledAdjacencyMatrixPlot}, adjacency matrices for random graph generated by hidden clique model. The graphs were generated with $n = 300$, $k = 3$, $p_{in} = 0.8$, $p_{out} = 0.2$, $n_{1} = 50$, $n_{2} = 40$, $n_{3} = 20$.}
+	\caption[Plots of adjacency matrices of graph generated by hidden clique model.]{\label{fig:hcmAdjacencyMatricesPlots} A set of plots for unlabelled, \subref{fig:hcmUnlabelledAdjacencyMatrixPlot}, and labelled, \subref{fig:hcmLabelledAdjacencyMatrixPlot}, adjacency matrices for random graph generated by hidden clique model. The graphs were generated with $n = 300$, $k = 3$, $p_{in} = 0.8$, $p_{out} = 0.2$, $n_{1} = 50$, $n_{2} = 40$, $n_{3} = 20$.}
 \end{figure}
 
 In \cref{fig:hcmExampleGraph}, we show a visualisation of an instance of a random graph generated by the hidden clique model with parameters with $n = 150$, $k = 1$, $n_{1} = 30$, $p_{in} = 0.3$, $p_{out} = 0.05$.
@@ -317,7 +325,7 @@ In \cref{fig:hcmExampleGraph}, we show a visualisation of an instance of a rando
 \begin{figure}
 	\centering
 	\includegraphics[width=0.6\linewidth]{figures/hcmExampleGraph.png}
-	\caption[Visualisation of a graph generated by the hidden clique model]{\label{fig:hcmExampleGraph} A visualisation of an instance of a random graph generated by the hidden clique model with $n = 150$, $k = 1$, $n_{1} = 30$, $p_{in} = 1.0$, $p_{out} = 0.1$. Nodes belonging to the hidden community, which in this case is in fact a clique, are coloured red whilst other nodes are coloured blue.}
+	\caption[Visualisation of a graph generated by the hidden clique model.]{\label{fig:hcmExampleGraph} A visualisation of an instance of a random graph generated by the hidden clique model with $n = 150$, $k = 1$, $n_{1} = 30$, $p_{in} = 1.0$, $p_{out} = 0.1$. Nodes belonging to the hidden community, which in this case is in fact a clique, are coloured red whilst other nodes are coloured blue.}
 \end{figure}
 
 An interesting phase transition can also be derived for these models also. We follow the argument of Montanari \cite{DM13,Mon13} to show this. We consider the simplest case of the model with only one hidden community (i.e. $k = 1$).
@@ -406,12 +414,13 @@ This particular eigenvector is associated with the eigenvalue $\lambda + \lambda
 		\caption{}
 		\label{fig:spectralPhaseTransitionWigner2}
 	\end{subfigure}
-	\caption[Plots illustrating spectral phase transition of Wigner Matrices]{\label{fig:spectralPhaseTransitionWignerPlots} We plot the limiting spectral density of the normalised adjacency matrix under two regimes. We illustrate the case where $\lambda < 1$, in \subref{fig:spectralPhaseTransitionWigner} and the case where $\lambda > 1$, in \subref{fig:spectralPhaseTransitionWigner2}. The blue dot in \subref{fig:spectralPhaseTransitionWigner2} represents the eigenvalue ($\lambda + \lambda^{-1}$) associated with he eigenvector that pops-out of the main semicircle lobe. Both figures obtained from \cite{Mon13}.}
+	\caption[Plots illustrating spectral phase transition of Wigner Matrices.]{\label{fig:spectralPhaseTransitionWignerPlots} We plot the limiting spectral density of the normalised adjacency matrix under two regimes. We illustrate the case where $\lambda < 1$, in \subref{fig:spectralPhaseTransitionWigner} and the case where $\lambda > 1$, in \subref{fig:spectralPhaseTransitionWigner2}. The blue dot in \subref{fig:spectralPhaseTransitionWigner2} represents the eigenvalue ($\lambda + \lambda^{-1}$) associated with he eigenvector that pops-out of the main semicircle lobe. Both figures obtained from \cite{Mon13}.}
 \end{figure}
 
 This result is key since it specifically describes a threshold where traditional spectral methods such as standard Principal Component Analysis (PCA) will not work (i.e. when $\lambda < 1$) and when it will produce a reconstructed vector correlated with the ground-truth (i.e. when $\lambda > 1$).
 Moreover we now have sufficient motivation to investigate methods where we can do better; more specifically we wish to study algorithms where we can essentially `beat' this spectral threshold by producing a reconstructed vector correlated with the ground-truth in the regime where $\lambda < 1$.
 There is hope of achieving the improvement over standard PCA since we observe the structure of the principal eigenvector of the matrix has two special properties, it is \emphT{non-negative} (since the elements are node assignments or indicator variables and are thus either zero or one) and \emphT{sparse} (since we are interested in the regime where the size of the hidden community or clique is small relative to the size of the graph).
+We discuss this observation in more detail in \cref{subsec:nonLinearPowerIteration} since it forms the basis of a class of algorithm.
 
 %--------------------------------
 %   Financial Background Section   
@@ -430,7 +439,7 @@ There is hope of achieving the improvement over standard PCA since we observe th
 Financial assets are instruments claiming to have monetary value that can be bought and sold. Financial assets can be separated into broad classes, with examples including stocks, bonds or real estate \cite{Kuh12d,BKM13}.
 The values of these assets is reflected in their price, which varies with time. Investors may wish to decide between which asset classes to invest in at any time, a process known as \emphT{asset allocation} \cite{BKM13}.
 Also, within a particular asset class, an investor wishes to allocate money to specific assets, a process known as \emphT{portfolio selection} \cite{BKM13}.
-For this report, we will focus on portfolio selection of stocks in our application of community detection algorithms, due to available data constraints; however a very similar scheme may be used to tackle asset allocation also.
+For this report, we will focus on portfolio selection of stocks in our application of community detection algorithms, due to data availability constraints; however a very similar scheme may be used to tackle asset allocation also.
 
 Investors tend not to consider the prices of assets they have invested in, but rather the \emphT{return} generated. Let us consider a financial asset whose price at time $t$ is $p(t)$. One popular measure of return is called the \emphT{rate of return} \cite{Kuh12e,BKM13} at a time $t$, denoted by $r(t)$, which is defined as
 \begin{equation}
@@ -471,7 +480,7 @@ Secondly, for small rates of return, the logarithmic return is approximately equ
 Thirdly, we benefit from numerical stability since the addition of small numbers is numerically stable, whilst multiplying small numbers is subject to \emphT{arithmetic underflow} \cite{QuaWp}.
 
 However, there are disadvantages to using the logarithmic return, including the issue that the derivation is only correct if the interest rate is constant \cite{QuaWp,Onn02}.
-Nonetheless, the logarithmic return is widely used in the literature (e.g. see \cite{Onn02,OCK+02,OKK03,FPM+10,FPW+11,MG13}), and hence we shall use it for the rest of the report, and the reader should note we shall use the terms `return' and `logarithmic return' interchangeably from now on. An example plot of price and logarithmic return for a stock is shown in \cref{fig:priceAndLogReturn}.
+Nevertheless, the logarithmic return is widely used in the literature (e.g. see \cite{Onn02,OCK+02,OKK03,FPM+10,FPW+11,MG13}), and hence we shall use it for the rest of the report, and the reader should note we shall use the terms `return' and `logarithmic return' interchangeably from now on. An example plot of price and logarithmic return for a stock is shown in \cref{fig:priceAndLogReturn}.
 
 %--- FIGURE
 \begin{figure}
@@ -537,7 +546,8 @@ Note that the standard deviation of the returns of the portfolio (or any asset) 
 
 This formulation serves a key question, given estimates of each assets returns, variances and covariances (which one can obtain from historical data), how does one pick a selection of these assets, for any given time period, in order to form the best portfolio for the investor?
 We see in \cref{eq:portfolioVariance}, that by simply investing in assets which have a lower correlation with one another (i.e. a lower value of $\rho_{ij}$), we can reduce the variance, and thus risk, of the portfolio. This process is called \emphT{diversification}.
-Thus, for any given time period (and possibly dynamically), finding groups of assets, where the returns have higher correlation within groups and lower correlation between groups would help by presenting `baskets' of assets that the investor can pick from knowing selecting from a range of baskets would be beneficial (of course which assets to select from inside the basket relates to the risk-return trade off). This serves as the main motivation for the application of community detection algorithms within financial networks, as we formalise in \cref{subsec:financialNetworksConstructionBackground}.
+Thus, for any given time period (and possibly dynamically), finding groups of assets, where the returns have higher correlation within groups and lower correlation between groups would help by presenting `baskets' of assets that the investor can pick from knowing selecting from a range of baskets would be beneficial (of course which assets to select from inside the basket relates to the risk-return trade off).
+This serves as the main motivation for the application of community detection algorithms within financial networks, as we formalise in \cref{subsec:financialNetworksConstructionBackground}.
 
 %-------------------------------------------
 %   Constructing Financial Networks Sub Section
@@ -549,7 +559,8 @@ Thus, for any given time period (and possibly dynamically), finding groups of as
 From \cref{subsec:portfolioTheoryBackground} we understand one way to help minimise risk in constructing portfolios involves analysing the correlation coefficients of returns between two assets.
 In order to study all possible correlations between all available assets, we construct a weighted, undirected and fully-connected network of assets, which we call the \emphT{financial network}. The following model has been considered by \cite{PGR+99,OCK+02,OKK03,FPM+10,MG13}.
 
-Let us consider the situation where the investor is faced with $n$ financial assets, and has access to historical price data for all these assets for $T$ time steps. The time steps may be trading days, or weeks, for instance, and the appropriate choice will depend on the type of assets available.
+Let us consider the situation where the investor is faced with $n$ financial assets, and has access to historical price data for all these assets for $T$ time steps.
+The time steps may be trading days, or weeks, for instance, and the appropriate choice will depend on the type of assets available.
 
 We proceed to construct a graph with $n$ nodes, where each nodes represents an asset, and assign to the $i$-th node a single time series, denoted by $X_{i}$, which is defined as
 \begin{equation}
@@ -558,7 +569,8 @@ We proceed to construct a graph with $n$ nodes, where each nodes represents an a
 \end{equation}
 where $x_{i}(t)$ describes the logarithmic return of asset $i$ at time $t$, defined by \cref{eq:logarithmicReturn}.
 This time series describes the evolution of the logarithmic return of the asset over $T$ time steps.
-We then model the weight of an edge connecting nodes $i$ and $j$ of the graph by the cross-correlation between the time series corresponding to assets $i$ and $j$. We form a cross-correlation matrix, denoted by $\matvar{C}$, whose elements are defined by
+We then model the weight of an edge connecting nodes $i$ and $j$ of the graph by the cross-correlation between the time series corresponding to assets $i$ and $j$.
+We form a cross-correlation matrix, denoted by $\matvar{C}$, whose elements are defined by
 \begin{equation}
 	\label{eq:crossCorrelationMatrix}
 	C_{ij} = \frac{\mean{X_{i} X_{j}} - \mean{X_{i}} \mean{X_{j}}}{\sqrt{[\mean{X_{i}^{2}} - \mean{X_{i}}^{2}][\mean{X_{j}^{2}} - \mean{X_{j}}^{2}]}}
@@ -603,6 +615,8 @@ In \cref{fig:exampleCrossCorrelationMatrix}, we have plotted a correlation matri
 	\caption[Example plot for a correlation matrix]{\label{fig:exampleCrossCorrelationMatrix} Example of a correlation matrix. Evaluated from an ensemble of 80 stocks listed on the FTSE 100 (see \cref{app:listFTSE100Stocks} for a list) using data between 01/01/2011 and 01/01/2013.}
 \end{figure}
 
-The problem statement can now summarised. Given a financial network, how can we group nodes into communities where correlations are higher within the communities and lower between the communities?
-Contrary to graphs with community structure described in \cref{sec:communityStructureBackground}, the weights of the edges rather than the topology of the network are crucial in determining community memberships. In other words, we focus solely on the weighted adjacency matrix of the graph.
+The problem statement can now summarised.
+Given a financial network, how can we group nodes into communities where correlations are higher within the communities and lower between the communities?
+Contrary to graphs with community structure described in \cref{sec:communityStructureBackground}, the weights of the edges rather than the topology of the network are crucial in determining community memberships.
+In other words, we focus solely on the weighted adjacency matrix of the graph.
 Also the reader should note that the correlations between asset returns will vary over time, and thus representing this relationship dynamically (rather than over a one long period of time) is very important since investors wish to change their positions in order to react to the dynamics of market conditions.
