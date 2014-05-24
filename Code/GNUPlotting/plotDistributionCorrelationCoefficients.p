@@ -1,6 +1,6 @@
 ##########################################################################################
 ###                                                                                    ###
-###   Plot Mean, Variance, Skewness of Correlation Coefficients with 30 day rollover   ###
+###   Plot Mean, Variance, Skewness of Correlation Coefficients with 10 day rollover   ###
 ###                                                                                    ###
 ##########################################################################################
 
@@ -8,7 +8,7 @@ reset
 
 # produce postscript (.ps) output plot
 set term postscript eps enhanced color size 7,5
-set output "distributionCorrelationCoefficientsRollover_30.eps"
+set output "distributionCorrelationCoefficientsRollover_10.eps"
 
 # x-axis data is time with format specified
 set xdata time
@@ -30,22 +30,22 @@ set key outside center bottom horizontal font "sans-serif, 18"
 
 set xlabel "Time (year)"
 set ylabel "Mean"
-plot 'meanCorrelationCoefficientsRollover_30.dat' using 1:2 notitle with lines ls 1, 'meanCorrelationCoefficientsRollover_30.dat' using 3:4 notitle with lines ls 2, 'meanCorrelationCoefficientsRollover_30.dat' using 5:6 notitle with lines ls 3
+plot 'meanCorrelationCoefficientsRollover_10.dat' using 1:2 notitle with lines ls 1, 'meanCorrelationCoefficientsRollover_10.dat' using 3:4 notitle with lines ls 2, 'meanCorrelationCoefficientsRollover_10.dat' using 5:6 notitle with lines ls 3
 
 set xlabel "Time (year)"
 set ylabel "Variance"
-plot 'varianceCorrelationCoefficientsRollover_30.dat' using 1:2 notitle with lines ls 1, 'varianceCorrelationCoefficientsRollover_30.dat' using 3:4 notitle with lines ls 2, 'varianceCorrelationCoefficientsRollover_30.dat' using 5:6 notitle with lines ls 3
+plot 'varianceCorrelationCoefficientsRollover_10.dat' using 1:2 notitle with lines ls 1, 'varianceCorrelationCoefficientsRollover_10.dat' using 3:4 notitle with lines ls 2, 'varianceCorrelationCoefficientsRollover_10.dat' using 5:6 notitle with lines ls 3
 
 set xlabel "Time (year)"
 set ylabel "Skewness"
-plot 'skewnessCorrelationCoefficientsRollover_30.dat' using 1:2 title 'T=100' with lines ls 1, 'skewnessCorrelationCoefficientsRollover_30.dat' using 3:4 title 'T=150' with lines ls 2, 'skewnessCorrelationCoefficientsRollover_30.dat' using 5:6 title 'T=200' with lines ls 3
+plot 'skewnessCorrelationCoefficientsRollover_10.dat' using 1:2 title 'T=100' with lines ls 1, 'skewnessCorrelationCoefficientsRollover_10.dat' using 3:4 title 'T=150' with lines ls 2, 'skewnessCorrelationCoefficientsRollover_10.dat' using 5:6 title 'T=200' with lines ls 3
 
 unset multiplot
 
 
 ##########################################################################################
 ###                                                                                    ###
-###   Plot Mean, Variance, Skewness of Correlation Coefficients with 5 day rollover    ###
+###   Plot Mean, Variance, Skewness of Correlation Coefficients with 1 day rollover    ###
 ###                                                                                    ###
 ##########################################################################################
 
@@ -53,7 +53,7 @@ reset
 
 # produce postscript (.ps) output plot
 set term postscript eps enhanced color size 7,5
-set output "distributionCorrelationCoefficientsRollover_5.eps"
+set output "distributionCorrelationCoefficientsRollover_1.eps"
 
 # x-axis data is time with format specified
 set xdata time
@@ -75,14 +75,14 @@ set key outside center bottom horizontal font "sans-serif, 18"
 
 set xlabel "Time (year)"
 set ylabel "Mean"
-plot 'meanCorrelationCoefficientsRollover_5.dat' using 1:2 notitle with lines ls 1, 'meanCorrelationCoefficientsRollover_5.dat' using 3:4 notitle with lines ls 2, 'meanCorrelationCoefficientsRollover_5.dat' using 5:6 notitle with lines ls 3
+plot 'meanCorrelationCoefficientsRollover_1.dat' using 1:2 notitle with lines ls 1, 'meanCorrelationCoefficientsRollover_1.dat' using 3:4 notitle with lines ls 2, 'meanCorrelationCoefficientsRollover_1.dat' using 5:6 notitle with lines ls 3
 
 set xlabel "Time (year)"
 set ylabel "Variance"
-plot 'varianceCorrelationCoefficientsRollover_5.dat' using 1:2 notitle with lines ls 1, 'varianceCorrelationCoefficientsRollover_5.dat' using 3:4 notitle with lines ls 2, 'varianceCorrelationCoefficientsRollover_5.dat' using 5:6 notitle with lines ls 3
+plot 'varianceCorrelationCoefficientsRollover_1.dat' using 1:2 notitle with lines ls 1, 'varianceCorrelationCoefficientsRollover_1.dat' using 3:4 notitle with lines ls 2, 'varianceCorrelationCoefficientsRollover_1.dat' using 5:6 notitle with lines ls 3
 
 set xlabel "Time (year)"
 set ylabel "Skewness"
-plot 'skewnessCorrelationCoefficientsRollover_5.dat' using 1:2 title 'T=100' with lines ls 1, 'skewnessCorrelationCoefficientsRollover_5.dat' using 3:4 title 'T=150' with lines ls 2, 'skewnessCorrelationCoefficientsRollover_5.dat' using 5:6 title 'T=200' with lines ls 3
+plot 'skewnessCorrelationCoefficientsRollover_1.dat' using 1:2 title 'T=100' with lines ls 1, 'skewnessCorrelationCoefficientsRollover_1.dat' using 3:4 title 'T=150' with lines ls 2, 'skewnessCorrelationCoefficientsRollover_1.dat' using 5:6 title 'T=200' with lines ls 3
 
 unset multiplot

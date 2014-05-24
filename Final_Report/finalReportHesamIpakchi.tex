@@ -71,7 +71,7 @@
 \newcommand*\transpose[1]{#1^{T}}
 
 % trace command
-\newcommand*\trace[1]{Tr(#1)}
+\newcommand*\trace[1]{tr(#1)}
 
 % Bernoulli distribution command
 \newcommand*\bernoulli[1]{Be(#1)}
@@ -83,7 +83,11 @@
 \newcommand*\iid{i.i.d.\xspace}
 
 % probability event command
-\newcommand*\probability[1]{\Pr(#1)}
+\newcommand*\probability[1]{\mathbb{P}(#1)}
+
+% conditional 'given that' command
+\newcommand*\givenbase[1][]{\:#1\lvert\:}
+\let\given\givenbase
 
 % expectation command
 \newcommand*\expectation[1]{\mathbb{E}(#1)}

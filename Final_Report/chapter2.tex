@@ -64,19 +64,19 @@ An example of an undirected bipartite graph with nine vertices and eight edges i
 \centering
 	\begin{subfigure}{.5\textwidth}
 		\centering
-		\includegraphics[width=0.8\linewidth]{figures/exampleGraphSmall.png}
+		\includegraphics[width=0.6\linewidth]{figures/exampleGraphSmall.png}
 		\caption{}
 		\label{fig:exampleGraphSmall}
 	\end{subfigure}%
 	\begin{subfigure}{.5\textwidth}
 		\centering
-		\includegraphics[width=0.8\linewidth]{figures/exampleGraphBipartite.png}
+		\includegraphics[width=0.6\linewidth]{figures/exampleGraphBipartite.png}
 		\caption{}
 		\label{fig:exampleGraphBipartite}
 	\end{subfigure}\\
 	\begin{subfigure}{.5\textwidth}
 		\centering
-		\includegraphics[width=0.8\linewidth]{figures/exampleGraphClique.png}
+		\includegraphics[width=0.6\linewidth]{figures/exampleGraphClique.png}
 		\caption{}
 		\label{fig:exampleGraphClique}
 	\end{subfigure}
@@ -89,13 +89,13 @@ There is a very close connection between graphs and matrices, since the whole in
 	The \emphT{adjacency matrix}, $\matvar{A} \in \{0,1\}^{n \times n}$ of a graph $\graphvar{G} = (V,E)$, is a $n\times n$ matrix whose element $A_{ij}$ equals 1 if there exists an edge joining vertices i and j in $\graphvar{G}$, and zero otherwise.
 \end{definition}
 From \cref{def:adjacencyMatrix}, it follows that elements of the adjacency matrix, $\matvar{A}$, can be written as
-\begin{equation*}
+\begin{equation}
 	A_{ij} =
 	\begin{cases}
 		1 & \text{if } (i,j) \in E\\
 		0 & \text{otherwise}
 	\end{cases}
-\end{equation*}
+\end{equation}
 Note that the sum of elements of the $i$-th row of the adjacency matrix yields the degree of node $i$ of the graph, $d_{i} = \sum_{j} A_{ij}$. Also, the adjacency matrix is symmetric if the graph is undirected.
 \begin{definition}
 	\label{def:weightedAdjacencyMatrix}
@@ -108,26 +108,26 @@ There are other matrices that have also been studied extensively in spectral gra
 	The \emphT{degree matrix}, $\matvar{D}$, of a graph $\graphvar{G} = (V,E)$, is a $n \times n$ diagonal matrix whose element $D_{ii}$ equals the degree of vertex $i$.
 \end{definition}
 From \cref{def:degreeMatrix}, it follows that elements of the degree matrix, $\matvar{D}$, can be written as
-\begin{equation*}
+\begin{equation}
 	 D_{ij} =
 	\begin{cases}
 		d_{i} & \text{if } i = j\\
 		0 & \text{otherwise}
 	\end{cases}
-\end{equation*}
+\end{equation}
 \begin{definition}
 	\label{def:unnormalisedLaplacianMatrix}
 	The matrix $\matvar{L} = \matvar{D}  - \matvar{A} $ is called the \emphT{unnormalised Laplacian matrix}.
 \end{definition}
 From \cref{def:unnormalisedLaplacianMatrix}, it follows that elements of the unnormalised Laplacian matrix of a graph $\graphvar{G} = (V,E)$, $\matvar{L}$, can be written as
-\begin{equation*}
+\begin{equation}
 	L_{ij} =
 	\begin{cases}
 		d_{i} & \text{if } i = j\\
 		-1 & \text{if } i \neq j \text{ and }  (i,j) \in E\\
 		0 & \text{otherwise}
 	\end{cases}
-\end{equation*}
+\end{equation}
 \begin{definition}
 	\label{def:normalisedLaplacianMatrix}
 	The matrix $\widetilde{\matvar{L}} = \matvar{I}  - \matvar{D}^{-1/2}\matvar{A}\matvar{D}^{-1/2}$ is called the \emphT{normalised Laplacian matrix}, where $\matvar{I}$ is the $n \times n$ identity matrix.
@@ -420,7 +420,7 @@ This particular eigenvector is associated with the eigenvalue $\lambda + \lambda
 This result is key since it specifically describes a threshold where traditional spectral methods such as standard Principal Component Analysis (PCA) will not work (i.e. when $\lambda < 1$) and when it will produce a reconstructed vector correlated with the ground-truth (i.e. when $\lambda > 1$).
 Moreover we now have sufficient motivation to investigate methods where we can do better; more specifically we wish to study algorithms where we can essentially `beat' this spectral threshold by producing a reconstructed vector correlated with the ground-truth in the regime where $\lambda < 1$.
 There is hope of achieving the improvement over standard PCA since we observe the structure of the principal eigenvector of the matrix has two special properties, it is \emphT{non-negative} (since the elements are node assignments or indicator variables and are thus either zero or one) and \emphT{sparse} (since we are interested in the regime where the size of the hidden community or clique is small relative to the size of the graph).
-We discuss this observation in more detail in \cref{subsec:nonLinearPowerIteration} since it forms the basis of a class of algorithm.
+We will see how to utilise of this observation in more detail in \cref{subsec:nonLinearPowerIteration} since it forms the basis of a class of algorithms.
 
 %--------------------------------
 %   Financial Background Section   
@@ -611,7 +611,7 @@ In \cref{fig:exampleCrossCorrelationMatrix}, we have plotted a correlation matri
 %--- FIGURE
 \begin{figure}
 	\centering
-	\includegraphics[width=0.6\linewidth]{figures/correlationMatrix_FTSE100_n_80_T_2501.png}
+	\includegraphics[width=0.7\linewidth]{figures/correlationMatrix_FTSE100_n_80_T_2501.png}
 	\caption[Example plot for a correlation matrix]{\label{fig:exampleCrossCorrelationMatrix} Example of a correlation matrix. Evaluated from an ensemble of 80 stocks listed on the FTSE 100 (see \cref{app:listFTSE100Stocks} for a list) using data between 01/01/2011 and 01/01/2013.}
 \end{figure}
 

@@ -40,8 +40,7 @@ logReturns = calculateLogarithmicReturns(priceMatrix);
 lengthTimeWindowVector = [100;];
 
 nolengthTimeWindows = length(lengthTimeWindowVector);
-% rolloverPeriod = 5; % uncomment for testing
-rolloverPeriod = 30;%30
+rolloverPeriod = 1;%10 or 1
 rolloverPeriod_str = num2str(rolloverPeriod);
 
 noRolloverTimeWindowsPerLengthtimeWindows = zeros(nolengthTimeWindows,1);
@@ -52,7 +51,7 @@ meanCorrelationCoefficientsMatrix = -100.*ones(nolengthTimeWindows,floor((T-min(
 varianceCorrelationCoefficientsMatrix = -100.*ones(nolengthTimeWindows,floor((T-min(lengthTimeWindowVector))/rolloverPeriod));
 skewnessCorrelationCoefficientsMatrix = -100.*ones(nolengthTimeWindows,floor((T-min(lengthTimeWindowVector))/rolloverPeriod));
 
-numberPCAnalysed = 5;
+numberPCAnalysed = 12;%5
 
 for i=1:nolengthTimeWindows
     

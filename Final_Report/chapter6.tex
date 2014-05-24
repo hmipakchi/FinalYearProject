@@ -29,35 +29,34 @@ Proceeding to create a correlation matrix based upon the standardised time serie
 As previously, each correlation coefficient (i.e. entry in the correlation matrix) between any two time series is the weight of the edge connecting the nodes associated with the ties series in the network.
 We have created a sequence financial networks by rolling the time windows of returns through the whole data set, with each network describing the underlying correlation structure of the market at a particular time interval.
 By shifting the time window there is an overlap in data in the consecutive windows, but this allows us to track the evolution of correlations and identify changes in the behaviour of the market at many different times during the whole time period \cite{FPW+11}.
-This is particularly consequential given that the data set (01/01/2004 - 01/01/2013) includes some of the most significant periods for the state of developed economics worldwide in recent timed, a point we will address later on in this section.
+This is particularly consequential given that the data set (01/01/2004 - 11/11/2013) includes some of the most significant periods for the state of developed economics worldwide in recent timed, a point we will address later on in this section.
 
 Immediately, though, there is the requirement of deciding upon both the window length and the length of the overlap (i.e. the duration of time any one window has data overlapped with the preceding time window).
 Any particular choice of $T$ is a compromise between overly noisy and overly smoothed correlation coefficients \cite{OCK+02,FPW+11}.
 We study the distribution of correlation coefficients for different choices of the parameters to decide on appropriate values.
-For instance, \cref{fig:distributionCorrelationCoefficientsRollover5} compares the distribution of the correlation coefficients for three different values of the time window length, $T=100$, $150$ and $200$ (days), whilst fixing the overlap period to 5 (days).
+For instance, \cref{fig:distributionCorrelationCoefficientsRollover1} compares the distribution of the correlation coefficients for three different values of the time window length, $T=100$, $150$ and $200$ (days), whilst fixing the overlap period to 1 (day).
 Here we plot the mean, variance and skewness to characterise the distribution and realise these signals are quite noisy.
 
 %---   FIGURE
 \begin{figure}
 	\centering
-	\includegraphics[width=0.8\linewidth]{figures/distributionCorrelationCoefficientsRollover_5.png}
-	\caption[Plots characterising the distribution of correlation coefficients for a fixed roll-over period of 5 days and varying window lengths.]{\label{fig:distributionCorrelationCoefficientsRollover5} Plots characterising the distribution of correlation coefficients over time for a fixed roll-over period of 5 days and varying window lengths, $T=100$, $150$ and $200$. The top graph plots the mean value, the centre graph plots the variance whilst the bottom graph plots the skewness all against the whole time period for the FTSE 100 data set.}
+	\includegraphics[width=0.8\linewidth]{figures/distributionCorrelationCoefficientsRollover_1.png}
+	\caption[Plots characterising the distribution of correlation coefficients for a fixed roll-over period of 1 day and varying window lengths.]{\label{fig:distributionCorrelationCoefficientsRollover1} Plots characterising the distribution of correlation coefficients over time for a fixed roll-over period of 1 day and varying window lengths, $T=100$, $150$ and $200$. The top graph plots the mean value, the centre graph plots the variance whilst the bottom graph plots the skewness all against the whole time period for the FTSE 100 data set.}
 \end{figure}
 
-Whereas, \cref{fig:distributionCorrelationCoefficientsRollover30} compares the distribution of the correlation coefficients for three different values of the time window length, $T=100$, $150$ and $200$ (days), whilst fixing the overlap period to 30 (days).
+Whereas, \cref{fig:distributionCorrelationCoefficientsRollover10} compares the distribution of the correlation coefficients for three different values of the time window length, $T=100$, $150$ and $200$ (days), whilst fixing the overlap period to 10 (days).
 Once more we plot the mean, variance and skewness to characterise the distribution, but now realise these signals are smoother.
 
 %---   FIGURE
 \begin{figure}
 	\centering
-	\includegraphics[width=0.8\linewidth]{figures/distributionCorrelationCoefficientsRollover_30.png}
-	\caption[Plots characterising the distribution of correlation coefficients for a fixed roll-over period of 30 days and varying window lengths.]{\label{fig:distributionCorrelationCoefficientsRollover30} Plots characterising the distribution of correlation coefficients over time for a fixed roll-over period of 30 days and varying window lengths, $T=100$, $150$ and $200$. The top graph plots the mean value, the centre graph plots the variance whilst the bottom graph plots the skewness all against the whole time period for the FTSE 100 data set.}
+	\includegraphics[width=0.8\linewidth]{figures/distributionCorrelationCoefficientsRollover_10.png}
+	\caption[Plots characterising the distribution of correlation coefficients for a fixed roll-over period of 10 days and varying window lengths.]{\label{fig:distributionCorrelationCoefficientsRollover10} Plots characterising the distribution of correlation coefficients over time for a fixed roll-over period of 10 days and varying window lengths, $T=100$, $150$ and $200$. The top graph plots the mean value, the centre graph plots the variance whilst the bottom graph plots the skewness all against the whole time period for the FTSE 100 data set.}
 \end{figure}
 
-We decide to trade-off the over-smoothing of shorter window lengths with the longer overlap period, and proceed with $T=100$ and a value of overlap period equal to 30 days.
-These choices results, for our data, in 80 correlation matrices (and hence financial networks) spanning the period between 01/01/2004 and 01/01/2013.
+We decide to trade-off the over-smoothing of shorter window lengths with the longer overlap period, and proceed with $T=100$ and a value of overlap period equal to 10 days.
+These choices results, for our data, in 240 correlation matrices (and hence financial networks) spanning the period between 01/01/2004 and 11/11/2013.
 This completes the construction of time evolving financial networks, which we can now use as an empirical test basis for our proceeding analysis.
-
 
 %-----------------------------------------------------
 %   Temporal Evolution of Correlation Section
@@ -72,8 +71,91 @@ We now wish to investigate the temporal evolution of the correlations between th
 Having previously used tools from RMT, we now utilise a closely linked \cite{FPW+11} and widely used technique, known as principal component analysis (PCA).
 PCA is a statistical technique in data analysis that uses an orthogonal transformation to generate a lower-dimensional representation of multi-variate data, whilst preserving as much information to best represent the original set of variables \cite{Jol02,FPW+11}.
 
-Let us denote the matrix with entries consisting of the standardised logarithmic returns by $\matvar{X}$.
-The empirical correlation matrix, also equal to the covariance matrix of $\matvar{X}$, is denoted by $\matvar{R}$ and defined as
+We shall consider the following derivation based on \cite{Jol02,UIO03,FPM+10,FPW+11}.
+Firstly, recall $T$ represents the time window length and $n$ represents the number of assets in the network (these values equal to 100 and 80, respectively, in our specific empirical example).
+Let us denote the matrix with entries consisting of the standardised logarithmic returns, for any one particular time window, by a $n \times T$ matrix $\matvar{X}$.
+The empirical correlation matrix, also equal to the covariance matrix of $\matvar{X}$, is denoted by $\matvar{C}$ and defined by
+\begin{equation}
+	\label{eq:correlationMatrix}
+	\matvar{C} = \frac{1}{T} \matvar{X} \transpose{\matvar{X}}
+\end{equation}
+where each element $C_{ij}$ represents the cross-correlation between time series $i$ and $j$.
+The matrix $\matvar{X}$ constitutes the set of observed (original) variables, and the PCA method seeks to find a linear transformation, denoted by the matrix, $\matvar{\Omega}$, that maps $\matvar{X}$ into a set of uncorrelated variables given by $\matvar{Y}$.
+$\matvar{Y}$ is an $n \times T$ matrix defined by
+\begin{equation}
+	\label{eq:uncorrelatedVariables}
+	\matvar{Y} = \matvar{\Omega} \matvar{X} 
+\end{equation}
+where each row $\vecvar{y}_{i}$ (for $i =1,\dots,n$) corresponds to a principal component (PC) of $\matvar{X}$.
+The first row of the matrix $\matvar{\Omega}$, denoted by $\vecvar{\omega}_{1}$, is selected so the first PC, $\vecvar{y}_{1}$, is aligned with the direction of maximal variance in the $n$-dimensional space defined by $\matvar{X}$.
+Each subsequent PC accounts for the maximal variance of $\matvar{X}$ subject to the condition that the vectors $\vecvar{\omega}_{j}$ are mutually orthonormal.
+This implies that
+\begin{equation}
+	\label{eq:PCCoefficients}
+	 \vecvar{\omega}_{j} \transpose{\vecvar{\omega}_{k}} =
+	\begin{cases}
+		1 & \text{if } j = k\\
+		0 & \text{otherwise}
+	\end{cases}
+\end{equation}
+for all $j,k = 1,\dots,n$.
+The correlation matrix is an $n \times n$ symmetric and diagonalisable matrix, which can be written as 
+\begin{equation}
+	\label{eq:diagonalisationCorrelationMatrix}
+	\matvar{C} = \matvar{\Phi} \matvar{\Lambda} \transpose{\matvar{\Phi}}
+\end{equation}
+where $\matvar{\Phi}$ is an orthogonal matrix of its eigenvectors and $\matvar{\Lambda}$ is diagonal matrix consisting of the associated eigenvalues.
+From the result that the eigenvectors of the covariance matrix correspond to the directions of maximal variance \cite{Jol02}, $\matvar{\Omega} = \transpose{\matvar{\Phi}}$, and thus we can determine the PCs using the decomposition given by \cref{eq:diagonalisationCorrelationMatrix}.
 
+\Cref{subsec:randomMatrixTheory} compares the eigenvalue spectra of an empirical correlation matrix (using our entire data set) against a correlation matrix created from $n$ random time series of length $T$ in the limiting case.
+The analysis found significant features of the spectra of the empirical correlation matrix.
+Most of the eigenvalues were contained in a region explained as random noise and given by the Sengupta-Mitra distribution.
+However, a selection of eigenvalues lay outside this region, as illustrated in \cref{fig:eigenvalueSpectra}, suggesting some form of correlation structure between the microscopic and macroscopic exists.
+We crucially note that the condition of $T/n > 1$ must be satisfied for the result to hold, but only requires appropriate selection of the parameter $T$.
+We have achieved in satisfying this constraint and thus the result from RMT applies to all of our time-windowed financial networks as well.
 
+We can now combine the results from PCA and RMT to study the temporal evolution of correlation structure, considering the approaches from \cite{UIO03,FPM+10,FPW+11}.
+We denote the covariance matrix for the PC matrix $\matvar{Y}$ by $\matvar{\Sigma}$, which is defined as
+\begin{equation}
+	\label{eq:PCCovarainceMatrix}
+	\matvar{\Sigma} = \frac{1}{T} \matvar{Y} \transpose{\matvar{Y}}
+\end{equation}
+Using \cref{eq:correlationMatrix,eq:uncorrelatedVariables,eq:diagonalisationCorrelationMatrix}, we can re-write $\matvar{\Sigma}$ as
+\begin{equation}
+	\label{eq:PCCovarainceMatrixRewritten}
+	\matvar{\Sigma} = \frac{1}{T} \matvar{\Omega} \matvar{X} \transpose{\matvar{X}} \transpose{\matvar{\Omega}} = \matvar{\Omega} \matvar{C} \transpose{\matvar{\Omega}} = \transpose{\matvar{\Phi}} \matvar{C} \matvar{\Phi} = \matvar{\Lambda}
+\end{equation}
+We wish to find the total variance in the logarithmic returns for all assets.
+Let us denote the $i$-th entry along the diagonal of $\matvar{\Lambda}$ by $\lambda_{i}$ (i.e. $\lambda_{i} = \Lambda_{ii}$).
+Then the total variance for $\matvar{X}$ is given by
+\begin{equation}
+	\label{eq:totalVarianceLogarithmicReturns}
+	\trace{\matvar{C}} = \sum_{i=1}^{n} \lambda_{i} = \trace{\matvar{\Lambda}} = n
+\end{equation}
+Therefore the proportion of the total variance in $\matvar{X}$ given by the $i$-th PC is given by
+\begin{equation}
+	\label{eq:proportionVarianceLogarithmicReturns}
+	\frac{\Sigma_{ii}}{\trace{\matvar{C}}} = \frac{\lambda_{i}}{n}
+\end{equation}
+We can now analyse the time-varying nature of the proportion of variance of returns explained by certain PCs.
 
+%---   FIGURE
+\begin{figure}
+	\centering
+	\includegraphics[width=0.8\linewidth]{figures/eigenvalueContributionsPC.png}
+	\caption[Plots of the contribution of the top 5 principal components to the total variance in returns against time.]{\label{fig:eigenvalueContributionsPC} Plots of the contribution of the top 5 principal components to the total variance in returns against time. Each data point corresponds to the term $\lambda_{i}/n$, defined in \cref{eq:proportionVarianceLogarithmicReturns}, for $i=1,\dots,5$ and a particular time window.}
+\end{figure}
+
+\Cref{fig:eigenvalueContributionsPC} shows the proportion of variance of returns explained by the top 5 PCs for each time window, so we plot $\lambda_{i}/n$ for $i=1,\dots,5$ and every time-windowed financial network.
+The fraction of the variance explained by the first PC increased between 2005 and towards the end of 2006, then dipped for a few months through towards the middle of 2007.
+There was a sharp rise beginning at the middle of 2007, around the time when the United States subprime mortgage industry collapsed \cite{GrWik}.
+Also several central banks stepped in with lending to the interbank lending market in August 2007 in order to prevent a liquidity crisis \cite{GrWik}.
+The bursting of the United States housing bubble had a major impact on the health of major worldwide financial institutions due to their massive exposure to mortgage-backed securities on their balance sheets \cite{GrWik}.
+For instance, Merrill Lynch was taken over by Bank of America and Lehman Brother filed for bankruptcy on 15/09/2008, and we see the proportion of variance of returns contributed by the first PC increased from this date onwards towards 2011, a significant period of time during the recession \cite{FPW+11,GrWik}.
+The large contribution in variance of returns by only one principal component indicates a significant amount of common variation in the market (i.e. in the FTSE 100 exchange in our case) \cite{FPW+11}.
+In other words, the market, as a whole, became more correlated during these years, in particular a very distinct reaction to a major crisis to a few internaitonal financial institutions.
+This information implied by {fig:eigenvalueContributionsPC} relates to the intuition that the performance of stocks should decline, as a whole, during a financial crisis, so then the returns will be more highly correlated during this period.
+In addition, in 2004, the top twelve PCs contributed to 64.12\% of the variance of returns, whilst, in 2009, just the top six PCs contributed to 62.82\%.
+The fact that fewer components are required to account for a similar amount of variation in returns, in 2009, compared to five years earlier suggests an increase in the common variation between stocks in the exchange.
+Moreover, it also implies the correlation structure of this marker can be explained by many fewer factors than $n$ sets of asset time series.
+The last fact supports the eigenvalue spectra analysis of \cref{subsec:randomMatrixTheory}.

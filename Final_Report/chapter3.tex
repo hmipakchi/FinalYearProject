@@ -17,6 +17,10 @@ We introduce spectral clustering, modularity-based optimisation, non-linear powe
 \label{sec:spectralClustering}
 
 The basis of all spectral clustering algorithms is the transformation of a set of variables into the set of points in space whose coordinates are elements of eigenvectors of a matrix, and then the clustering of these points using well-known clustering algorithms \cite{Lux06,For10}.
+
+%---   TODO
+%%% need to describe the justification for spectral clustering algorithm.
+
 We consider the spectral clustering algorithm described in \cite{Lux06,For10}, but we do not aim to justify the intuition behind the algorithm since it requires results from spectral graph theory that is beyond the scope of this report.
 Nevertheless, the reader may wish to refer to \cite{Lux06,Spi07,For10} for more details.
 
@@ -201,6 +205,16 @@ An added benefit is the extensibility of the spectral method to applications wit
 \section{Belief Propagation Algorithm}
 \label{sec:beliefPropagationAlgorithm}
 
+%---   TODO
+%%% need to describe Belief Propagation Algorithm.
+The belief propagation algorithm of \cite{Has06,DKM+13} is designed to infer the group assignment from an instance of the planted partition model outlined in \cref{subsec:plantedPartitionModel}.
+We shall describe the derivation of Decelle et al.'s algorithm \cite{DKM+13} for this particular case of the planted partition model, but we notify the reader that message passing algorithms such as belief propagation are very similar in nature and incredibly useful in many other applications outside the problem of community detection \cite{For10}.
+We begin by realising the probability the planted partition model with parameters $\theta = \{k,n_{a},\{P_{ab}\}\}$ generates a graph $\graphvar{G}$ with an associated adjacency matrix $\matvar{A}$ and ground-truth node assignments ${\sigma_{i}}$ is given by
+\begin{equation}
+	\label{eq:probabilityPPMGeneratingGraph}
+	\probability{\graphvar{G},\{\sigma_{i}\} \given \theta} = \prod_{i \neq j} \left[ P_{\sigma_{i},\sigma_{j}}^{A_{ij}} (1-P_{\sigma_{i},\sigma_{j}})^{1-A_{ij}} \right] \prod_{i} n_{\sigma_{i}}
+\end{equation}
+
 
 %-----------------------------------------------------
 %   NLPI and AMP Algorithms Section
@@ -239,7 +253,7 @@ where
 		&f_{t}(\vecvar{z}) = \transpose{[f_{t}(z_{1}),\dots,f_{t}(z_{n})]}
 	\end{split}
 \end{equation}
-since we consider positive-part thresholding, for all $i=1,\dots,n$
+and, since we consider positive-part thresholding, for all $i=1,\dots,n$,
 \begin{equation}
 	\label{eq:NLPIAlgorithmThresholding}
 	f_{t}(z_{i}) =
@@ -248,6 +262,7 @@ since we consider positive-part thresholding, for all $i=1,\dots,n$
 		0 & \text{otherwise}
 	\end{cases}
 \end{equation}
+This algorithm takes advantage of the fact that the leading eigenvector is non-negative, a point identified in \cref{subsec:hiddenCliqueModel}.
 We will test this algorithm empirically for synthetically generated networks for varying SNR and sizes of the hidden community in \cref{sec:NLPIAndAMPAlgorithms}, but it is also important to analyse the algorithm theoretically, for instance by quantifying the (possible) improvement over spectral methods.
 Unfortunately, analysing this algorithm in terms of precise asymptotics is very difficult since there are dependencies existent after any number of iterations \cite{Mon13}.
 

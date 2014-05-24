@@ -33,6 +33,6 @@ set style line 5 lc rgb '#808080' lt 1 lw 1.5 ps 1.5
 set key outside center bottom horizontal font "sans-serif, 18"
 
 set xlabel "Time (year)"
-set ylabel "{/Symbol b}_{k}/N"
+set ylabel "{/Symbol l}_{i}/n"
 
-plot 'eigenvalueContributionsPC.dat' using 1:2 title 'k=1' with lines ls 1, 'eigenvalueContributionsPC.dat' using 1:3 title 'k=2' with lines ls 2, 'eigenvalueContributionsPC.dat' using 1:4 title 'k=3' with lines ls 3, 'eigenvalueContributionsPC.dat' using 1:5 title 'k=4' with lines ls 4, 'eigenvalueContributionsPC.dat' using 1:6 title 'k=5' with lines ls 5
+plot 'eigenvalueContributionsPC.dat' using 1:2 title 'i=1' with lines ls 1, 'eigenvalueContributionsPC.dat' using 1:3 title 'i=2' with lines ls 2, 'eigenvalueContributionsPC.dat' using 1:4 title 'i=3' with lines ls 3, 'eigenvalueContributionsPC.dat' using 1:5 title 'i=4' with lines ls 4, 'eigenvalueContributionsPC.dat' using 1:6 title 'i=5' with lines ls 5
