@@ -69,9 +69,9 @@ We have seen in \cref{subsec:randomMatrixTheory}, how the eigenvalue spectrum of
 This result became a justification for seeking mesoscopic level communities by discovering patterns in the correlation structure of the financial network, and was a building block of our modified modularity approach.
 We now wish to investigate the temporal evolution of the correlations between the stocks by analysing the behaviour of the respective correlation matrix eigenvalues and eigenvectors at each time window.
 Having previously used tools from RMT, we now utilise a closely linked \cite{FPW+11} and widely used technique, known as principal component analysis (PCA).
-PCA is a statistical technique in data analysis that uses an orthogonal transformation to generate a lower-dimensional representation of multi-variate data, whilst preserving as much information to best represent the original set of variables \cite{Jol02,FPW+11}.
+PCA is a statistical technique that uses an orthogonal transformation to represent the covariance structure of a set of variables through a smaller number of linear combinations of these variables. \cite{Jol02,FPW+11,Gil14}.
 
-We shall consider the following derivation based on \cite{Jol02,UIO03,FPM+10,FPW+11}.
+We shall consider the following derivation based on \cite{Jol02,UIO03,FPM+10,FPW+11,Gil14}.
 Firstly, recall $T$ represents the time window length and $n$ represents the number of assets in the network (these values equal to 100 and 80, respectively, in our specific empirical example).
 Let us denote the matrix with entries consisting of the standardised logarithmic returns, for any one particular time window, by a $n \times T$ matrix $\matvar{X}$.
 The empirical correlation matrix, also equal to the covariance matrix of $\matvar{X}$, is denoted by $\matvar{C}$ and defined by

@@ -180,6 +180,7 @@
 \usepackage{longtable}
 \usepackage{hyperref}
 \usepackage[noabbrev]{cleveref}
+\usepackage{pdfpages}
 
 \theoremstyle{plain}
 \newtheorem{example}{Example}[chapter]

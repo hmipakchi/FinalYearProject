@@ -57,6 +57,9 @@ AMPVariationalInformation = zeros(length(SNR),1);
 spectralClusteringCommunities = zeros(n,length(SNR));
 spectralClusteringVariationalInformation = zeros(length(SNR),1);
 
+testLouvainCommunities = zeros(n,length(SNR));
+testLouvainModularities = zeros(length(SNR),1);
+
 for s=1:length(SNR)
     s_str = num2str(s);
     
@@ -183,6 +186,13 @@ for s=1:length(SNR)
 
 %      [spectralClusteringCommunities(:,s)] = financialSpectralClustering(modularityMatrix, noCommunities, SNR(s));
 %     spectralClusteringVariationalInformation(s) = calculateNormalisedVariationInformation(timeSeriesCommunities,spectralClusteringCommunities(:,s));
+
+    limit = 10000;
+    k = full(sum(modularityMatrix));
+    twom = sum(k); 
+    B = @(v) modularityMatrix(:,v) - k'*k(v)/twom;
+    [testLouvainCommunities(:,s),testLouvainModularities(s)] = genlouvain(B,limit,0);
+%     [testLouvainCommunities(:,s),testLouvainModularities(s)] = genlouvain(modularityMatrix,limit,0);
 
     fastNewmanModularitiesNew(s) = computeModularityForPartition(weightedAdjacencyMatrix,fastNewmanCommunities(:,s));
     montanariModularitiesNew(s) = computeModularityForPartition(weightedAdjacencyMatrix,montanariCommunities(:,s));
