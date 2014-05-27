@@ -9,6 +9,8 @@
 In this chapter we aim to apply algorithms to detect communities within real-world financial networks.
 Firstly, we explain the process of gathering the data to create the financial networks.
 Then we investigate and apply different community detection algorithms and compare their performance on both synthetically generated and the real-world data.
+We focus on modularity optimisation and study two naive modularity maximisation methods studied in previous chapters as well as two modified modularity optimisation techniques that are tailored to detect communities in our specific example of financial networks based on empirical correlation matrices.
+By determining the best method for the static financial network, we make an important step in identifying communities in time-varying financial networks.
 
 %-----------------------------------------------------
 %   Financial Data Processing Section
@@ -17,11 +19,14 @@ Then we investigate and apply different community detection algorithms and compa
 \section{Constructing the Real-world Financial Network}
 \label{sec:realWorldFinancialNetwork}
 
-The dataset we use consists of daily closing prices of 80 stocks in the FTSE 100 index, which we obtained from \cite{YahFi}.
+The dataset we use consists of daily closing prices of 80 stocks in the FTSE 100 index, which we obtained from \cite{LSE,YahFi}.
 The time period considered is between the beginning of 2004 to the end of 2013, a total of 2501 prices. 
-This is the data we obtained after the removal of a few data points due to incomplete data across different stocks.The complete list of stocks is given in \cref{app:listFTSE100Stocks}.
-We then calculated, for each stock and for each time period, the logarithmic return. We generated a time series of these returns and associated each stock with a single time series.
-By using the method described in \cref{subsec:financialNetworksConstructionBackground}, we proceeded to construct financial network represented by a fully-connected, undirected and weighted graph. There are 80 nodes in this network (each one representing one of the stocks), and the weights on the edges connecting any two nodes is the cross-correlation between the time series of returns associated with the stocks represented by the two nodes.
+This is the data we obtained after the removal of a few data points due to incomplete data across different stocks.
+The complete list of stocks is given in \cref{app:listFTSE100Stocks}.
+We then calculated the logarithmic return for each stock and for each time period.
+We generated a time series of these returns and associated each stock with a single time series.
+By using the method described in \cref{subsec:financialNetworksConstructionBackground}, we proceeded to construct a financial network represented by a fully-connected, undirected and weighted graph.
+There are 80 nodes in this network (each one representing one of the stocks), and the weights on the edges connecting any two nodes is the cross-correlation between the time series of returns associated with the stocks represented by the two nodes.
 We stress, at this point, the data of the whole period (01/01/2004 - 11/11/2013) is currently represented by one single network.
 \Cref{fig:expectedReturnsAndVolatility} shows a plot of the expected return against the volatility for each stock considered during this period.
 
@@ -39,7 +44,8 @@ We stress, at this point, the data of the whole period (01/01/2004 - 11/11/2013)
 \subsection{Random Matrix Theory}
 \label{subsec:randomMatrixTheory}
 
-The correlation matrix is representing the weighted adjacency matrix of the network, and in order to better understand the weights in the network, we wish to refer to an important result from Random Matrix Theory (RMT) that has been outlined in \cite{SM99,PGR+99,PBL05,MG13}. In particular, we wish to distinguish between random and non-random properties of empirical correlation matrices.
+The correlation matrix is representing the weighted adjacency matrix of the network, and in order to better understand the weights in the network, we wish to refer to an important result from Random Matrix Theory (RMT) that has been outlined in \cite{SM99,PGR+99,PBL05,MG13}.
+In particular, we wish to distinguish between random and non-random properties of empirical correlation matrices.
 
 A correlation matrix created from $n$ random time series of length $T$, in the limits $n \rightarrow +\infty$ and $T \rightarrow +\infty$ with $1 < T/n < +\infty$, has a specific distribution of eigenvalues known as the \emphT{Sengupta-Mitra distribution} \cite{SM99,PBL05,FPW+11,MG13}. This distribution is defined by 
 \begin{equation}
@@ -120,7 +126,7 @@ From previous sections, we understand the notion of community detection within g
 The reader should also note the adjacency matrix studied in previous sections is directly related to the structure of the network in question, whereas in this case, it is related to the weights of links between nodes.
 This suggests the possibility of having to modify previously studied algorithms for this scenario.
 
-Given the conclusions of our analysis in \cref{cha:communityDetectionAlgorithms}, and that the real-world data in this case is not well represented by generative random models, we shall use the modularity optimisation as a basis of some of our algorithms.
+Given the conclusions of our analysis in \cref{cha:communityDetectionAlgorithms}, and that the real-world data in this case is not well represented by generative random models, we shall use the modularity optimisation as a basis of our algorithms.
 
 %-------------------------------------------
 %   Naive Modularity Methods Sub Section
@@ -138,25 +144,25 @@ Let us denote a partition of $n$ nodes, in the financial network, into communiti
 \end{equation}
 where $\matvar{A}$ is the weighted adjacency matrix of the network, $k_{i} \equiv \sum_{j} A_{ij}$ and $2m \equiv \sum_{ij} A_{ij}$.
 Note that in the case of binary networks, $A_{ij}$ represented the presence or absence of an edge between nodes $i$ and $j$, $d_{i}$ represented the degree of node $i$ and $m$ represented the total number of edges in the networks.
-Since we are interested in financial networks, a naive approach would be to use the empirical correlation matrix, denoted by $\matvar{C}$, as the networks weighted adjacency matrix. Note that we are essentially ignoring the results of \cref{subsec:randomMatrixTheory}, and we will see in \cref{subsec:modifiedModularityOptimisationMethod} why this is not a good idea, both intuitively and mathematically.
+Since we are interested in financial networks, a naive approach would be to use the empirical correlation matrix, denoted by $\matvar{C}$, as the networks weighted adjacency matrix. Note that we are essentially ignoring the results of \cref{subsec:randomMatrixTheory}.
 
 For now, though, let us use the following relationship
 \begin{equation}
 \label{eq:weightedAdjacencyMatrixFinancialNetworks}
 	A_{ij} = \frac{1}{2} \big( C_{ij}+1 \big) - \delta(i,j)
 \end{equation}
-where $\matvar{C}$ denotes the correlation matrix, and $\delta(i,j)$ removes self edges. From this definition we simply note that $A_{ij} \in [0,1]$.
+where $\matvar{C}$ denotes the correlation matrix, and the $\delta(i,j)$ term removes self edges. From this definition, we simply note that $A_{ij} \in [0,1]$.
 
 We now focus on finding the partition, $\vecvar{\sigma}$, that maximises the modularity. We notice that a larger value of $A_{ij}$ implies larger correlation between the stocks $i$ and $j$, whilst a smaller value implies a lower correlation.
  Recalling how, for the case with binary networks, we sought after denser connections within groups and sparser connections between groups, we realise the modularity maximisation algorithms used on binary networks should have the same effect on financial networks.
 This is intuitive since, in both types of networks, we aim to find the partition which maximises the sum of correlations or number of edges between nodes within same community and minimises the sum of correlations or number of edges between nodes belonging to different communities.
 
-We shall select two familiar approaches, widely known in the literature, as algorithms for the modularity maximisation. Firstly we consider a greedy agglomerative method discussed earlier in the report, and secondly a method that uses spectral relaxation.
+We shall select two familiar approaches, widely known in the literature, as algorithms for the modularity maximisation. We consider a greedy agglomerative method discussed earlier in the report, and secondly a method that uses spectral relaxation.
 
-We consider the same greedy agglomerative method described in \cref{subsec:greedyAlgorithm}, which we noted is also applicable in this case of weighted networks.
-The implementation code for this algorithm is in MATLAB and has been taken from \cite{ELM}.
+Firstly, we use the greedy method of Clauset et al. \cite{CNM04} described in \cref{subsec:greedyAlgorithm}, which we noted is also applicable in this case of weighted networks, so we use \cref{eq:weightedAdjacencyMatrixFinancialNetworks} as input to the algorithm.
+The algorithm we use is implemented in MATLAB and the code has been written by Le Martelot \cite{ELM}.
 
-The approach using the spectral relaxation can be summarised using the argument from \cite{DM}. Let $\matvar{B}$ denote the modularity matrix, defined by
+The approach using the spectral relaxation can be summarised using the argument from \cite{DM}. Let $\matvar{B}$ denote the modularity matrix, whose elements are defined by
 \begin{equation}
 \label{eq:modularityMatrixFinancialNetworks}
 	B_{ij} = A_{ij} - \frac{d_{i}d_{j}}{2m}
@@ -184,8 +190,8 @@ We have implemented this algorithm of \cite{DM} using MATLAB, stressing the inpu
 %   Modified Modularity Method Sub Section
 %-------------------------------------------
 
-\subsection{Modified Modularity Optimisation Method}
-\label{subsec:modifiedModularityOptimisationMethod}
+\subsection{Modified Modularity Optimisation Methods}
+\label{subsec:modifiedModularityOptimisationMethods}
 
 We move on to understand the potential issues with the naive approach hinted in the previous section. Intuitively, the term $d_{i}d_{j}/2m$ reflects the null hypothesis that the observed network structure is wholly based on the degrees of the nodes.
 This idea is sound when applied to binary networks, however, these terms do not have a specific meaning when applied to financial networks since we are interested in the correlation matrix rather than the structure of the underlying graph.
@@ -195,9 +201,10 @@ In order to detect communities within the correlation matrix that leads to corre
 We have already discussed, in \cref{subsec:randomMatrixTheory}, how to construct a filtered correlation matrix that takes into account the random noise at the level of individual stocks and a market-wide component.
 Therefore, this filtered matrix, which we have denoted by $\matvar{C}^{(g)}$ and defined in \cref{eq:remainingCorrelationMatrix}, can be used as a modularity matrix, since it reflects a suitable null model (i.e. random noise plus market wide correlation) subtracted from the observed correlation matrix.
 
-Our aim, here, is to use $\matvar{C}^{(g)}$ as input to an algorithm that can detect communities by maximising modularity. We hope this provides better results than the naive modularity methods discussed previously. The construction of an algorithm is not quite as straightforward, though, since we take into account the modification of the modularity matrix.
+Our aim, here, is to use $\matvar{C}^{(g)}$ as input to an algorithm that can detect communities by maximising modularity.
+We hope this provides better results than both of the naive modularity methods discussed previously.
 
-We must first, though, introduce a new formulation of modularity given a partition, as used by \cite{MG13}, which we denote by $Q_{n}(\vecvar{\sigma})$
+We must first, though, introduce a new formulation of modularity given a partition, as used by \cite{MG13}, which we denote by $Q_{n}(\vecvar{\sigma})$,
 \begin{equation}
 \label{eq:newModularityFinancialNetworks}
 	Q_{n}(\vecvar{\sigma}) = \frac{1}{C_{norm}} \sum_{ij} C^{(g)}_{ij} \delta \left( \sigma_{i},\sigma_{j} \right).
@@ -210,13 +217,18 @@ where $C_{norm}$ is a normalisation term defined by
 which just ensures the value of the newly-defined modularity lies within the interval $[-1,+1]$.
 The new formulation of modularity is specifically aimed to detect mesoscopic-level communities.
 
-The `modified' modularity method is a spectral clustering algorithm based on the exact same technique considered for binary networks considered in \cref{sec:spectralClustering}, but instead we shall use the filtered correlation matrix, $\matvar{C}^{(g)}$, as input.
+Our first `modified' modularity method is a spectral clustering algorithm based on the exact same technique considered for binary networks considered in \cref{sec:spectralClustering}, but instead we shall use the filtered correlation matrix, $\matvar{C}^{(g)}$, as input.
 We simply find the eigenvectors of $\matvar{C}^{(g)}$, use them to construct the embedded vectors, which are then clustered using the familiar k-means clustering algorithm (same procedure as with binary networks).
 We use different values for the number of groups (within an appropriate range), then run the algorithm for each one and choose the partition with the best value for the re-defined modularity (\cref{eq:newModularityFinancialNetworks}).
 
-%---   TODO
-%%% need to describe modified greedy agglomerative method for modified modularity maximisation
+The second modified modularity method is a greedy algorithm based on the Louvain method proposed by Blondel et al. \cite{BGL+08}, and discussed in \cref{subsec:greedyAlgorithm}.
+However, we shall instead use the filtered correlation matrix, $\matvar{C}^{(g)}$, as the input to the algorithm.
+We use the MATLAB implementation of this algorithm where the code has been written by Mucha and Porter \cite{GenLou}.
+The intention of utilising this method over the spectral clustering approach just mentioned is twofold.
+Firstly, we do not need to run the algorithm for various values for the number of groups, since the Louvain method generates the node assignments without requiring the number of communities in advance.
+Secondly, this algorithm has a faster run time, and this will be important considering performance on time-evolving financial networks, which we shall discuss in \cref{cha:temporalEvolutionFinancialNetworks}.
 
+To summarise, we will study four algorithms based on modularity optimisation; two are considered to be naive approach using a weighted adjacency matrix as input with the same null model as with conventional community detection block models, whereas the other two are tailored to detect communities in our application of financial networks by optimising the modified definition of modularity using the results from RMT.
 
 %-----------------------------------------------------
 %   Synthetic Data Testing Section
@@ -226,10 +238,12 @@ We use different values for the number of groups (within an appropriate range), 
 \label{sec:syntheticDataTesting}
 
 Before applying the four algorithms discussed previously to our financial network based on the FTSE 100 data set, we must run tests to confirm we can correctly detect correlated sets of time series in synthetically generated benchmark cases, as also outlined by \cite{MG13}.
-We consider a benchmark data set of correlation matrices with $100$ time series (i.e. we consider $n = 100$ stocks in the data set) divided into $10$ communities of $10$ correlated time series. Note the length of the time series is chosen to be $T=2500$ to reflect similar conditions to the real data set and is also prescribed by RMT (i.e. $T>n$).
-The set consists of correlation matrices generated with different levels of correlations between the groups and within a group reflecting different signal-to-noise ratios (SNR). We set the ground-truth partition, which we denote by $\vecvar{\sigma}^{*}$, to be the same across all correlation matrices.
-We considered $6$ such benchmarks within the correlation matrix set with varying SNR, and have illustrated $2$ such examples in \cref{fig:benchmarkCorrelationMatrices}.
-We confirmed that, in all the benchmarks, all four methods succeeded in identifying $\vecvar{\sigma}^{*}$.
+We consider a benchmark data set of correlation matrices with 100 time series (i.e. we consider $n = 100$ stocks in the data set) divided into 10 communities of 10 correlated time series.
+Note the length of the time series is chosen to be $T=2500$ to reflect similar conditions to the real data set and is also prescribed by RMT (i.e. $T>n$).
+The set consists of correlation matrices generated with different levels of correlations between the groups and within a group reflecting different signal-to-noise ratios (SNR), where a lower value for SNR results in more difficulty in identifying the ground-truth partition.
+We set the ground-truth partition, which we denote by $\vecvar{\sigma}^{*}$, to be the same across all correlation matrices.
+We considered 6 such benchmarks within the correlation matrix set with varying SNR, and have illustrated 2 such examples in \cref{fig:benchmarkCorrelationMatrices}.
+We confirmed that, in all the benchmarks, all four methods succeeded in identifying $\vecvar{\sigma}^{*}$ to a sufficiently high accuracy.
 
 %---   FIGURE
 \begin{figure}
@@ -246,7 +260,7 @@ We confirmed that, in all the benchmarks, all four methods succeeded in identify
 		\caption{}
 		\label{fig:benchmarkCorrelationMatrix3}
 	\end{subfigure}
-	\caption[Plots of synthetically generated benchmark correlation matrices]{\label{fig:benchmarkCorrelationMatrices} Plots of synthetically generated benchmark correlation matrices, one with low SNR (a value of 0.5), \subref{fig:benchmarkCorrelationMatrix1}, in addition to one with higher SNR (a value of 1), \subref{fig:benchmarkCorrelationMatrix3}. These are two examples from a set created from $100$ time series divided into $10$ communities of $10$ correlation time series. The blocks along the diagonal represent cross-correlations between members of the same group, and are thus high (i.e. close to one), whereas off-diagonal blocks represent cross-correlations between time series belonging to different communities reflecting noise (system-wide or additional inter-community correlations).}
+	\caption[Plots of synthetically generated benchmark correlation matrices]{\label{fig:benchmarkCorrelationMatrices} Plots of synthetically generated benchmark correlation matrices, one with low SNR (a value of 0.5), \subref{fig:benchmarkCorrelationMatrix1}, in addition to one with higher SNR (a value of 1), \subref{fig:benchmarkCorrelationMatrix3}. These are two examples from a set created from 100 time series divided into 10 communities of 10 correlation time series. The blocks along the diagonal represent cross-correlations between members of the same group, and are thus high (i.e. close to one), whereas off-diagonal blocks represent cross-correlations between time series belonging to different communities reflecting noise (system-wide or additional inter-community correlations).}
 \end{figure}
 
 %-----------------------------------------------------
@@ -256,14 +270,14 @@ We confirmed that, in all the benchmarks, all four methods succeeded in identify
 \section{Application to Real-world Financial Network}
 \label{sec:applicationToRealWorldFinancialNetwork}
 
-We now apply the three modularity optimisation methods discussed in \cref{sec:communityDetectionAlgorithms} to the FTSE 100 data collected.
-Our intentions are two fold.
-Firstly we wish to understand the community structure of the stocks, in particular with regard to the composition of each community based upon the industry sectors of the stocks.
-Secondly, we wish to build a comparative analysis of the three different algorithms based on empirical data.
+We now apply the modularity optimisation methods discussed in \cref{sec:communityDetectionAlgorithms} to the FTSE 100 data collected.
+We have two clear intentions.
+Firstly, we wish to understand the community structure of the stocks, in particular with regard to the composition of each community based upon the industry sectors of the stocks.
+Secondly, we wish to build a comparative analysis of the different algorithms based on empirical data.
 
-We firstly begin by looking at the communities generated by the three modularity methods discussed in \cref{sec:communityDetectionAlgorithms}, using all of the data.
+We begin by looking at the communities generated by the four modularity methods discussed in \cref{sec:communityDetectionAlgorithms}, using all of the data.
 \Cref{fig:outputFTSE100} displays the communities identified by all the algorithms by grouping the tickers of the stocks based upon label colouring.
-We see from \cref{fig:outputCommunitiesGreedy,fig:outputCommunitiesSpectralRelaxation} that both traditional modularity methods, the greedy algorithm and the spectral relaxation method respectively, have identified two distinct communities; whilst from \cref{fig:outputCommunitiesSpectralClustering}, we notice the modified modularity spectral clustering technique has identified four communities.
+We see from \cref{fig:outputCommunitiesGreedy,fig:outputCommunitiesSpectralRelaxation} that both traditional modularity methods, the greedy algorithm and the spectral relaxation method respectively, have identified two distinct communities; whilst from \cref{fig:outputCommunitiesSpectralClustering,fig:outputCommunitiesTestLouvainMethod}, we notice both the modified modularity based techniques have identified four communities.
 This is the outcome we expected given the null model assumed discounted both random and market-wide correlations \cite{MG13}, meaning the spectral clustering algorithm was successful in finding previously undetected communities.
 
 %---   FIGURE
@@ -286,8 +300,14 @@ This is the outcome we expected given the null model assumed discounted both ran
 		\includegraphics[width=0.9\linewidth]{figures/outputFTSE100FinancialSpectralClusteringMethod.png}
 		\caption{}
 		\label{fig:outputCommunitiesSpectralClustering}
+	\end{subfigure}%
+	\begin{subfigure}{.5\textwidth}
+		\centering
+		\includegraphics[width=0.9\linewidth]{figures/outputFTSE100TestLouvainMethod.png}
+		\caption{}
+		\label{fig:outputCommunitiesTestLouvainMethod}
 	\end{subfigure}
-	\caption[Communities of the FTSE 100 data generated using three different algorithms.]{\label{fig:outputFTSE100} Communities of the FTSE 100 data generated using three different algorithms. The name of each label represents the associated stock's ticker (see \cref{app:listFTSE100Stocks}) whilst the colour of the label represents community memberships. The resulting communities after the greedy algorithm was applied is shown in \subref{fig:outputCommunitiesGreedy}, where there were two communities generated. The resulting communities after the algorithm based on a spectral relaxation was applied is shown in \subref{fig:outputCommunitiesSpectralRelaxation}, where there were also two communities generated. The resulting communities after the spectral clustering algorithm based on the modified modularity matrix was applied is shown in \subref{fig:outputCommunitiesSpectralClustering}, where there were four communities generated.}
+	\caption[Communities of the FTSE 100 data generated using four different algorithms.]{\label{fig:outputFTSE100} Communities of the FTSE 100 data generated using four different algorithms. The name of each label represents the associated stock's ticker (see \cref{app:listFTSE100Stocks}) whilst the colour of the label represents community memberships (i.e. stocks associated with labels that have different colours belong to different communities and stocks whose labels have the same colour belong to the same community). The resulting communities after the greedy algorithm was applied are shown in \subref{fig:outputCommunitiesGreedy}, where there were two communities generated. The resulting communities after the algorithm based on a spectral relaxation was applied are shown in \subref{fig:outputCommunitiesSpectralRelaxation}, where there were also two communities generated. The resulting communities after the spectral clustering algorithm based on the modified modularity matrix was applied is shown are \subref{fig:outputCommunitiesSpectralClustering}, where there were four communities generated and, finally, resulting communities after the modified modularity Louvain method was applied are shown in \subref{fig:outputCommunitiesTestLouvainMethod}, where there were also four communities.}
 \end{figure}
 
 A first look at the tickers of stocks belonging to each community does not help to uncover any particular patterns.
@@ -324,8 +344,14 @@ We note that the actual sizes of the pie charts do not provide any information, 
 		\includegraphics[width=0.9\linewidth]{figures/outputFTSE100IndustriesPieChartsFinancialSpectralClusteringMethod.png}
 		\caption{}
 		\label{fig:outputPieChartsCommunitiesSpectralClustering}
+	\end{subfigure}%
+	\begin{subfigure}{.5\textwidth}
+		\centering
+		\includegraphics[width=0.9\linewidth]{figures/outputFTSE100IndustriesPieChartsTestLouvainMethod.png}
+		\caption{}
+		\label{fig:outputPieChartsCommunitiesTestLouvainMethod}
 	\end{subfigure}
-	\caption[Pie charts showing the relative composition of each generated community based on industry sectors of the FTSE 100 stocks for three different algorithms.]{\label{fig:outputFTSE100PieCharts} Pie charts showing the relative composition of each generate community based on the industry sectors of the stocks (see \cref{app:listFTSE100Stocks}). Individual communities are labelled by letter, where each community is represented by one pie chart, and the colour legend for all these pie charts is shown in \cref{tab:outputFTSE100PieChartsColourLegend}. The result for communities generated by the greedy algorithm is shown in \subref{fig:outputPieChartsCommunitiesGreedy}, whilst the result for communities generated by the spectral relaxation method is shown in \subref{fig:outputPieChartsCommunitiesSpectralRelaxation}. The output for communities generated by the modified modularity spectral clustering method is show in \subref{fig:outputPieChartsCommunitiesSpectralClustering}.}
+	\caption[Pie charts showing the relative composition of each generated community based on industry sectors of the FTSE 100 stocks for four different algorithms.]{\label{fig:outputFTSE100PieCharts} Pie charts showing the relative composition of each generate community based on the industry sectors of the stocks (see \cref{app:listFTSE100Stocks}). Individual communities are labelled by letter, where each community is represented by one pie chart, and the colour legend for all these pie charts is shown in \cref{tab:outputFTSE100PieChartsColourLegend}. The result for communities generated by the greedy algorithm is shown in \subref{fig:outputPieChartsCommunitiesGreedy}, whilst the result for communities generated by the spectral relaxation method is shown in \subref{fig:outputPieChartsCommunitiesSpectralRelaxation}. The output for communities generated by the modified modularity spectral clustering method is show in \subref{fig:outputPieChartsCommunitiesSpectralClustering}, whilst the result for communities generated by the Louvain method is shown in \subref{fig:outputPieChartsCommunitiesTestLouvainMethod}.}
 \end{figure}
 
 A few interesting observations can be made.
@@ -336,44 +362,49 @@ A similar outcome has also been observed in \cite{MG13} with a data set consisti
 This suggests that subgroups of stocks within a sector are often more correlated with stock from different top-level sectors than from their own.
 Unfortunately, we were not able to obtain sub-classifications for industry sectors due to lack of information available, however, we believe it would be beneficial to extract this form of qualitative information and combine with our quantitative approach identify interesting patterns in correlations.
 
-We now introduce the notion of a renormalised filtered correlation between two communities $A$ and $B$ considered in \cite{MG13}.
+We now introduce the notion of a renormalised filtered correlation between two communities $A$ and $B$ as described in \cite{MG13}.
 We consider the renormalised filtered correlation matrix, denoted by $\widetilde{\matvar{C}}^{(g)}$, as a matrix whose dimension equal the number of communities detected with each element defined by
 \begin{equation}
 \label{eq:renormalisedFilteredCorrelationMatrix}
 	\widetilde{C}^{(g)}_{AB} \equiv \sum_{i \in A} \sum_{j \in B} C^{(g)}_{ij}
 \end{equation}
 We shall use the renormalised filtered correlation to test whether different communities, generated are mutually less correlated than expected under the null model \cite{MG13}.
-\Cref{fig:renormalisedFilteredCorrelationMatrices} plots the renormalised filtered correlation matrices for the communities generated by three different algorithms.
+\Cref{fig:renormalisedFilteredCorrelationMatrices} plots the renormalised filtered correlation matrices for the communities generated by the four different algorithms.
 
 %---   FIGURE
 \begin{figure}
 \centering
 	\begin{subfigure}{.5\textwidth}
 		\centering
-		\includegraphics[width=0.6\linewidth]{figures/renormalisedFilteredCorrelationMatrixFastNewmanMethod.png}
+		\includegraphics[width=0.7\linewidth]{figures/renormalisedFilteredCorrelationMatrixFastNewmanMethod.png}
 		\caption{}
 		\label{fig:renormalisedFilteredCorrelationMatrixGreedyAlgorithm}
 	\end{subfigure}%
 	\begin{subfigure}{.5\textwidth}
 		\centering
-		\includegraphics[width=0.6\linewidth]{figures/renormalisedFilteredCorrelationMatrixMontanariMethod.png}
+		\includegraphics[width=0.7\linewidth]{figures/renormalisedFilteredCorrelationMatrixMontanariMethod.png}
 		\caption{}
 		\label{fig:renormalisedFilteredCorrelationMatrixSpectralRelaxation}
 	\end{subfigure}\\
 	\begin{subfigure}{.5\textwidth}
 		\centering
-		\includegraphics[width=0.6\linewidth]{figures/renormalisedFilteredCorrelationMatrixFinancialSpectralClusteringMethod.png}
+		\includegraphics[width=0.7\linewidth]{figures/renormalisedFilteredCorrelationMatrixFinancialSpectralClusteringMethod.png}
 		\caption{}
 		\label{fig:renormalisedFilteredCorrelationMatrixSpectralClustering}
+	\end{subfigure}%
+	\begin{subfigure}{.5\textwidth}
+		\centering
+		\includegraphics[width=0.7\linewidth]{figures/renormalisedFilteredCorrelationMatrixTestLouvainMethod.png}
+		\caption{}
+		\label{fig:renormalisedFilteredCorrelationMatrixTestLouvainMethod}
 	\end{subfigure}
-	\caption[Plots of renormalised filtered correlation matrices for the communities generated by three different algorithms.]{\label{fig:renormalisedFilteredCorrelationMatrices} Plots of renormalised filtered correlation matrices for the communities generated by three different algorithms. Each heat map represents the cross-correlations between the communities identified by each algorithm. Each off-diagonal element is calculated as the sum of the correlations between the corresponding pair of communities, whilst the diagonal entries represents the sum of correlations of nodes belonging to the specific community. The filtered correlation matrix for the output of the greedy algorithm is shown in \subref{fig:renormalisedFilteredCorrelationMatrixGreedyAlgorithm}, whilst the result for the communities generated by the spectral relaxation method is shown in \subref{fig:renormalisedFilteredCorrelationMatrixSpectralRelaxation}. The output for communities generated by the modified modularity spectral clustering method is show in \subref{fig:renormalisedFilteredCorrelationMatrixSpectralClustering}.}
+	\caption[Plots of renormalised filtered correlation matrices for the communities generated by four different algorithms.]{\label{fig:renormalisedFilteredCorrelationMatrices} Plots of renormalised filtered correlation matrices for the communities generated by four different algorithms. Each heat map represents the cross-correlations between the communities identified by each algorithm. Each off-diagonal element is calculated as the sum of the correlations between the corresponding pair of communities, whilst the diagonal entries represents the sum of correlations of nodes belonging to the specific community. The filtered correlation matrix for the output of the greedy algorithm is shown in \subref{fig:renormalisedFilteredCorrelationMatrixGreedyAlgorithm}, whilst the result for the communities generated by the spectral relaxation method is shown in \subref{fig:renormalisedFilteredCorrelationMatrixSpectralRelaxation}. The output for communities generated by the modified modularity spectral clustering method is show in \subref{fig:renormalisedFilteredCorrelationMatrixSpectralClustering}, whilst the result for the communities generated by the Louvain method is shown in \subref{fig:renormalisedFilteredCorrelationMatrixTestLouvainMethod}.}
 \end{figure}
 
 We see that all algorithms identify partitions that, on aggregate, are anti-correlated with one another using the definition of renormalised filtered correlation.
 
 We conclude that introducing the notion of modified modularity has helped to detect more communities at the mesoscopic scale by applying a spectral clustering algorithm.
 The properties of these communities are similar, and the partitions are anti-correlated with one another.
-The main benefit of applying the greedy algorithm, though, is that it converges faster to the resulting node assignments.
-A step forward would be, therefore, to introduce a greedy agglomerative method based on modified modularity, and indeed take advantage of both the removal of noise at the level of individual stocks and the fast nature of the greedy algorithm.
+The main benefit of applying the Louvain method over the spectral clustering approach is faster convergence to its generated node assignments.
 Overall, as discussed in \cref{subsec:portfolioTheoryBackground}, this property is very useful for investors following mean-variance portfolio theory, since it provides a basis for picking stocks belonging to mesoscopic-level communities that are, on average over a specified period of time (decided by the investor and given by selective use of available data), negatively correlated with one another.
 

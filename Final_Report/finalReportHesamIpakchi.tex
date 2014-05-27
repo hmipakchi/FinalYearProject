@@ -117,7 +117,7 @@
 \newcommand*\emphT[1]{\textit{#1}}
 
 % natural logarithm command
-\newcommand*\natlog[1]{\log#1}
+\newcommand*\natlog[1]{\log \left( #1 \right)}
 
 % euler constant (e) command
 \newcommand{\euler}{e\xspace}
@@ -131,6 +131,17 @@
 % big O command
 \newcommand*\bigO[1]{O(#1)}
 
+%----------------------------------------------------------------------------------------
+%	COVER PAGE
+%----------------------------------------------------------------------------------------
+
+\setboolean{@twoside}{false}
+\includepdf[pages={-},offset=75 -75]{ReportCoverPage.pdf}
+
+% blank page
+\thispagestyle{empty}
+\mbox{}
+\newpage
 
 %----------------------------------------------------------------------------------------
 %	TITLE PAGE
@@ -234,7 +245,7 @@ $\trace{\matvar{M}}$ & Trace of the matrix $\matvar{M}$ \\
 $\expectation{X}$ & Expected value of $X$ \\
 $\variance{X}$ & Variance of $X$ \\
 $\exp(x)$ & Exponential function \\
-$\natlog(x)$ & \emphT{natural logarithm} of $x$ (logarithm to the base $\euler$)
+$\natlog{x}$ & \emphT{natural logarithm} of $x$ (logarithm to the base $\euler$)
 }
 
 %----------------------------------------------------------------------------------------
