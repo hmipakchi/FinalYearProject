@@ -62,11 +62,11 @@ set cbrange [ -1 : 1 ] noreverse nowriteback
 plot 'renormalisedFilteredCorrelationMatrixMontanariMethod.dat' matrix with image
 
 
-##########################################################################
-###                                                                    ###
-###   Plot Montanari Method Renormalised Filtered Correlation Matrix   ###
-###                                                                    ###
-##########################################################################
+##############################################################################################
+###                                                                                        ###
+###   Plot Financial Spectral Clustering Method Renormalised Filtered Correlation Matrix   ###
+###                                                                                        ###
+##############################################################################################
 
 reset
 
@@ -92,3 +92,36 @@ load 'default.plt'
 set cbrange [ -1 : 1 ] noreverse nowriteback
 
 plot 'renormalisedFilteredCorrelationMatrixFinancialSpectralClusteringMethod.dat' matrix with image
+
+
+#############################################################################
+###                                                                       ###
+###   Plot Test Louvain Method Renormalised Filtered Correlation Matrix   ###
+###                                                                       ###
+#############################################################################
+
+reset
+
+# produce postscript (.ps) output plot
+set term postscript eps enhanced color size 6,5
+set output "renormalisedFilteredCorrelationMatrixTestLouvainMethod.eps"
+
+set border linewidth 0
+unset key
+
+# note: n = 4
+set xrange [-0.5:3.5]
+set yrange [-0.5:3.5]
+
+unset xtics
+unset ytics
+
+set format x ""
+set format y ""
+
+load 'default.plt'
+
+set cbrange [ -1 : 1 ] noreverse nowriteback
+
+plot 'renormalisedFilteredCorrelationMatrixTestLouvainMethod.dat' matrix with image
+

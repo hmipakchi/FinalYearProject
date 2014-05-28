@@ -3,15 +3,16 @@ clear;
 % definition of the stochastic block model
 
 % number vertices
-n = 100;%200
+n = 200;%200
 n_str = int2str(n);
 
 % number of communities
 q = 2;%2
 q_str = int2str(q);
 
-pinValueVector = [0.9;];
-noColumnsInPlot = 1;
+pinValueVector = [0.3;0.6;0.9;]; % normal case
+% pinValueVector = [0.001;0.01;0.1;0.5;0.9]; % sparse case
+noColumnsInPlot = 2;
 
 for pinValueNo=1:max(size(pinValueVector))
     
@@ -53,22 +54,24 @@ for pinValueNo=1:max(size(pinValueVector))
                 end
             end
         end
+        gmlOutputFileName_str = sprintf('data_files/spectralClustering/adjacencyMatrixGMLFiles/pin_%s_iteration_%s_q_%s.gml',pin_str,num2str(iteration),num2str(q));
+        writeTestAdjacencyMatrixToGMLFile(gmlOutputFileName_str, adjacencyMatrix, nodeCommunities);
 
         % apply spectral clustering using Laplacian method
-%         communityAssignmentsLaplacian = zeros(n,1);
-        communityAssignmentsLaplacian = spectralClusteringLaplacian(adjacencyMatrix, q);
+        communityAssignmentsLaplacian = zeros(n,1);
+%         communityAssignmentsLaplacian = spectralClusteringLaplacian(adjacencyMatrix, q);
         
         % apply spectral clustering using Modularity: Spectral method
-%         communityAssignmentsModularitySpectral = zeros(n,1);
-        communityAssignmentsModularitySpectral = spectralClusteringModularity(adjacencyMatrix, q);
+        communityAssignmentsModularitySpectral = zeros(n,1);
+%         communityAssignmentsModularitySpectral = spectralClusteringModularity(adjacencyMatrix, q);
         
         % apply spectral clustering using Modularity: Fast Newman method
-%         communityAssignmentsModularityFastNewman = zeros(n,1);
-        communityAssignmentsModularityFastNewman = fast_newman(adjacencyMatrix);
+        communityAssignmentsModularityFastNewman = zeros(n,1);
+%         communityAssignmentsModularityFastNewman = fast_newman(adjacencyMatrix);
         
         % apply spectral clustering using Modularity: Montanari method
-%         communityAssignmentsModularityMontanari = zeros(n,1);
-        communityAssignmentsModularityMontanari = montanari_modularity(adjacencyMatrix);
+        communityAssignmentsModularityMontanari = zeros(n,1);
+%         communityAssignmentsModularityMontanari = montanari_modularity(adjacencyMatrix);
 
 
         % check errors in community detection
@@ -141,21 +144,21 @@ for pinValueNo=1:max(size(pinValueVector))
             scatter(errorsMatrix(i,3),errorsMatrix(i,4),circlePlotSize,'blue');
         end
         
-        % plot results for Modularity Method
+        % plot results for Spectral Clustering Modularity Method
         if errorsMatrix(iteration, 8) <= 0
             scatter(errorsMatrix(i,3),errorsMatrix(i,5),circlePlotSize,'red');
         else
             scatter(errorsMatrix(i,3),errorsMatrix(i,5),circlePlotSize,'red');
         end
         
-        % plot results for AMP (without Onsager term) Method
+        % plot results for Fast Newman Modularity Method
         if errorsMatrix(iteration, 8) <= 0
             scatter(errorsMatrix(i,3),errorsMatrix(i,6),circlePlotSize,'green');
         else
             scatter(errorsMatrix(i,3),errorsMatrix(i,6),circlePlotSize,'green');
         end
         
-        % plot results for AMP (with Onsager term) Method
+        % plot results for Montanari Modularity
         if errorsMatrix(iteration, 8) <= 0
             scatter(errorsMatrix(i,3),errorsMatrix(i,7),circlePlotSize,'black');
         else
@@ -163,7 +166,7 @@ for pinValueNo=1:max(size(pinValueVector))
         end
     end
     
-    % write algorithms errors to file
+%     % write algorithms errors to file
 %     filename_str = sprintf('data_files/spectralClustering/syntheticDataErrors_pin_%s.dat',pin_str);
 %     fileID = fopen(filename_str,'w');
 %     for i=1:maxNoIterations

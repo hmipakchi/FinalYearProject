@@ -7,12 +7,13 @@
 %----------------------------------------------------------------------------------------
 
 In this chapter we aim to experiment with community detection algorithms on synthetically generated data.
-We shall consider each algorithm described in the previous chapter, and experiment with data created from the appropriate generative block model.
+We shall consider the algorithms described in the previous chapter, and use data created from the appropriate generative block model.
 The goal of the experiments on synthetic data is to understand how the underlying
 network structure, and the variation of parameters therein, affects the performance of different algorithms \cite{RLK12}.
 In general the experiments will proceed as follows.
 We generate a network with the appropriate block model and specified parameters, with underlying ground-truth node assignments.
 We then measure the accuracy of the specific algorithm investigated as we vary model parameters.
+These parameters include the sparsity of the graph and the edge occurrence probabilities.
 This then allows us to draw conclusions regarding the relative performance of community detection algorithms in controlled conditions given by networks with common properties.
 We conclude by comparing all the algorithms investigated and provide recommendations for their use in different circumstances.
 
@@ -25,15 +26,16 @@ We conclude by comparing all the algorithms investigated and provide recommendat
 
 We shall test the spectral clustering algorithm of \cref{sec:spectralClustering} and the greedy modularity optimisation method of \cref{subsec:greedyAlgorithm} using identical synthetic data generated using the planted partition model described in \cref{subsec:plantedPartitionModel}.
 We aim to, firstly, understand the quality (i.e. accuracy) of the partitions generated from the two algorithms as we vary both the sparsity of the network and the edge occurrence probabilities.
+We have found very similar performance for all the algorithms as we increase the number of communities, and therefore, in the interests of simplicity we only consider the case of graphs with two ground-truth communities.
 Secondly, we wish to empirically test how close we can reliably detect communities up to the phase transition point.
 We assume assortative community structure throughout also.
-We apply each of generated networks as input to the Laplacian spectral clustering and greedy modularity method, and measure the accuracy of reconstruction of the node assignments by computing the \emphT{overlap} defined below \cite{DKM+11}.
-Denote the overlap by $T$, and let the estimated node assignments given by $\{s_{i}\}$ with ground-truth node assignments given by $\{\sigma_{i}\}$, then we define $T$ by
+We apply each of generated networks as input to the Laplacian spectral clustering and greedy modularity method, and measure the accuracy of reconstruction of the node assignments by computing the \emphT{overlap} using the definition by Decelle et al. \cite{DKM+11,DKM+13}.
+Denote the overlap by $T$, and let the estimated node assignments be given by $\{q_{i}\}$ with ground-truth node assignments given by $\{\sigma_{i}\}$, then we define $T$ by
 \begin{equation}
 	\label{eq:overlap}
-	T = \max_{\pi} \frac{\frac{1}{n} \sum_{i} \delta(\sigma_{i},\pi(s_{i})) - \frac{1}{k}}{1 - \frac{1}{k}}
+	T = \max_{\pi} \frac{\frac{1}{n} \sum_{i} \delta(\sigma_{i},\pi(q_{i})) - \frac{1}{k}}{1 - \frac{1}{k}}
 \end{equation}
-where $\pi$ ranges over the permutations on $s$ elements and $k$ represents the number of clusters.
+where $\pi$ ranges over the permutations on $q$ elements and $k$ represents the number of clusters.
 This definition means that $0 \le T \le 1$ with a higher value implying improved reconstruction and more accurate results, and an overlap of 0 meaning the algorithm is, on average, no better than random uniform selection of node assignments.
 
 The traditional spectral clustering algorithm  has been implemented in MATLAB based on the derivation in \cref{sec:spectralClustering}, whilst the MATLAB implementation for the greedy modularity algorithm has been obtained from \cite{ELM}.
@@ -118,10 +120,9 @@ However, we have seen how the performance declines as the ground-truth network g
 We have explained some of the issues observed that can account for the disappointing results, although there is no deep understanding regarding the modularity optimisation methods \cite{For10}.
 Describing the behaviour of the modularity methods is important, though, and there have been many situations where the algorithm works well in practical applications \cite{New06a,New06b,For10,GMC10}.
 This should not be startling given how the synthetic data we have used for our experimental tests are, in general, not well representative of real-world networks considered in practice.
-Since the greedy algorithm is very fast and can be applied to larger scale networks, we would recommend using this algorithm instead of other modularity optimisation methods as well as traditional spectral clustering as it achieves similar or better accuracy with faster run time.
-For the case of smaller size networks, the pragmatic option seems most suitable, where these different algorithms may be run and then compared in training cases, with the best one evaluated used for further investigation in test applications.
-We notify the reader that we shall revisit modularity optimisation algorithms as they are useful for the particular application of financial networks, further studied in \cref{cha:communityDetectionFinancialNetworks}.
-For the moment, nevertheless, we wish to find a class of algorithms that, empirically, seem to reliably detect communities up to the phase transition in the sparse regime also.
+Since the greedy algorithm is very fast and will be favourable for larger networks, we would recommend using this algorithm instead of other modularity optimisation methods as well as traditional spectral clustering as it achieves similar or better accuracy with faster run time.
+For the case of small sized networks, the pragmatic option seems most suitable, where these different algorithms may be run and then compared in training cases, with the best one evaluated used for further investigation in test applications.
+We shall revisit modularity optimisation algorithms as they are useful for the particular application of financial networks, further studied in \cref{cha:communityDetectionFinancialNetworks,cha:temporalEvolutionFinancialNetworks}.
 
 %----------------------------------------------------------------
 %   Belief Propagation Algorithm Section
@@ -132,6 +133,8 @@ For the moment, nevertheless, we wish to find a class of algorithms that, empiri
 
 %---   TODO
 %%% need to describe empirical results for Belief Propagation Algorithm.
+We wish to find a class of algorithms that, empirically, seem to reliably detect communities up to the phase transition in the sparse regime as well as the dense regime.
+Unfortunately, both the spectral clustering and modularity optimisation methods could not achieve this, but we are hopeful that the BP algorithm from \cref{sec:beliefPropagationAlgorithm} given its derivation.
 
 %-----------------------------------------------------
 %   NLPI and AMP Algorithms Section
@@ -166,7 +169,7 @@ We have previously discussed that the transition for standard PCA algorithms for
 \Cref{fig:NLPIAccuracyPlot} illustrates that for small values of $\varepsilon$ (e.g. between 0 and 0.2), the reconstructed vector is correlated with ground-truth (i.e. $\innerP{\vecvar{u},\widehat{\vecvar{u}}} > 0$).
 In particular, we can get good reconstruction for values of $\lambda$ all the way down to 0.8. Thus we have shown to beat the spectral threshold!
 
-Although the NLPI algorithm can be shown to beat the spectral threshold empirically by using the synthetic data strategy of \cite{Mon13}  that we used above, as we have already noted, analysing its asymptotic behaviour mathematically is not trivial.
+Although the NLPI algorithm can be shown to beat the spectral threshold empirically by using the synthetic data strategy of \cite{Mon13}  that we used above, analysing its asymptotic behaviour mathematically is not trivial, as we have already noted.
 This served as the motivation for the AMP algorithm where precise asymptotics could be derived theoretically (however this is beyond the scope of this report).
 We shall now analyse the performance of the AMP algorithm using identical synthetic data (i.e. the same normalised adjacency matrix input for every value pair $(\lambda,\varepsilon)$ in the grid) as we tested the NLPI algorithm with. We also chose to run the AMP algorithms for 50 iterations.
 We have plotted the accuracy for the AMP algorithm in \cref{fig:AMPAccuracyPlot}.

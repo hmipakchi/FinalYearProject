@@ -117,7 +117,11 @@
 \newcommand*\emphT[1]{\textit{#1}}
 
 % natural logarithm command
-\newcommand*\natlog[1]{\log \left( #1 \right)}
+\newcommand*\natlog[1]{\log(#1)}
+
+% exponential function command
+\let\oldexp\exp
+\renewcommand{\exp}[1]{\oldexp(#1)}
 
 % euler constant (e) command
 \newcommand{\euler}{e\xspace}
@@ -129,7 +133,13 @@
 \newcommand*\one{\mathds{1}\xspace}
 
 % big O command
-\newcommand*\bigO[1]{O(#1)}
+\newcommand*\bigO[1]{O\left(#1\right)}
+
+% argmax command
+\newcommand*{\argmax}{\operatornamewithlimits{argmax}\limits}
+
+% argmin command
+\newcommand*{\argmin}{\operatornamewithlimits{argmin}\limits}
 
 %----------------------------------------------------------------------------------------
 %	COVER PAGE
@@ -244,7 +254,7 @@ $\abs{\matvar{M}}$ & Determinant of the matrix $\matvar{M}$ \\
 $\trace{\matvar{M}}$ & Trace of the matrix $\matvar{M}$ \\
 $\expectation{X}$ & Expected value of $X$ \\
 $\variance{X}$ & Variance of $X$ \\
-$\exp(x)$ & Exponential function \\
+$\exp{x}$ & Exponential function \\
 $\natlog{x}$ & \emphT{natural logarithm} of $x$ (logarithm to the base $\euler$)
 }
 
