@@ -126,7 +126,8 @@ From previous sections, we understand the notion of community detection within g
 The reader should also note the adjacency matrix studied in previous sections is directly related to the structure of the network in question, whereas in this case, it is related to the weights of links between nodes.
 This suggests the possibility of having to modify previously studied algorithms for this scenario.
 
-Given the conclusions of our analysis in \cref{cha:communityDetectionAlgorithms}, and that the real-world data in this case is not well represented by generative random models, we shall use the modularity optimisation as a basis of our algorithms.
+Given our analysis in \cref{cha:communityDetectionAlgorithms}, modularity optimisation has worked well in other practical applications and does not require prior knowledge of the number of or sizes of the communities to be detected \cite{HGH+12,MG13}.
+Hence, we shall use modularity optimisation methods as a basis for community detection in financial networks.
 
 %-------------------------------------------
 %   Naive Modularity Methods Sub Section
