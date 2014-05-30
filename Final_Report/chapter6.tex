@@ -6,7 +6,7 @@
 
 %----------------------------------------------------------------------------------------
 
-In this chapter we aim to understand the temporal evolution of a financial network with respect to the evolving correlation structure of the constituting assets.
+In this chapter we aim to understand the temporal evolution of a financial system with respect to the evolving correlation structure of the constituting assets.
 In \cref{cha:communityDetectionFinancialNetworks} we considered a static financial network, where the weight of an edge represents the correlation coefficient between the two time series associated with the nodes connected by the edge, considering the entire time period to construct one financial network.
 We then applied community detection techniques to uncover groups of stocks from the FTSE 100 that were correlated more than a null hypothesis suggests.
 An issue with this approach is the static nature of the network, since investors wish to understand the strength of correlations in price movements in order to dynamically manage investment risk in their portfolios \cite{FPW+11}.
@@ -22,12 +22,12 @@ This approach enables us to identify major changes in the underlying financial m
 
 Once more we consider the same FTSE 100 data set used earlier in the report, but we move away from using the data of the whole period to construct one single network.
 Instead, we examine the data for several, overlapping, time windows that collectively cover the whole period.
-We generate one financial network for each time window in the following way, also used by \cite{OCK+02,OKK03,BD10,FPM+10,FPW+11}.
-Recall from \cref{subsec:financialNetworksConstructionBackground} each node in the network (i.e. asset) is associated with a single time series consisting of the daily logarithmic return.
-We now let the number of time steps considered, $T$, equal the length of each time window rather than the length of the whole time period.
+We generate one financial network for each time window in the following way, as used by \cite{OCK+02,OKK03,BD10,FPM+10,FPW+11}.
+Recall from \cref{subsec:financialNetworksConstructionBackground} each node in the network (i.e. each asset) is associated with a single time series consisting of the daily logarithmic return.
+We now let the number of time steps considered, $T$, equal the length of each time window rather than the length of the whole data set time period.
 Proceeding to create a correlation matrix based upon the standardised time series, as before, we have developed one correlation matrix for each time window.
-As previously, each correlation coefficient (i.e. entry in the correlation matrix) between any two time series is the weight of the edge connecting the nodes associated with the ties series in the network.
-We have created a sequence financial networks by rolling the time windows of returns through the whole data set, with each network describing the underlying correlation structure of the market at a particular time interval.
+As previously, each cross-correlation (i.e. entry in the correlation matrix) between any two time series is the weight of the edge connecting the nodes associated with the time series in the network.
+We have created a sequence of financial networks by rolling the time windows of returns through the whole data set, with each network describing the underlying correlation structure of the market at a particular time interval.
 By shifting the time window there is an overlap in data in the consecutive windows, but this allows us to track the evolution of correlations and identify changes in the behaviour of the market at many different times during the whole time period \cite{FPW+11}.
 This is particularly consequential given that the data set (01/01/2004 - 11/11/2013) includes some of the most significant periods for the state of developed economics worldwide in recent timed, a point we will address later on in this section.
 
@@ -55,7 +55,7 @@ Once more we plot the mean, variance and skewness to characterise the distributi
 \end{figure}
 
 We decide to trade-off the over-smoothing of shorter window lengths with the longer overlap period, and proceed with $T=100$ and a value of overlap period equal to 10 days.
-These choices results, for our data, in 240 correlation matrices (and hence financial networks) spanning the period between 01/01/2004 and 11/11/2013.
+These choices results, for our particular data set, in 240 correlation matrices (and hence financial networks) spanning the period between 01/01/2004 and 11/11/2013.
 This completes the construction of time evolving financial networks, which we can now use as an empirical test basis for our proceeding analysis.
 
 %-----------------------------------------------------
@@ -68,7 +68,7 @@ This completes the construction of time evolving financial networks, which we ca
 We have seen in \cref{subsec:randomMatrixTheory}, how the eigenvalue spectrum of the empirical correlation matrix generated by the aggregate at set indicated correlations not compatible with the null model of a combination of random and market-wide components.
 This result became a justification for seeking mesoscopic level communities by discovering patterns in the correlation structure of the financial network, and was a building block of our modified modularity approach.
 We now wish to investigate the temporal evolution of the correlations between the stocks by analysing the behaviour of the respective correlation matrix eigenvalues and eigenvectors at each time window.
-Having previously used tools from RMT, we now utilise a closely linked \cite{FPW+11} and widely used technique, known as principal component analysis (PCA).
+Having previously used tools from RMT, we now utilise a closely linked and widely used technique, known as principal component analysis (PCA) \cite{FPW+11}.
 PCA is a statistical technique that uses an orthogonal transformation to represent the covariance structure of a set of variables through a smaller number of linear combinations of these variables. \cite{Jol02,FPW+11,Gil14b}.
 
 We shall consider the following derivation based on \cite{Jol02,UIO03,FPM+10,FPW+11,Gil14b}.
@@ -105,7 +105,7 @@ The correlation matrix is an $n \times n$ symmetric and diagonalisable matrix, w
 	\matvar{C} = \matvar{\Phi} \matvar{\Lambda} \transpose{\matvar{\Phi}}
 \end{equation}
 where $\matvar{\Phi}$ is an orthogonal matrix of its eigenvectors and $\matvar{\Lambda}$ is diagonal matrix consisting of the associated eigenvalues.
-From the result that the eigenvectors of the covariance matrix correspond to the directions of maximal variance \cite{Jol02}, $\matvar{\Omega} = \transpose{\matvar{\Phi}}$, and thus we can determine the PCs using the decomposition given by \cref{eq:diagonalisationCorrelationMatrix}.
+From the result that the eigenvectors of the covariance matrix correspond to the directions of maximal variance, $\matvar{\Omega} = \transpose{\matvar{\Phi}}$, and thus we can determine the PCs using the decomposition given by \cref{eq:diagonalisationCorrelationMatrix} \cite{Jol02}.
 
 \Cref{subsec:randomMatrixTheory} compares the eigenvalue spectra of an empirical correlation matrix (using our entire data set) against a correlation matrix created from $n$ random time series of length $T$ in the limiting case.
 The analysis found significant features of the spectra of the empirical correlation matrix.
@@ -154,7 +154,7 @@ The bursting of the United States housing bubble had a major impact on the healt
 For instance, Merrill Lynch was taken over by Bank of America and Lehman Brother filed for bankruptcy on 15/09/2008, and we see the proportion of variance of returns contributed by the first PC increased from this date onwards towards 2011, a significant period of time during the recession \cite{FPW+11,GrWik}.
 The large contribution in variance of returns by only one principal component indicates a significant amount of common variation in the market (i.e. in the FTSE 100 exchange in our case) \cite{FPW+11}.
 In other words, the market, as a whole, became more correlated during these years, in particular a very distinct reaction to a major crisis to a few international financial institutions.
-This information implied by {fig:eigenvalueContributionsPC} relates to the intuition that the performance of stocks should decline, as a whole, during a financial crisis, so then the returns will be more positively correlated during this period.
+This information, implied by \cref{fig:eigenvalueContributionsPC}, relates to the intuition that the performance of stocks should decline, as a whole, during a financial crisis, so the returns will be more positively correlated during this period.
 In addition, in 2004, the top twelve PCs contributed to 64.12\% of the variance of returns, whilst, in 2009, just the top six PCs contributed to 62.82\%.
 The fact that fewer components are required to account for a similar amount of variation in returns, in 2009, compared to five years earlier suggests an increase in the common variation between stocks in the exchange.
 Moreover, it also implies the correlation structure of this marker can be explained by many fewer factors than $n$ sets of asset time series.
