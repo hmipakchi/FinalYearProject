@@ -200,13 +200,23 @@ in the\\
 \mbox{}
 \newpage
 
+\setstretch{1.3} % Reset the line-spacing to 1.3 for body text (if it has changed)
+
 %----------------------------------------------------------------------------------------
 %	ABSTRACT PAGE
 %----------------------------------------------------------------------------------------
 
 \addtotoc{Abstract} % Add the "Abstract" page entry to the Contents
 
-\abstract{Write Abstract here...}
+\abstract{
+A very important area in network science is the detection of communities within networks, which helps to boost our understanding of many real-world complex systems.
+Community detection is a very challenging problem, and a range of algorithms have been proposed, many based upon different approaches and techniques.
+This project's aims are two-fold.
+Firstly, we investigate and study different community detection algorithms, with a synthetic data-driven testing approach considered to develop a comprehensive comparison based on a range of network properties, using well-known statistical generative models.
+Secondly, we fuse traditional community detection algorithms with analysis of correlation structure within the financial networks setting to investigate modified or tailored community detection algorithms that are applied to real-world and time-evolving financial data constructed from the daily prices of 80 stocks listed on the FTSE 100, during a period between 2004 and 2013.
+The combination of our analysis using both synthetic and empirical data enables us to advocate the use of specific algorithms based upon the underlying network properties one wishes to detect communities from, in addition to validating techniques which may become useful for investors in their risk management of portfolios.
+Furthermore, we are able to uncover interesting patterns in the evolving correlation structure of financial assets, which constitute a major equities exchange, during a significant period for economies worldwide.
+}
 
 \clearpage % Start a new page
 
@@ -214,9 +224,13 @@ in the\\
 %	ACKNOWLEDGEMENTS
 %----------------------------------------------------------------------------------------
 
-\setstretch{1.3} % Reset the line-spacing to 1.3 for body text (if it has changed)
+\acknowledgements{
+I would like to thank my supervisor Dr. Moez Draief for his support and advice during the project work in addition to his inspiring knowledge that has guided me throughout.
 
-\acknowledgements{Write Acknowledgements here...}
+I would also like to thank my great friends and fellow colleagues who have made my studies the fantastic experience it has been.
+
+Finally, I would like to thank my family for their everlasting support and love.
+}
 
 \clearpage % Start a new page
 
@@ -237,8 +251,6 @@ in the\\
 
 \clearpage % Start a new page
 
-\setstretch{1.3} % Reset the line-spacing to 1.3 for body text (if it has changed)
-
 \listofnomenclature{ll}
 {
 $\cardinality{\setvar{S}}$ & Cardinality of the set $\setvar{S}$ \\
@@ -246,7 +258,7 @@ $\one_{\setvar{S}}$ & Indicator variable over the set $\setvar{S}$ \\
 $y$ & Scalar $y$ \\
 $\abs{y}$ & Absolute value of $y$ \\
 $\vecvar{v}$ & Vector $\vecvar{v}$ \\
-$\norm{\vecvar{v}}$ & Euclidean norm of $\vecvar{v}$ \\
+$\norm{\vecvar{v}}$ & Euclidean norm of the vector $\vecvar{v}$ \\
 $\matvar{M}$ & Matrix $\matvar{M}$ \\
 $M_{ij}$ & The element of the matrix $\matvar{M}$ at row $i$ and column $j$\\
 $\transpose{\matvar{M}}$ & Transpose of the matrix $\matvar{M}$ \\
@@ -283,6 +295,9 @@ $\natlog{x}$ & \emphT{natural logarithm} of $x$ (logarithm to the base $\euler$)
 
 % Temporal Evolution in financial networks
 \input{chapters/chapter6}
+
+% Conclusion
+\input{chapters/chapter7}
 
 %----------------------------------------------------------------------------------------
 %	THESIS CONTENT - APPENDICES

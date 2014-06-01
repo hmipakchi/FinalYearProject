@@ -3,6 +3,9 @@ function [ variationInformation ] = calculateNormalisedVariationInformation( par
 %   Input: two partitions
 %   Output: calculate normalised variation of information of two partitions
 
+    partition1 = standardisePartition(partition1);
+    partition2 = standardisePartition(partition2);
+
     n = length(partition1);
 
     entropyParition1 = calculateEntropyPartition(partition1);

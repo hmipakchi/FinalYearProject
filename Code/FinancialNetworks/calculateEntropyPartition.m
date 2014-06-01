@@ -6,7 +6,7 @@ function [ entropy ] = calculateEntropyPartition( partition )
     entropy = 0;
     
     n = length(partition);
-    K = max(partition);
+    K = length(unique(partition));
     commNodeList = zeros(K,n);
     p = zeros(K,1);
     

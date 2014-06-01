@@ -136,30 +136,47 @@ for i=1:nolengthTimeWindows
         tensorModularityMatrices(j) = {modularityMatrix};
     end
     
-%     gamma = 1;
-%     omega = 0.5;
-%     ii=[]; jj=[]; vv=[];
-%     twomu=0;
-%     for s=1:noRolloverTimeWindows
-%         indx=[1:n]'+(s-1)*n;
-%         [i,j,v]=find(tensorModularityMatrices{s});
-%         ii=[ii;indx(i)]; jj=[jj;indx(j)]; vv=[vv;v];
-%         k=sum(tensorModularityMatrices{s});
-%         kv=zeros(n*noRolloverTimeWindows,1);
-%         twom=sum(k);
-%         twomu=twomu+twom;
-%         kv(indx)=k/twom;
-%         kcell{s}=kv;
-%     end
-%     AA = sparse(ii,jj,vv,n*noRolloverTimeWindows,n*noRolloverTimeWindows);
-%     clear ii jj vv
-%     kvec = full(sum(AA));
-%     AA = AA + omega*spdiags(ones(n*noRolloverTimeWindows,2),[-n,n],n*noRolloverTimeWindows,n*noRolloverTimeWindows);
-%     twomu=twomu+2*omega*n*(noRolloverTimeWindows-1);
-%     B = @(i) AA(:,i) - gamma*kcell{ceil(i/(n+eps))}*kvec(i);
-%     [S,Q] = genlouvain(B);
-%     Q = Q/twomu
-%     S = reshape(S,n,noRolloverTimeWindows);
+    gamma = 1;
+    omegaVector = 1;%[0.25; 0.5; 0.75; 1;];%0.25 or 0.5 or 0.75 or 1
+    testMultiSliceLouvainMethodCommunities = cell(length(omegaVector),1);
+    testMultiSliceLouvainMethodModularities = zeros(length(omegaVector),1);
+    
+    for omegaIterator = 1:length(omegaVector)
+        omega = omegaVector(omegaIterator);
+        display(omega);
+        ii=[]; jj=[]; vv=[];
+        twomu=0;
+        for s=1:noRolloverTimeWindows
+            indx=[1:n]'+(s-1)*n;
+            [i,j,v]=find(tensorModularityMatrices{s});
+            ii=[ii;indx(i)]; jj=[jj;indx(j)]; vv=[vv;v];
+            k=sum(tensorModularityMatrices{s});
+            kv=zeros(n*noRolloverTimeWindows,1);
+            twom=sum(k);
+            twomu=twomu+twom;
+            kv(indx)=k/twom;
+            kcell{s}=kv;
+        end
+        AA = sparse(ii,jj,vv,n*noRolloverTimeWindows,n*noRolloverTimeWindows);
+        clear ii jj vv
+        kvec = full(sum(AA));
+        AA = AA + omega*spdiags(ones(n*noRolloverTimeWindows,2),[-n,n],n*noRolloverTimeWindows,n*noRolloverTimeWindows);
+        twomu=twomu+2*omega*n*(noRolloverTimeWindows-1);
+        B = @(i) AA(:,i) - gamma*kcell{ceil(i/(n+eps))}*kvec(i);
+        [S,Q] = genlouvain(B);
+        Q = Q/twomu
+        S = reshape(S,n,noRolloverTimeWindows);
+        testMultiSliceLouvainMethodCommunities(omegaIterator) = {S};
+        testMultiSliceLouvainMethodModularities(omegaIterator) = Q;
+    end
+    
+    normalisedVariationInformationTemporalEvolutionMatrix = zeros(noRolloverTimeWindows,length(omegaVector));
+    for t = 1:noRolloverTimeWindows
+        display(t);
+        for omegaIterator=1:length(omegaVector)
+            normalisedVariationInformationTemporalEvolutionMatrix(t,omegaIterator) = calculateNormalisedVariationInformation(testLouvainMethodTemporalCommunities(:,t),testMultiSliceLouvainMethodCommunities{omegaIterator,1}(:,t));
+        end
+    end
 end
 
 % % write mean, variance and skewness coeffients to file
@@ -218,33 +235,33 @@ end
 % end
 % fclose(fileID);
 
-% write testableDatesYearOnly to file: for plot only!!!
-filename_str = sprintf('../data_files/financialNetworks/testableDatesYearOnlyForPlotOnly.txt');
-timeWindowLengthIndex = 1;
-dateFormat = 'yyyy';
-fileID = fopen(filename_str,'w');
-fprintf(fileID,'\n');
-for i=1:noRolloverTimeWindowsPerLengthtimeWindows(timeWindowLengthIndex)
-    fprintf(fileID,'%s ',datestr(testableDatesVector{1,1}{timeIndexMatrix(timeWindowLengthIndex,i)},dateFormat));
-    if (i ~= noRolloverTimeWindowsPerLengthtimeWindows(timeWindowLengthIndex))
-        fprintf(fileID,'\n');
-    end
-end
-fclose(fileID);
+% % write testableDatesYearOnly to file: FOR PLOT ONLY!!!
+% filename_str = sprintf('../data_files/financialNetworks/testableDatesYearOnlyForPlotOnly.txt');
+% timeWindowLengthIndex = 1;
+% dateFormat = 'yyyy';
+% fileID = fopen(filename_str,'w');
+% fprintf(fileID,'\n');
+% for i=1:noRolloverTimeWindowsPerLengthtimeWindows(timeWindowLengthIndex)
+%     fprintf(fileID,'%s ',datestr(testableDatesVector{1,1}{timeIndexMatrix(timeWindowLengthIndex,i)},dateFormat));
+%     if (i ~= noRolloverTimeWindowsPerLengthtimeWindows(timeWindowLengthIndex))
+%         fprintf(fileID,'\n');
+%     end
+% end
+% fclose(fileID);
 
-% write tickersVector to file: for plot only!!!
-filename_str = sprintf('../data_files/financialNetworks/tickersForPlotOnly.txt');
-fileID = fopen(filename_str,'w');
-fprintf(fileID,'\n');
-for i=1:length(tickersVector{1,1})
-    fprintf(fileID,'%s ',tickersVector{1,1}{i});
-    if (i ~= length(tickersVector{1,1}))
-        fprintf(fileID,'\n');
-    end
-end
-fclose(fileID);
+% % write tickersVector to file: FOR PLOT ONLY!!!
+% filename_str = sprintf('../data_files/financialNetworks/tickersForPlotOnly.txt');
+% fileID = fopen(filename_str,'w');
+% fprintf(fileID,'\n');
+% for i=1:length(tickersVector{1,1})
+%     fprintf(fileID,'%s ',tickersVector{1,1}{i});
+%     if (i ~= length(tickersVector{1,1}))
+%         fprintf(fileID,'\n');
+%     end
+% end
+% fclose(fileID);
 
-% write testLouvain method temporal communities to file
+% % write testLouvain method temporal communities to file
 % filename_str = sprintf('../data_files/financialNetworks/testLouvainMethodTemporalCommunities.dat');
 % timeWindowLengthIndex = 1;
 % dateFormat = 'yyyy-mm-dd';
@@ -259,4 +276,35 @@ fclose(fileID);
 % end
 % fclose(fileID);
 
+% write testMultiSliceLouvain method communities to file
+for omegaIterator=1:length(omegaVector)
+    omega = omegaVector(omegaIterator);
+    filename_str = sprintf('../data_files/financialNetworks/testMultiSliceLouvainMethodCommunities_omega_%s.dat',num2str(omega));
+    timeWindowLengthIndex = 1;
+    dateFormat = 'yyyy-mm-dd';
+    fileID = fopen(filename_str,'w');
+    for i=1:n
+        for j=1:noRolloverTimeWindowsPerLengthtimeWindows(timeWindowLengthIndex)
+            fprintf(fileID,'%d ',testMultiSliceLouvainMethodCommunities{omegaIterator,1}(n-i+1,j));
+        end
+        if (i ~= n)
+            fprintf(fileID,'\n');
+        end
+    end
+    fclose(fileID);
+end
+
+% % write normalisedVariationOfInformation between baseline temporalLouvain and MultiSliceLouvain methods
+% filename_str = sprintf('../data_files/financialNetworks/normalisedVariationOfInformationTemporalCommunities.dat');
+% timeWindowLengthIndex = 1;
+% dateFormat = 'yyyy-mm-dd';
+% fileID = fopen(filename_str,'w');
+% for j=1:noRolloverTimeWindowsPerLengthtimeWindows(timeWindowLengthIndex)
+%     fprintf(fileID,'%s ',datestr(testableDatesVector{1,1}{timeIndexMatrix(timeWindowLengthIndex,j)},dateFormat));
+%     for k=1:length(omegaVector)
+%         fprintf(fileID,'%d ',normalisedVariationInformationTemporalEvolutionMatrix(j,k));
+%     end
+%     fprintf(fileID,'\n');
+% end
+% fclose(fileID);
 

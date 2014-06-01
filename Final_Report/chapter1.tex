@@ -7,16 +7,29 @@
 %----------------------------------------------------------------------------------------
 
 Networks have been studied extensively to model many interesting complex systems, including the Internet, social networks, financial networks and biological networks \cite{New06a,DKM+13,MG13}.
-Any network consists of \emphT{nodes} which represent items of interest, and \emphT{edges} which represent the connectivity between pairs of nodes. For example, considering social networks, nodes are the users and the edges correspond to interactions between the users.
-An interesting feature many networks exhibit is \emphT{community structure}, which involves the natural dividing of nodes into groups, called \emphT{communities}, where there are denser connections within a group, and sparser connections between different groups \cite{New06a,DKM+13,For10,New06b}. This particular type of community structure is also known as \emphT{assortative} \cite{DKM+13}. For instance, social networks contain communities corresponding to real-life communities consisting of the members, such as friendship or family circles.
-The problem of detecting communities within networks is known as \emphT{community detection}, and a current research area involves developing algorithms to provide a solution.
+Any network consists of \emphT{nodes} which represent items of interest, and \emphT{edges} which represent the connectivity between pairs of nodes.
+For example, considering social networks, nodes are the users and the edges correspond to interactions between the users.
+An interesting feature many networks exhibit is \emphT{community structure}, which involves the natural dividing of nodes into groups, called \emphT{communities}, where there are denser connections within a group, and sparser connections between different groups \cite{New06a,DKM+13,For10,New06b}.
+This particular type of community structure is also known as \emphT{assortative} \cite{DKM+13}.
+For instance, social networks contain communities corresponding to real-life communities consisting of the members, such as friendship or family circles.
+The problem of detecting communities within networks is known as \emphT{community detection}, and a current research area involves developing algorithms to partition a netowrk into communities.
 
-In order to provide a theoretical setting to test and compare different community detection algorithms, generative models of random graphs are very useful, and one such commonly used model is the \emphT{stochastic block model} \cite{DKM+13,NN12}. We will investigate several community detection algorithms, and will use different generative models in order to analyse and reason about them.
+In order to provide a theoretical setting to test and compare different community detection algorithms, generative models of random graphs are very useful, and one such commonly used model is the \emphT{stochastic block model} \cite{DKM+13,NN12}.
+These statistical models can provide synthetic data to capture varying network properties (e.g. size, sparsity, number of communities) that represent a variety of test case scenarios.
+We will investigate a selection of community detection algorithms, which we can distinguish based upon their differing approaches, and then apply them to the synthetic data generated from an appropriate block model to measure their performance.
+This process enables us to advocate specific techniques depending on the types of networks considered.
 
-The underlying ingredients of the community detection algorithms have other interesting applications also, including the analysis of time series data within the context of financial networks. The aim involves seeking groups of correlated financial assets that can be used in \emphT{mean variance portfolio optimisation}.
-We consider the application of community detection algorithms to real-world time-evolving financial networks, in order find groups of correlated stocks found on the FTSE 100 exchange.
+The underlying ingredients of the community detection algorithms have other interesting applications also, including the analysis of time series data within the context of financial networks.
+The goal involves seeking isolated groups of correlated financial assets to be used in \emphT{mean variance portfolio optimisation}.
+This will provide investors with `baskets' of assets to be used as a first point of call for the selection of assets to make up their portfolio based upon their unique risk and return preferences, which is very useful for the purposes of risk management \cite{MG13}.
+We consider the application of community detection algorithms to real-world time-evolving financial networks in order determine isolated groups of correlated stocks found on the FTSE 100 exchange.
 
-The project aims are twofold; firstly, we investigate and study different community detection algorithms, and secondly, use these to motivate modified techniques in order to detect communities within the financial networks setting using real-world data.
+This project's principal aims can be summarised as follows.
+Firstly, we investigate and study different community detection algorithms, with a data-driven testing approach considered.
+Secondly, we combine traditional community detection algorithms with analysis of the financial network setting to investigate modified or tailored community detection algorithms which we intend to apply to real-world and time-evolving financial data based on the prices of 80 FTSE 100 stocks during a period between 2004 and 2013.
+
+Our contribution lies in the study, testing and comparison of a range of existing community detection algorithms in addition to the adaptation of a class of algorithms to the time-evolving financial networks setting, constructed from a recent 10-year period of financial market data.
+This enables us to identify important observation and draw conclusions regarding the evolving correlation structure of the assets which are traded on the FTSE 100 exchange, over the last decade.
 
 The rest of the report is organised as follows.
 In \cref{cha:background}, we provide a technical background in graph theory, community structure within networks and financial networks required to understand the concepts investigated throughout the report.

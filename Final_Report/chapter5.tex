@@ -6,11 +6,11 @@
 
 %----------------------------------------------------------------------------------------
 
-In this chapter we aim to apply algorithms to detect communities within real-world financial networks.
+In this chapter we aim to motivate and study modified modularity algorithms to detect communities within real-world financial networks and compare their performance with baseline methods.
 Firstly, we explain the process of gathering the data to create the financial network.
-Then we investigate and apply different community detection algorithms and compare their performance on both synthetically generated and real-world data.
-We focus on modularity optimisation and study two naive modularity maximisation methods studied in previous chapters as well as two modified modularity optimisation techniques that are tailored to detect communities in our specific example of financial networks based on empirical correlation matrices.
-By determining the best method for the static financial network, we make an important step in identifying communities in time-varying financial networks.
+Then we investigate and apply algorithms on both synthetically generated and real-world data.
+We focus on modularity optimisation and study two naive modularity maximisation methods studied in previous chapters as well as two modified modularity optimisation techniques that are tailored to detect communities in our specific setting of financial networks based on empirical correlation matrices.
+By determining the `best' method for the static financial network, we make an important step in identifying communities in time-varying financial networks.
 
 %-----------------------------------------------------
 %   Financial Data Processing Section
@@ -419,7 +419,7 @@ We shall use the renormalised filtered correlation to test whether different com
 
 We see that all algorithms identify partitions that, on aggregate, are anti-correlated with one another using the definition of renormalised filtered correlation.
 
-We conclude that introducing the notion of modified modularity has helped to detect more communities at the mesoscopic scale by applying a spectral clustering algorithm.
+We conclude that introducing the notion of modified modularity has helped to detect more communities at the mesoscopic scale by applying either a spectral clustering algorithm or a greedy method.
 The properties of these communities are similar, and the partitions are anti-correlated with one another.
 The main benefit of applying the Louvain method over the spectral clustering approach is faster convergence to its generated node assignments.
 Overall, as discussed in \cref{subsec:portfolioTheoryBackground}, this property is very useful for investors following mean-variance portfolio theory, since it provides a basis for picking stocks belonging to mesoscopic-level communities that are, on average over a specified period of time (decided by the investor and given by selective use of available data), negatively correlated with one another.

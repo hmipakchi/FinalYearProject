@@ -7,11 +7,12 @@
 %----------------------------------------------------------------------------------------
 
 In this chapter we aim to understand the temporal evolution of a financial system with respect to the evolving correlation structure of the constituting assets.
-In \cref{cha:communityDetectionFinancialNetworks} we considered a static financial network, where the weight of an edge represents the correlation coefficient between the two time series associated with the nodes connected by the edge, considering the entire time period to construct one financial network.
+In \cref{cha:communityDetectionFinancialNetworks} we considered a static financial network, where the weight of an edge represents the cross correlation between the two time series associated with the nodes connected by the edge, considering the entire time period to construct one financial network.
 We then applied community detection techniques to uncover groups of stocks from the FTSE 100 that were correlated more than a null hypothesis suggests.
 An issue with this approach is the static nature of the network, since investors wish to understand the strength of correlations in price movements in order to dynamically manage investment risk in their portfolios \cite{FPW+11}.
 We build on the results given in \cref{cha:communityDetectionFinancialNetworks} and investigate community dynamics utilising time-dependent correlation structures with application to the same FTSE 100 data set, complementing the work of \cite{OCK+02,OKK03,BD10,FPM+10,FPW+11}.
-This approach enables us to identify major changes in the underlying financial market, and the same ideas may be applied to other financial markets and asset classes (by use of other available data sets), underlining the potential utility of the techniques considered.
+This approach enables us to identify major changes in the underlying financial market, with the same ideas applicable to other financial markets and asset classes (by use of other available data sets), underlining the potential utility of the techniques considered.
+We believe this setting of time-varying (weighted) network structure is an important application in regard to the process of adapting existing community detection algorithms to moderately-sized, real-world evolving networks.
 
 %-----------------------------------------------------
 %   Financial Data Processing Section
@@ -158,4 +159,4 @@ This information, implied by \cref{fig:eigenvalueContributionsPC}, relates to th
 In addition, in 2004, the top twelve PCs contributed to 64.12\% of the variance of returns, whilst, in 2009, just the top six PCs contributed to 62.82\%.
 The fact that fewer components are required to account for a similar amount of variation in returns, in 2009, compared to five years earlier suggests an increase in the common variation between stocks in the exchange.
 Moreover, it also implies the correlation structure of this marker can be explained by many fewer factors than $n$ sets of asset time series.
-The last fact supports the eigenvalue spectra analysis of \cref{subsec:randomMatrixTheory}.
+The last observation supports the eigenvalue spectra analysis of \cref{subsec:randomMatrixTheory}.
