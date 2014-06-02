@@ -117,7 +117,7 @@
 \newcommand*\emphT[1]{\textit{#1}}
 
 % natural logarithm command
-\newcommand*\natlog[1]{\log(#1)}
+\newcommand*\natlog[1]{\log \left( #1 \right)}
 
 % exponential function command
 \let\oldexp\exp
@@ -125,6 +125,9 @@
 
 % euler constant (e) command
 \newcommand{\euler}{e\xspace}
+
+% differentiate with repect to time command
+\newcommand*\timeDiff[1]{\dot{#1}}
 
 % set of real numbers 'R' command
 \newcommand*\realsR{\mathbb{R}\xspace}

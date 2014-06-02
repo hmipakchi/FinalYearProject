@@ -19,6 +19,7 @@ end
 SNR = [0.5;0.6;0.7;0.8;];
 
 normalisedVariationInformationTemporalEvolutionTensor = cell(length(SNR),1);
+testMultiSliceLouvainMethodModularitiesTensor = cell(length(SNR),1);
 
 for SNRIterator=1:length(SNR)
     s_str = num2str(SNRIterator);
@@ -154,9 +155,11 @@ for SNRIterator=1:length(SNR)
         testMultiSliceLouvainMethodModularities(omegaIterator) = Q;
     end
     
+    testMultiSliceLouvainMethodModularitiesTensor(SNRIterator) = {testMultiSliceLouvainMethodModularities};
+    
     normalisedVariationInformationTemporalEvolutionMatrix = zeros(noRolloverTimeWindows,length(omegaVector)+1);
     for t = 1:noRolloverTimeWindows
-        display(t);
+%         display(t);
         for omegaIterator=1:length(omegaVector)
             normalisedVariationInformationTemporalEvolutionMatrix(t,omegaIterator) = calculateNormalisedVariationInformation(timeSeriesCommunities,testMultiSliceLouvainMethodCommunities{omegaIterator,1}(:,t));
         end
@@ -166,7 +169,7 @@ for SNRIterator=1:length(SNR)
     normalisedVariationInformationTemporalEvolutionTensor(SNRIterator) = {normalisedVariationInformationTemporalEvolutionMatrix};
 end
 
-normalisedVariationInformationTemporalEvolutionTensorAverages = zeros(noRolloverTimeWindows,length(omegaVector));
+normalisedVariationInformationTemporalEvolutionTensorAverages = zeros(noRolloverTimeWindows,length(omegaVector)+1);
 
 for omegaIteration=1:length(omegaVector)
     for SNRIterator=1:length(SNR)
@@ -187,8 +190,22 @@ dateFormat = 'yyyy-mm-dd';
 fileID = fopen(filename_str,'w');
 for j=1:lengthTimeWindow
     fprintf(fileID,'%d ',j);
-    for k=1:length(omegaVector)
+    for k=1:length(omegaVector)+1
         fprintf(fileID,'%f ',normalisedVariationInformationTemporalEvolutionTensorAverages(j,k));
+    end
+    fprintf(fileID,'\n');
+end
+fclose(fileID);
+
+% write Modularities over all SNR for MultiSliceLouvain methods (different omega)
+filename_str = sprintf('../data_files/financialNetworks/testMultiSliceLoucainMethodModularitiesSyntheticData.dat');
+timeWindowLengthIndex = 1;
+dateFormat = 'yyyy-mm-dd';
+fileID = fopen(filename_str,'w');
+for SNRIterator=1:length(SNR)
+    fprintf(fileID,'%d %f ',SNRIterator,SNR(SNRIterator));
+    for k=1:length(omegaVector)
+        fprintf(fileID,'%f ',testMultiSliceLouvainMethodModularitiesTensor{SNRIterator,1}(k,1));
     end
     fprintf(fileID,'\n');
 end

@@ -137,7 +137,7 @@ for i=1:nolengthTimeWindows
     end
     
     gamma = 1;
-    omegaVector = 1;%[0.25; 0.5; 0.75; 1;];%0.25 or 0.5 or 0.75 or 1
+    omegaVector = [0;1;]%[0.25; 0.5; 0.75; 1;];%0.25 or 0.5 or 0.75 or 1
     testMultiSliceLouvainMethodCommunities = cell(length(omegaVector),1);
     testMultiSliceLouvainMethodModularities = zeros(length(omegaVector),1);
     
@@ -276,23 +276,23 @@ end
 % end
 % fclose(fileID);
 
-% write testMultiSliceLouvain method communities to file
-for omegaIterator=1:length(omegaVector)
-    omega = omegaVector(omegaIterator);
-    filename_str = sprintf('../data_files/financialNetworks/testMultiSliceLouvainMethodCommunities_omega_%s.dat',num2str(omega));
-    timeWindowLengthIndex = 1;
-    dateFormat = 'yyyy-mm-dd';
-    fileID = fopen(filename_str,'w');
-    for i=1:n
-        for j=1:noRolloverTimeWindowsPerLengthtimeWindows(timeWindowLengthIndex)
-            fprintf(fileID,'%d ',testMultiSliceLouvainMethodCommunities{omegaIterator,1}(n-i+1,j));
-        end
-        if (i ~= n)
-            fprintf(fileID,'\n');
-        end
-    end
-    fclose(fileID);
-end
+% % write testMultiSliceLouvain method communities to file
+% for omegaIterator=1:length(omegaVector)
+%     omega = omegaVector(omegaIterator);
+%     filename_str = sprintf('../data_files/financialNetworks/testMultiSliceLouvainMethodCommunities_omega_%s.dat',num2str(omega));
+%     timeWindowLengthIndex = 1;
+%     dateFormat = 'yyyy-mm-dd';
+%     fileID = fopen(filename_str,'w');
+%     for i=1:n
+%         for j=1:noRolloverTimeWindowsPerLengthtimeWindows(timeWindowLengthIndex)
+%             fprintf(fileID,'%d ',testMultiSliceLouvainMethodCommunities{omegaIterator,1}(n-i+1,j));
+%         end
+%         if (i ~= n)
+%             fprintf(fileID,'\n');
+%         end
+%     end
+%     fclose(fileID);
+% end
 
 % % write normalisedVariationOfInformation between baseline temporalLouvain and MultiSliceLouvain methods
 % filename_str = sprintf('../data_files/financialNetworks/normalisedVariationOfInformationTemporalCommunities.dat');
