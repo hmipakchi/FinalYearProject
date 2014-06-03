@@ -137,7 +137,7 @@ for i=1:nolengthTimeWindows
     end
     
     gamma = 1;
-    omegaVector = [0;1;]%[0.25; 0.5; 0.75; 1;];%0.25 or 0.5 or 0.75 or 1
+    omegaVector = [1;];%[0.25; 0.5; 0.75; 1;];%0.25 or 0.5 or 0.75 or 1
     testMultiSliceLouvainMethodCommunities = cell(length(omegaVector),1);
     testMultiSliceLouvainMethodModularities = zeros(length(omegaVector),1);
     
@@ -175,6 +175,17 @@ for i=1:nolengthTimeWindows
         display(t);
         for omegaIterator=1:length(omegaVector)
             normalisedVariationInformationTemporalEvolutionMatrix(t,omegaIterator) = calculateNormalisedVariationInformation(testLouvainMethodTemporalCommunities(:,t),testMultiSliceLouvainMethodCommunities{omegaIterator,1}(:,t));
+        end
+    end
+end
+
+modifiedModularitiesEachPartitionGeneralisedLouvainMethod = zeros(noRolloverTimeWindows,length(omegaVector));
+modifiedModularitiesEachPartitionTestLouvainMethod = zeros(noRolloverTimeWindows,1);
+for omegaIterator=1:length(omegaVector)
+    for t = 1:noRolloverTimeWindows
+        modifiedModularitiesEachPartitionGeneralisedLouvainMethod(t,omegaIterator) = computeModularity(tensorModularityMatrices{t},testMultiSliceLouvainMethodCommunities{omegaIterator,1}(:,t));
+        if (omegaIterator == 1)
+            modifiedModularitiesEachPartitionTestLouvainMethod(t,1) = computeModularity(tensorModularityMatrices{t},testLouvainMethodTemporalCommunities(:,t));
         end
     end
 end

@@ -227,7 +227,7 @@ Consider independent and identical homogeneous Poisson processes defined on each
 	\label{eq:densityRandomWalkerContinuousTime}
 	\timeDiff{p_{i}} = \sum_{j} \frac{A_{ij}}{d_{j}} p_{j} - p_{i}
 \end{equation}
-This equation is driven by the operator $A_{ij}/d_{j} - \delta_{ij} = -L_{ij}$, where we denote $\matvar{L}$ as the normalised Laplacian matrix we defined in \cref{def:normalisedLaplacianMatrix} (notice a change in notation is made for convenience) \cite{MRM+10}.
+This equation is driven by the operator $A_{ij}/d_{j} - \delta_{ij} = -L_{ij}$, where we denote $\matvar{L}$ as the normalised Laplacian matrix we defined in \cref{def:normalisedLaplacianMatrix}, where change our notation slightly for convenience \cite{MRM+10}.
 The stationary distribution of this continuous-time process is the same as with the discrete-time process, $p_{i}^{*} = d_{i}/2m$,
 Furthermore, the stability of the partition is given by
 \begin{equation}
@@ -313,7 +313,7 @@ However, as we have seen with standard modularity optimisation, it is NP-hard to
 One such algorithm is the generalised Louvain method, developed by Mucha et al. \cite{MRM+10}.
 As the name suggests, it uses a procedure similar to the Louvain method we have discussed throughout the report, but works for dynamic networks also.
 This algorithm has been implemented by Mucha et al. in MATLAB, and the code is available from \cite{GenLou}.
-We remark that the decision of the parameters $\gamma$ and $\omega$ are important and do alter the communities generated, and intelligent choice of such parameters depending on the specific application is required to provide `good' partitions.
+We remark that the decision of the parameters $\gamma_{s}$ and $\omega$ are important and do alter the communities generated, and intelligent choice of such parameters depending on the specific application is required to provide `good' partitions.
 
 This algorithm has been applied to real-world networks previously.
 For instance \cite{MRM+10} detected communities in a time-dependent networks constructed from roll call voting in the Unites States Senate.
@@ -336,7 +336,7 @@ This generates 240 correlation matrices that combined represent the temporal evo
 We then utilise the modified modularity techniques discussed in \cref{cha:communityDetectionFinancialNetworks} to construct the modified modularity matrix from each network slice (i.e. from each of the 240 correlation matrices) to finally generate our time-evolving modified modularity matrices, which we will be used as input to the generalised Louvain method.
 
 We wish to use benchmark data to find good values for the parameters of the generalised Louvain method.
-Since the computation time for this algorithm is rather long, we choose to simply let $\gamma_{s}=1$ for all $s$.
+Since the computation time for this algorithm is rather long, we choose to simply let $\gamma_{s}=\gamma=1$ for all $s$.
 Choosing the best parameter value for $\omega$ is trickier, and thus we decide to consider four different values, $\omega \in \{ 0.25,0.5,0.75,1 \}$.
 \Cref{tab:generalisedLouvainMethodModularitiesSyntheticData} shows the modularities obtained by applying the generalised Louvain method with the different values of $\omega$ and $\gamma=1$ to the synthetic data set of different SNRs.
 The first, and obvious, observation is that the modularity values obtained increase, on the whole, as the SNR increases, matching the intuition that the community detection problem is simpler as we increase the inter-community correlations and decrease the intra-community correlations.
@@ -403,9 +403,63 @@ We also noticed that the generalised Louvain method is more computationally expe
 Therefore we shall also apply modified modularity based Louvain method to our time-evolving financial networks and compare both the output partitions and run time.
 
 %-------------------------------------------------------------------------
-%   Community Detection in Real-world Time-evolving  Financial Networks Section
+%   Community Detection in Real-world Time-evolving Financial Networks Section
 %-------------------------------------------------------------------------
 
 \section{Community Detection in Real-world Time-evolving  Financial Networks}
 \label{sec:communityDetectionRealWorldTimeEvolvingFinancialNetworks}
 
+Using the generalised Louvain method, tested on synthetically generated data in \cref{sec:temporalEvolutionSyntheticDataTesting} and used to maximise the generalised modularity function derived in \cref{sec:generalisedModularityOptimisation}, we wish to identify dynamic communities in the time-evolving financial networks (constructed from our FTSE 100 stock price data set by following the procedure outlined in \cref{sec:timeEvolvingFinancialNetwork}).
+Once more, we utilise the MATALB code for the generalised Louvain method provided by \cite{GenLou}.
+The data is processed with a window length of $T = 100$ and an overlap of 10 which generated 240 correlation matrices, each representing a financial network slice.
+We choose parameters for the generalised Louvain method by setting $\gamma = 1$ and $\omega = 1$ (this is appropriate considering our analysis in the previous section of the performance on synthetic data with across a variation of parameters).
+We shall also apply our modified modularity based Louvain method, treating each network slice (i.e. each correlation matrix) as a static network, and unifying the communities detected in order to provide a baseline for time-evolving partitions.
+
+The output when the standard Louvain method was applied is shown in \cref{fig:standardLouvainMethodTemporalCommunities}, whilst the output when the generalised Louvain method was applied is shown in \cref{fig:generalisedLouvainMethodTemporalCommunities}.
+We plotted both figures with each stock ticker representing the vertical axis, and time, the horizontal axis (i.e. one data point for each stock and time window).
+Community memberships are identified by colour, which allows us to understand the temporal community memberships associated with each individual stock.
+We can make several remarks.
+Firstly, the plot for the standard Louvain method is pretty noisy with partitions changing rapidly between some time windows, but the plot for the generalised Louvain method is a lot smoother.
+This is an encouraging observation given that the latter algorithm is designed for community detection in time-evolving networks.
+Also, this enables us to more easily analyse the changes community structure globally across rime since the information is a lot clearer.
+Secondly, we can notice a change in structure at around the 2008-2009 time period, where there are fewer communities generated, whereas in the pre-2007 and post 2011 periods, there are 3-4 distinct communities.
+This relates to the intuition of higher correlations and thus fewer communities when the market, as a whole, is experiencing a downturn.
+
+%---   FIGURE
+\begin{figure}
+	\centering
+	\includegraphics[width=0.9\linewidth]{figures/testLouvainMethodTemporalCommunities.png}
+	\caption[Plot of the temporal community memberships generated by applying the standard Louvain method to each of the networks slices of our time-evolving financial system.]{\label{fig:standardLouvainMethodTemporalCommunities} Plot of the temporal community memberships generated by applying the standard Louvain method to each of the networks slices of our time-evolving financial system. The vertical axis compromise of the 80 tickers associated with the stocks we consider, whilst the horizontal axis represents time. Community memberships are represented by colour and the key is shown to the right of the figure. Hence, we can understand the temporal community memberships of each individual stock for each time window, and relate a global picture of the communities associated with the system throughout various time periods.}
+\end{figure}
+
+%---   FIGURE
+\begin{figure}
+	\centering
+	\includegraphics[width=0.9\linewidth]{figures/testMultiSliceLouvainMethodCommunities_omega_1.png}
+	\caption[Plot of the temporal community memberships generated by applying the generalised Louvain method to each of the networks slices of our time-evolving financial system.]{\label{fig:generalisedLouvainMethodTemporalCommunities} Plot of the temporal community memberships generated by applying the generalised Louvain method, with $\gamma = 1$ and $\omega=1$, to each of the networks slices of our time-evolving financial system. The vertical axis compromise of the 80 tickers associated with the stocks we consider, whilst the horizontal axis represents time. Community memberships are represented by colour and the key is shown to the right of the figure. Hence, we can understand the temporal community memberships of each individual stock for each time window, and relate a global picture of the communities associated with the system throughout various time periods.}
+\end{figure}
+
+We have also calculated the normalised variation of information, denoted by $V$, between each of the partitions generated by the two algorithm for each time window.
+The results are shown in \cref{fig:normalisedVariationOfInformationTemporalCommunities}.
+An interesting feature of this plot is the sudden drop in $V$ in the period 2008-2009, and the subsequent increase from 2010 onwards.
+This means the partitions generated by the two algorithms were unusually close between 2008 and 2009, which again implies in stronger correlations and fewer communities apparent in the system, since the community detection problem for those slices in this period seemed to be simpler.
+
+%---   FIGURE
+\begin{figure}
+	\centering
+	\includegraphics[width=0.8\linewidth]{figures/normalisedVariationOfInformationTemporalCommunities.png}
+	\caption[Plot of the normalised variation of information between the partitions generated by the standard and generalised Louvain methods for each time window.]{\label{fig:normalisedVariationOfInformationTemporalCommunities} Plot of the normalised variation of information between the partitions generated by the standard Louvain method and the generalised Louvain method (with $\gamma = 1$ and $\omega=1$) for each time window.}
+\end{figure}
+
+To understand this further we calculate the modified modularity, using \cref{eq:newModularityFinancialNetworks}, for each partition (i.e. the community assignments for all time windows) for both algorithms, and plot the results in \cref{fig:modifiedModularitiesEachPartition}.
+We observe two important features from the graph.
+Firstly the modified modularities obtained by both algorithms reaches maxima in the period between 2008 and 2009, suggesting our understanding from analysing \cref{fig:normalisedVariationOfInformationTemporalCommunities} is sound.
+Therefore, from these network diagnostics based on community structure, we do observe significant changes in the correlation structure within this market in the time period 2008-2009.
+Secondly, we find the modified modularity curve for the generalised Louvain method to be a lot smoother, and this again reflects how it was designed to detect communities in dynamic networks, and should be considered as a more robust technique than by simply applying traditional, static network, modularity optimisation methods to each slice.
+
+%---   FIGURE
+\begin{figure}
+	\centering
+	\includegraphics[width=0.8\linewidth]{figures/modifiedModularitiesEachPartition.png}
+	\caption[Plot of the modified modularity for each partition generated by both the generalised and standard Louvain methods.]{\label{fig:modifiedModularitiesEachPartition} Plot of the modified modularity, calculated using \cref{eq:newModularityFinancialNetworks}, for each partition generated by both the generalised and standard Louvain methods, with parameters set as previously considered.}
+\end{figure}
