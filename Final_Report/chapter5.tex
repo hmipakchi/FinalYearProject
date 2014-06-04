@@ -7,10 +7,10 @@
 %----------------------------------------------------------------------------------------
 
 In this chapter we aim to motivate and study modified modularity algorithms to detect communities within real-world financial networks and compare their performance with baseline methods.
-Firstly, we explain the process of gathering the data to create the financial network.
-Then we investigate and apply algorithms on both synthetically generated and real-world data.
+Firstly, we explain the process of gathering the empirical data to create the financial network.
+Then we investigate and apply algorithms on both synthetically generated and the empirical data.
 We focus on modularity optimisation and study two naive modularity maximisation methods studied in previous chapters as well as two modified modularity optimisation techniques that are tailored to detect communities in our specific setting of financial networks based on empirical correlation matrices.
-By determining the `best' method for the static financial network, we make an important step in identifying communities in time-varying financial networks.
+By determining the `best' method for the static financial network, we make an important step in identifying communities in time-evolving (dynamic) financial networks.
 
 %-----------------------------------------------------
 %   Financial Data Processing Section
@@ -26,7 +26,7 @@ The complete list of stocks is given in \cref{app:listFTSE100Stocks}.
 We then calculated the logarithmic return for each stock and for each time period.
 We generated a time series of these returns and associated each stock with a single time series.
 By using the method described in \cref{subsec:financialNetworksConstructionBackground}, we proceeded to construct a financial network represented by a fully-connected, undirected and weighted graph.
-There are 80 nodes in this network (each one representing one of the stocks), and the weights on the edges connecting any two nodes is the cross-correlation between the time series of returns associated with the stocks represented by the two nodes.
+There are 80 nodes in this network (each one representing a stock), and the weights on the edges connecting any two nodes is the cross-correlation between the time series of returns associated with the stocks represented by the two nodes.
 We stress, at this point, the data of the whole period (01/01/2004 - 11/11/2013) is currently represented by one single network.
 \Cref{fig:expectedReturnsAndVolatility} shows a plot of the expected return against the volatility for each stock considered during this period.
 
@@ -200,7 +200,7 @@ Let $\vecvar{v} \in \realsR^{\cardinality{\setvar{S}_{a}}}$ denote the sign vect
 where $\widetilde{\matvar{B}}_{a} = \matvar{B}_{a} - diag \left( \sum_{j \in \setvar{S}_{a}} B_{ij} \right)$.
 
 The algorithm accepts the splitting of the group which maximises the modularity difference, and terminates when reaches a threshold regarding the size of the groups and the possible improvement in modularity at a given iteration.
-We have implemented this algorithm of \cite{DM} using MATLAB, stressing the input is defined by \cref{eq:weightedAdjacencyMatrixFinancialNetworks}.
+We use the MATLAB implementation of this algorithm by Deshpande et al. \cite{DM}, stressing the input is defined by \cref{eq:weightedAdjacencyMatrixFinancialNetworks}.
 
 %-------------------------------------------
 %   Modified Modularity Method Sub Section
@@ -220,7 +220,7 @@ Therefore, this filtered matrix, which we have denoted by $\matvar{C}^{(g)}$ and
 Our aim, here, is to use $\matvar{C}^{(g)}$ as input to an algorithm that can detect communities by maximising modularity.
 We hope this provides better results than both of the naive modularity methods discussed previously.
 
-We must first, though, introduce a new formulation of modularity given a partition, as used by \cite{MG13}, which we denote by $Q_{n}(\vecvar{\sigma})$,
+We must first, though, introduce a new formulation of modularity given a partition, as used by \cite{MG13}, which we denote by $Q_{n}(\vecvar{\sigma})$ and call modified modularity,
 \begin{equation}
 \label{eq:newModularityFinancialNetworks}
 	Q_{n}(\vecvar{\sigma}) = \frac{1}{C_{norm}} \sum_{ij} C^{(g)}_{ij} \delta \left( \sigma_{i},\sigma_{j} \right).
@@ -233,7 +233,7 @@ where $C_{norm}$ is a normalisation term defined by
 which just ensures the value of the newly-defined modularity lies within the interval $[-1,+1]$.
 The new formulation of modularity is specifically aimed to detect mesoscopic-level communities.
 
-Our first `modified' modularity method is a spectral clustering algorithm based on the exact same technique considered for binary networks considered in \cref{sec:spectralClustering}, but instead we shall use the filtered correlation matrix, $\matvar{C}^{(g)}$, as input.
+Our first modified modularity method is a spectral clustering algorithm based on the exact same technique considered for binary networks considered in \cref{sec:spectralClustering}, but instead we shall use the filtered correlation matrix, $\matvar{C}^{(g)}$, as input.
 We simply find the eigenvectors of $\matvar{C}^{(g)}$, use them to construct the embedded vectors, which are then clustered using the familiar k-means clustering algorithm (same procedure as with binary networks).
 We use different values for the number of groups (within an appropriate range), then run the algorithm for each one and choose the partition with the best value for the re-defined modularity defined in \cref{eq:newModularityFinancialNetworks}.
 
@@ -286,7 +286,7 @@ We confirmed that, in all the benchmarks, all four methods succeeded in identify
 \section{Application to Real-world Financial Network}
 \label{sec:applicationToRealWorldFinancialNetwork}
 
-We now apply the modularity optimisation methods discussed in \cref{sec:communityDetectionAlgorithms} to the FTSE 100 data collected.
+We now apply the modularity optimisation methods discussed in \cref{sec:communityDetectionAlgorithms} to the empirical data we collected.
 We have two clear intentions.
 Firstly, we wish to understand the community structure of the stocks, in particular with regard to the composition of each community based upon the industry sectors of the stocks.
 Secondly, we wish to build a comparative analysis of the different algorithms based on empirical data.

@@ -8,7 +8,7 @@
 
 In this chapter we aim to understand the temporal evolution of a financial system with respect to the evolving correlation structure of the constituting assets.
 In \cref{cha:communityDetectionFinancialNetworks} we considered a static financial network, where the weight of an edge represents the cross correlation between the two time series associated with the nodes connected by the edge, considering the entire time period to construct one financial network.
-We then applied community detection techniques to uncover groups of stocks from the FTSE 100 that were correlated more than a null hypothesis suggests.
+We then applied community detection techniques to uncover groups of stocks from the FTSE 100 that were more correlated than a null hypothesis suggests.
 An issue with this approach is the static nature of the network, since investors wish to understand the strength of correlations in price movements in order to dynamically manage investment risk in their portfolios \cite{FPW+11}.
 We build on the results given in \cref{cha:communityDetectionFinancialNetworks} and investigate community dynamics utilising time-dependent correlation structures with application to the same FTSE 100 data set, complementing the work of \cite{OCK+02,OKK03,BD10,FPM+10,FPW+11}.
 This approach enables us to identify major changes in the underlying financial market, with the same ideas applicable to other financial markets and asset classes (by use of other available data sets), underlining the potential utility of the techniques considered.
@@ -24,7 +24,7 @@ We believe this setting of time-varying (weighted) network structure is an impor
 Once more we consider the same FTSE 100 data set used earlier in the report, but we shift away from using the data of the whole period to construct one single network.
 Instead, we examine the data for several overlapping time windows that collectively cover the whole time period.
 We generate one financial network for each time window in the following way, as also considered by \cite{OCK+02,OKK03,BD10,FPM+10,FPW+11}.
-Recall from \cref{subsec:financialNetworksConstructionBackground} each node in the network (i.e. each asset) is associated with a single time series consisting of the daily logarithmic return.
+Recall from \cref{subsec:financialNetworksConstructionBackground} that each node in the network (i.e. each asset) is associated with a single time series consisting of the daily logarithmic return.
 We now let the number of time steps considered, $T$, equal the length of each time window rather than the length of the whole data set time period.
 Proceeding to create a correlation matrix based upon the standardised time series, as before, we have developed one correlation matrix for each time window.
 As previously, each cross-correlation (i.e. entry in the correlation matrix) between any two time series is the weight of the edge connecting the nodes associated with the time series in the network.
@@ -56,7 +56,7 @@ Once more we plot the mean, variance and skewness to characterise the distributi
 \end{figure}
 
 We decide to trade-off the over-smoothing of shorter window lengths with the longer overlap period, and proceed with $T=100$ and a value of overlap period equal to 10 days.
-These choices results, for our particular data set, in 240 correlation matrices (and hence financial networks) spanning the period between 01/01/2004 and 11/11/2013.
+These choices results, for our particular data set, in 240 correlation matrices (and hence financial networks) collectively spanning the period between 01/01/2004 and 11/11/2013.
 This completes the construction of time evolving financial networks, which we can now use as an empirical test basis for our proceeding analysis of a community detection algorithm in dynamic networks.
 
 %-----------------------------------------------------
@@ -74,8 +74,8 @@ We mentioned PCA earlier in the report in regard to the detection of hidden comm
 PCA is a statistical technique that uses an orthogonal transformation to represent the covariance structure of a set of variables through a smaller number of linear combinations of these variables. \cite{Jol02,FPW+11,Gil14b}.
 
 We shall consider the following derivation based on \cite{Jol02,UIO03,FPM+10,FPW+11,Gil14b}.
-Firstly, recall $T$ represents the time window length and $n$ represents the number of assets in the network (these values equal to 100 and 80, respectively, in our specific empirical example).
-Let us denote the matrix with entries consisting of the standardised logarithmic returns, for any one particular time window, by a $n \times T$ matrix $\matvar{X}$.
+Firstly, recall $T$ represents the time window length and $n$ represents the number of assets in the network (these values equal to 100 and 80, respectively, in our specific example).
+Let us denote the matrix with entries consisting of the standardised logarithmic returns, for any one particular time window, by a $n \times T$ matrix denoted by $\matvar{X}$.
 The empirical correlation matrix, also equal to the covariance matrix of $\matvar{X}$, is denoted by $\matvar{C}$ and defined by
 \begin{equation}
 	\label{eq:correlationMatrix}
@@ -177,7 +177,7 @@ Multislice networks are essentially combinations of networks (slices) coupled th
 This is a general setting that includes time-evolving networks and is thus suitable for our application.
 The idea considered by \cite{MRM+10} is to derive a generalisation of community detection to multislice networks by formulating an appropriate null model derived from Laplacian dynamics, a concept introduced by Lambiotte et al. \cite{LDB08}.
 We shall provide a summary of the derivations available from \cite{LDB08,Lam10,MRM+10} that highlights the approach.
-Then we will discuss one algorithm to optimise generalised modularity in time-dependent networks known as the \emphT{generalised Louvain method}, outlined also in \cite{MRM+10,BPW+13}.
+Then we will discuss one algorithm to optimise generalised modularity in time-dependent networks known as the \emphT{generalised Louvain method}, described also in \cite{MRM+10,BPW+13}.
 
 %-----------------------------------------------------
 %   Laplacian Dynamics and Stability Sub Section
@@ -197,8 +197,7 @@ We define the stability, denoted by $R_{\graphvar{M}(t)}$, by
 	R_{\graphvar{M}(t)} = \sum_{C \in \graphvar{P}} P(C,t) - P(C,\infty)
 \end{equation}
 where $P(C,t)$ is the probability of the walker being within the community $C$ both initially and at the time $t$.
-This definition arises from the autocovariance function of a Markov process on the network \cite{DYB08}.
-Intuitively, stability measures the quality of a partition based on how persistent it is \cite{DYB08}.
+This definition arises from the autocovariance function of a Markov process on the network, and, intuitively, stability measures the quality of a partition based on how persistent it is \cite{DYB08}.
 
 Lambiotte et al. \cite{LDB08} consider normalised Laplacian dynamics to model an unbiased discrete-time random walker on the network, where the probability of moving from one node to another is proportional to the weight of the edge which connects them.
 Therefore,
@@ -219,7 +218,7 @@ Proceeding to find the stability at time $t=1$,
 	\label{eq:stabilityAtTime1}
 	R(1) = \sum_{C \in \graphvar{P}} \sum_{i,j \in C} \left( \frac{A_{ij}}{d_{j}} \frac{d_{j}}{2m} - \frac{d_{i}}{2m} \frac{d_{j}}{2m} \right) = \frac{1}{2m} \sum_{ij} \left( A_{ij} - \frac{d_{i}d_{j}}{2m} \right) \delta(g_{i},g_{j})
 \end{equation}
-which is equivalent to our formulation of modularity, $Q$, considered for undirected networks!
+which is equivalent to our formulation of modularity, $Q$, considered for undirected networks.
 
 In order to encompass time as a parameter within the formulation, we consider a continuous-time process associated with the random walker.
 Consider independent and identical homogeneous Poisson processes defined on each node of the graph \cite{LDB08}, so that the walkers moving at a constant rate from each node, then
@@ -227,7 +226,7 @@ Consider independent and identical homogeneous Poisson processes defined on each
 	\label{eq:densityRandomWalkerContinuousTime}
 	\timeDiff{p_{i}} = \sum_{j} \frac{A_{ij}}{d_{j}} p_{j} - p_{i}
 \end{equation}
-This equation is driven by the operator $A_{ij}/d_{j} - \delta_{ij} = -L_{ij}$, where we denote $\matvar{L}$ as the normalised Laplacian matrix we defined in \cref{def:normalisedLaplacianMatrix}, where change our notation slightly for convenience \cite{MRM+10}.
+This equation is driven by the operator $A_{ij}/d_{j} - \delta_{ij} = -L_{ij}$, where we denote $\matvar{L}$ as the normalised Laplacian matrix we defined in \cref{def:normalisedLaplacianMatrix}, where we change our notation slightly for convenience \cite{MRM+10}.
 The stationary distribution of this continuous-time process is the same as with the discrete-time process, $p_{i}^{*} = d_{i}/2m$,
 Furthermore, the stability of the partition is given by
 \begin{equation}
@@ -327,10 +326,10 @@ More recently, Bassett et al. \cite{BPW+13}, analysed empirical neuroscience dat
 \section{Synthetic Data Testing}
 \label{sec:temporalEvolutionSyntheticDataTesting}
 
-Similarly for the case of static networks in \cref{sec:syntheticDataTesting}, we wish to test the algorithm on synthetic data before applying to our real-world data.
+Similarly for the case of static networks in \cref{sec:syntheticDataTesting}, we wish to test the algorithm on synthetic data before applying to our empirical data.
 We consider a benchmark data set of correlation matrices with 100 time series, each with 2500 data points, divided into 10 communities of 10 correlated time series.
 The set consists of correlation matrices generated with different levels of correlations between the groups and within a group reflecting different signal-to-noise ratios (SNR), where a lower value for SNR results in more difficulty in identifying the ground-truth partition.
-For this synthetic data set, we consider four different values (0.5, 0.6, 0.7, 0.8).
+For this synthetic data set, we consider four different values for the SNR, $\{0.5, 0.6, 0.7, 0.8\}$.
 We can then use this data to construct time-evolving financial networks, by applying the rolling-window procedure outlined in \cref{sec:timeEvolvingFinancialNetwork}, where we choose the window length to be $T = 100$ and the overlap period to be equal to 10.
 This generates 240 correlation matrices that combined represent the temporal evolution of the correlation structure forming our synthetic data set. 
 We then utilise the modified modularity techniques discussed in \cref{cha:communityDetectionFinancialNetworks} to construct the modified modularity matrix from each network slice (i.e. from each of the 240 correlation matrices) to finally generate our time-evolving modified modularity matrices, which we will be used as input to the generalised Louvain method.
@@ -417,26 +416,27 @@ We shall also apply our modified modularity based Louvain method, treating each 
 
 The output when the standard Louvain method was applied is shown in \cref{fig:standardLouvainMethodTemporalCommunities}, whilst the output when the generalised Louvain method was applied is shown in \cref{fig:generalisedLouvainMethodTemporalCommunities}.
 We plotted both figures with each stock ticker representing the vertical axis, and time, the horizontal axis (i.e. one data point for each stock and time window).
+The tickers are those listed in detail in \cref{app:listFTSE100Stocks}.
 Community memberships are identified by colour, which allows us to understand the temporal community memberships associated with each individual stock.
 We can make several remarks.
 Firstly, the plot for the standard Louvain method is pretty noisy with partitions changing rapidly between some time windows, but the plot for the generalised Louvain method is a lot smoother.
 This is an encouraging observation given that the latter algorithm is designed for community detection in time-evolving networks.
-Also, this enables us to more easily analyse the changes community structure globally across rime since the information is a lot clearer.
-Secondly, we can notice a change in structure at around the 2008-2009 time period, where there are fewer communities generated, whereas in the pre-2007 and post 2011 periods, there are 3-4 distinct communities.
+Also, this enables us to more easily analyse the changes community structure globally across time since the information is presented more clearly.
+Secondly, we notice a change in structure at around the 2008-2009 time period, where there are fewer communities generated, whereas in the pre-2007 and post 2011 periods, there are 3 or 4 distinct communities.
 This relates to the intuition of higher correlations and thus fewer communities when the market, as a whole, is experiencing a downturn.
 
 %---   FIGURE
 \begin{figure}
 	\centering
 	\includegraphics[width=0.9\linewidth]{figures/testLouvainMethodTemporalCommunities.png}
-	\caption[Plot of the temporal community memberships generated by applying the standard Louvain method to each of the networks slices of our time-evolving financial system.]{\label{fig:standardLouvainMethodTemporalCommunities} Plot of the temporal community memberships generated by applying the standard Louvain method to each of the networks slices of our time-evolving financial system. The vertical axis compromise of the 80 tickers associated with the stocks we consider, whilst the horizontal axis represents time. Community memberships are represented by colour and the key is shown to the right of the figure. Hence, we can understand the temporal community memberships of each individual stock for each time window, and relate a global picture of the communities associated with the system throughout various time periods.}
+	\caption[Plot of the temporal community memberships generated by applying the standard Louvain method to each of the networks slices of our time-evolving financial system.]{\label{fig:standardLouvainMethodTemporalCommunities} Plot of the temporal community memberships generated by applying the standard Louvain method to each of the networks slices of our time-evolving financial system. The vertical axis compromise of the 80 tickers associated with the stocks we consider, whilst the horizontal axis represents time. The tickers are those listed in detail in \cref{app:listFTSE100Stocks}. Community memberships are represented by colour and the key is shown to the right of the figure. Hence, we can understand the temporal community memberships of each individual stock for each time window, and relate a global picture of the communities associated with the system throughout various time periods.}
 \end{figure}
 
 %---   FIGURE
 \begin{figure}
 	\centering
 	\includegraphics[width=0.9\linewidth]{figures/testMultiSliceLouvainMethodCommunities_omega_1.png}
-	\caption[Plot of the temporal community memberships generated by applying the generalised Louvain method to each of the networks slices of our time-evolving financial system.]{\label{fig:generalisedLouvainMethodTemporalCommunities} Plot of the temporal community memberships generated by applying the generalised Louvain method, with $\gamma = 1$ and $\omega=1$, to each of the networks slices of our time-evolving financial system. The vertical axis compromise of the 80 tickers associated with the stocks we consider, whilst the horizontal axis represents time. Community memberships are represented by colour and the key is shown to the right of the figure. Hence, we can understand the temporal community memberships of each individual stock for each time window, and relate a global picture of the communities associated with the system throughout various time periods.}
+	\caption[Plot of the temporal community memberships generated by applying the generalised Louvain method to each of the networks slices of our time-evolving financial system.]{\label{fig:generalisedLouvainMethodTemporalCommunities} Plot of the temporal community memberships generated by applying the generalised Louvain method, with $\gamma = 1$ and $\omega=1$, to each of the networks slices of our time-evolving financial system. The vertical axis compromise of the 80 tickers associated with the stocks we consider, whilst the horizontal axis represents time. The tickers are those listed in detail in \cref{app:listFTSE100Stocks}. Community memberships are represented by colour and the key is shown to the right of the figure. Hence, we can understand the temporal community memberships of each individual stock for each time window, and relate a global picture of the communities associated with the system throughout various time periods.}
 \end{figure}
 
 We have also calculated the normalised variation of information, denoted by $V$, between each of the partitions generated by the two algorithm for each time window.
@@ -451,11 +451,11 @@ This means the partitions generated by the two algorithms were unusually close b
 	\caption[Plot of the normalised variation of information between the partitions generated by the standard and generalised Louvain methods for each time window.]{\label{fig:normalisedVariationOfInformationTemporalCommunities} Plot of the normalised variation of information between the partitions generated by the standard Louvain method and the generalised Louvain method (with $\gamma = 1$ and $\omega=1$) for each time window.}
 \end{figure}
 
-To understand this further we calculate the modified modularity, using \cref{eq:newModularityFinancialNetworks}, for each partition (i.e. the community assignments for all time windows) for both algorithms, and plot the results in \cref{fig:modifiedModularitiesEachPartition}.
+To investigate this last point further, we calculate the modified modularity, using \cref{eq:newModularityFinancialNetworks}, for each partition (i.e. the community assignments for all time windows) for both algorithms, and plot the results in \cref{fig:modifiedModularitiesEachPartition}.
 We observe two important features from the graph.
 Firstly the modified modularities obtained by both algorithms reaches maxima in the period between 2008 and 2009, suggesting our understanding from analysing \cref{fig:normalisedVariationOfInformationTemporalCommunities} is sound.
 Therefore, from these network diagnostics based on community structure, we do observe significant changes in the correlation structure within this market in the time period 2008-2009.
-Secondly, we find the modified modularity curve for the generalised Louvain method to be a lot smoother, and this again reflects how it was designed to detect communities in dynamic networks, and should be considered as a more robust technique than by simply applying traditional, static network, modularity optimisation methods to each slice.
+Secondly, we find the modified modularity curve for the generalised Louvain method to be a lot smoother, and this again reflects how it was designed to detect communities in dynamic networks.
 
 %---   FIGURE
 \begin{figure}
@@ -463,3 +463,6 @@ Secondly, we find the modified modularity curve for the generalised Louvain meth
 	\includegraphics[width=0.8\linewidth]{figures/modifiedModularitiesEachPartition.png}
 	\caption[Plot of the modified modularity for each partition generated by both the generalised and standard Louvain methods.]{\label{fig:modifiedModularitiesEachPartition} Plot of the modified modularity, calculated using \cref{eq:newModularityFinancialNetworks}, for each partition generated by both the generalised and standard Louvain methods, with parameters set as previously considered.}
 \end{figure}
+
+We summarise by recommending that the generalised Louvain method should be considered as a more robust technique than by simply applying traditional, static network, modularity optimisation methods to each slice when detecting communities in dynamic financial networks.
+Although, we should bear in mind the generalised Louvain method has a longer computation time and we must determine appropriate values for the parameters $\gamma$ and $\omega$.

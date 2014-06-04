@@ -106,8 +106,8 @@
 
 %%%
 % switch comments to add/remove figures and replace with black boxes to compile faster
-\usepackage[demo]{graphicx}
-%\usepackage{graphicx}
+%\usepackage[demo]{graphicx}
+\usepackage{graphicx}
 %%%
 
 \usepackage{epstopdf}
@@ -181,6 +181,8 @@
 \usepackage{hyperref}
 \usepackage[noabbrev]{cleveref}
 \usepackage{pdfpages}
+\usepackage[numbers]{natbib}
+\usepackage{bm}
 
 \theoremstyle{plain}
 \newtheorem{example}{Example}[chapter]

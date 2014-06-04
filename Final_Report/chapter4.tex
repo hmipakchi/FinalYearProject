@@ -15,7 +15,7 @@ We generate a network with the appropriate block model and specified parameters,
 We then measure the accuracy of the specific algorithm investigated as we vary model parameters.
 These parameters include the sparsity of the graph and the edge occurrence probabilities.
 This then allows us to draw conclusions regarding the relative performance of community detection algorithms in controlled conditions given by networks with common properties.
-After undertaking this data-driven testing approach, we conclude by comparing the algorithms investigated by discussing their advantages and issues in order to advocate of the application on particular empirical circumstances based on their the suitability .
+After undertaking this data-driven testing approach, we conclude by comparing the algorithms investigated by discussing their advantages and issues in order to advocate the application on particular empirical circumstances based on their suitability .
 
 %----------------------------------------------------------------
 %   Spectral Clustering and Modularity-Optimisation Algorithms Section
@@ -36,7 +36,7 @@ Denote the overlap by $T$, and let the estimated node assignments be given by $\
 	T = \max_{\pi} \frac{\frac{1}{n} \sum_{i} \delta(\sigma_{i},\pi(q_{i})) - \frac{1}{k}}{1 - \frac{1}{k}}
 \end{equation}
 where $\pi$ ranges over the permutations on $q$ elements and $k$ represents the number of communities.
-This definition means that $0 \le T \le 1$ with a higher value implying improved reconstruction and more accurate results, and an overlap of 0 meaning the algorithm is, on average, no better than random uniform selection of node assignments.
+This definition means that $0 \le T \le 1$, with a higher value implying improved reconstruction and more accurate results, and an overlap of 0 meaning the algorithm is, on average, no better than random uniform selection of node assignments.
 
 The traditional spectral clustering algorithm  has been implemented in MATLAB based on the description given in \cref{sec:spectralClustering}, whilst the MATLAB implementation for the greedy modularity algorithm has been obtained from Le Martelot \cite{ELM}.
 
@@ -73,6 +73,10 @@ Recall the spectral clustering algorithm requires applying a k-means algorithm t
 For the case with dense graphs, the eigenvalue spectrum of the Laplacian is separated and the embedded vectors can be seen to be arbitrarily well separated also.
 However, for the case where the graph is sparse, the eigenvector elements (i.e. coordinates in the subspace) are very similar, and the k-means algorithm performance will be very poor, results in much lower accuracy for the spectral clustering algorithm.
 This observation is summarised as an illustration in \cref{fig:spectralClusteringEmbeddingVisualisationPlots}.
+For the dense regime, we generate a network from the planted partition model with $n=150$, $k=3$, $p_{in}=0.8$ and $p_{out}=0.2$, whilst for the sparse regime, we generate a network with the same values for $n$ and $k$, but $p_{in}=0.08$ and $p_{out}=0.02$.
+Note the important regulation that, for this illustration, the ratio $c_{out}/c_{in}$ is identical for both regimes, and is below the theoretical phase transition (i.e. we are in the detectable region).
+We see that, for the dense regime, all data points belonging to different communities are well separated, and points belonging to the same community are clustered together, so the k-means algorithm can accurately recover the cluster memberships.
+However, for the sparse regime, all data points are clustered together, so the k-means algorithm cannot recover the cluster memberships accurately, and the overlap for the spectral clustering method will be very low indeed.
 
 %---   FIGURE
 \begin{figure}
@@ -91,11 +95,6 @@ This observation is summarised as an illustration in \cref{fig:spectralClusterin
 	\end{subfigure}
 	\caption[Visualisation of spectral clustering embedding in sparse and dense regimes.]{\label{fig:spectralClusteringEmbeddingVisualisationPlots} A visualisation of the embedding for the spectral clustering algorithm in the dense, \subref{fig:spectralClusteringEmbeddingVisualisationPin08}, and sparse, \subref{fig:spectralClusteringEmbeddingVisualisationPin008}, regimes. The graph for the dense regime was generated using the planted partition model with $n=150$, $k=3$, $p_{in}=0.8$ and $p_{out}=0.2$, whilst the graph for the sparse regime was generated using the same values of $n$ and $k$ but with $p_{in}=0.08$ and $p_{out}=0.02$. We label the ground-truth node assignments by colour (i.e. points with the same colour represent nodes belonging to the same community in the graph). Notice that, for the dense regime, all data points with different colours are well separated so the k-means algorithm can accurately recover the cluster memberships. However, for the sparse regime, every data (red green and blue) are concentrated in the same region in the 2-dimensional embedding space, so the k-means algorithm cannot recover the cluster memberships accurately at all. This illustrates an issue with the Laplacian spectral clustering method.}
 \end{figure}
-
-For the dense regime, we generate a network from the planted partition model with $n=150$, $k=3$, $p_{in}=0.8$ and $p_{out}=0.2$, whilst for the sparse regime, we generate a network with the same values for $n$ and $k$, but $p_{in}=0.08$ and $p_{out}=0.02$.
-Note the important regulation that, for this illustration, the ratio $c_{out}/c_{in}$ is identical for both regimes, and is below the theoretical phase transition (i.e. we are in the detectable region).
-We see that, for the dense regime, all data points belonging to different communities are well separated, and points belonging to the same community are clustered together, so the k-means algorithm can accurately recover the cluster memberships.
-However, for the sparse regime, all data points are clustered together, so the k-means algorithm cannot recover the cluster memberships accurately, and the overlap for the spectral clustering method will be very low indeed.
 
 We now consider an issue associated with all modularity optimisation algorithms, known as the \emphT{resolution limit} \cite{GMC10,For10}.
 Essentially, communities that are small when compared to the whole graph may not be distinguished even though they are well defined communities or even cliques, and therefore this problem has an impact on practical applications \cite{For10}.
@@ -116,7 +115,7 @@ This results in extreme degeneracies in the modularity which causes problems in 
 This means that, the more modular a network is (i.e. the more communities it contains), it is actually becomes more difficult to determine the optimum partition among the suboptimal ones, which is a counter-intuitive result \cite{GMC10}.
 
 To summarise, both spectral clustering and modularity optimisation algorithms can detect communities up to the phase transition in the dense regime.
-However, we have seen how the performance declines, if the network is sparse, for both algorithms.
+However, we have seen how the performance declines for both algorithms, if the network is sparse.
 We have explained some of the issues observed that can account for the disappointing results, although there is no deep understanding regarding the modularity optimisation methods \cite{For10}.
 Describing the behaviour of the modularity methods is important, though, and there have been many situations where the algorithm works well in practical applications \cite{New06a,New06b,For10,GMC10}.
 This should not be startling given how the synthetic data we have used for our experimental tests are, in general, not well representative of real-world networks considered in practice.
@@ -130,8 +129,6 @@ For the case of small sized networks, the pragmatic option seems most suitable, 
 \section{Belief Propagation Algorithm}
 \label{sec:beliefPropagationAlgorithmTest}
 
-%---   TODO
-%%% in particular, need to precisely specify the phase transitions points predicted by the conjecture.
 We wish to find a class of algorithms that, empirically, seem to reliably detect communities in networks generated by the planted partition model up to the phase transition in the sparse regime as well as the dense regime.
 Both the spectral clustering and modularity optimisation methods could not achieve this, but we wish test whether the BP algorithm of Decelle et al. \cite{DKM+13} will succeed.
 We shall analyse the accuracy of the partitions generated by the BP algorithm as we vary the following parameters: size of the graph, sparsity of the graph, number of communities and the edge occurrence probabilities.
@@ -223,17 +220,13 @@ The results do indicate the BP algorithm accurately detects communities for diff
 Combining the implications of our empirical testing for the belief propagation algorithm and comparing it with the synthetic data results for the spectral clustering and greedy modularity methods in \cref{sec:spectralClusteringModularityOptimisationAlgorithms}, we do find the BP algorithm has several advantages for the specific test case of the planted partition model.
 Firstly, we can detect communities reliably in the sparse regime up to the corresponding phase transition point in addition to the dense regime.
 Also, the algorithm is more scalable in the sparse regime due to faster run time.
-%---   TODO
-%%% find reference of Leskovec for poor representation of block models of real-world networks
-However, these remarks should not be a surprise given that the BP algorithm was specifically designed to detect communities from graphs generated by the planted partition model and, therefore, we could have concerns about the generalisation achieved, since statistical block models do not generate graphs with similar properties to those found in real world networks (i.e. they are not well representative) \cite{DKM+13}.
+However, these remarks should not be a surprise given that the BP algorithm was specifically designed to detect communities from graphs generated by the planted partition model and, therefore, we could have concerns about the generalisation achieved, since statistical block models do not generate graphs with similar properties to those found in real world networks (e.g. see \cite{LLD+08} for an empirical study in the statistical properties of social and information networks).
 
 The BP algorithm has been applied to real-world networks in \cite{DKM+13}, but they considered only small-sized networks that are not very practical, such as the popular Zachary's karate club network as well as a network of political books.
-%---   TODO
-%%% find reference for modularity methods performing well on real-world networks
-Whereas, modularity methods have been tested on a wide array of data sets and networks in the literature, and have performed well.
+Whereas, modularity methods have been tested on a wide array of data sets and networks in the literature, and have performed well \cite{For10}.
 Therefore we conclude that, for applications involving moderately-sized real-world networks, modularity optimisation methods should be a first point of call.
 We also suggest possible tweaks could be made to certain modularity methods that tailor them to the specific application at hand (similarly to how the BP algorithm we considered has been tailored to the planted partition model), which could also improve performance.
-An example application of this is a financial network, as we shall discuss in \cref{cha:communityDetectionFinancialNetworks,cha:temporalEvolutionFinancialNetworks}.
+An example application of this is financial networks, as we shall discuss in \cref{cha:communityDetectionFinancialNetworks,cha:temporalEvolutionFinancialNetworks}.
 
 %-----------------------------------------------------
 %   NLPI and AMP Algorithms Section

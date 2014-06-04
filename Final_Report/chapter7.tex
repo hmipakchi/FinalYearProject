@@ -1,0 +1,50 @@
+% Chapter 7
+
+\chapter{Conclusion and Future Work}
+
+\label{cha:Conclusion}
+
+%----------------------------------------------------------------------------------------
+
+Within this report we have studied the topic of community detection in networks, with two principal contributions outlined, involving the exploration of algorithms and their application to both controlled environments (realised by synthetically-generated data) and empirical data (representing real-world networks).
+
+Firstly, we analysed a range of community detection algorithms, with different techniques underpinning them, that are present in the literature, and tested them on synthetic data.
+By undertaking this approach, through the generation of networks with community structure using well-known statistical block models, we have studied the performance of these algorithms on networks with varying properties.
+This enabled us to advocate the use of certain algorithms depending on the properties of the underlying network we wish to detect communities from.
+Particular highlights include the belief propagation algorithm, which performed better than all the other methods in terms of accuracy in the sparse regime and is more extensible to larger-scale sparse networks due to lower computational complexity.
+We also noted that this BP algorithm was specifically designed to detect communities created from the statistical generative model, which is not well representative of many real-world networks.
+On the other hand, the modularity optimisation methods studied, and specifically the greedy algorithms, have performed well on a range of real-world networks but with lower accuracy than the BP algorithm in sparse synthetically-generated networks.
+
+Our second task involved the application of community detection algorithms to real-world, time-evolving financial networks, where we partition the network to uncover isolated groups of assets that are, on aggregate, more highly correlated within groups than between groups.
+We motivated this problem by discussing its practicality in mean-variance portfolio theory, where investors could start with a mesoscopic-level grouping of assets for selecting their portfolios.
+Using an empirical data set, that we constructed from the prices of 80 stocks traded on the FTSE 100 exchange between 2004 and 2013, we generated a static financial network.
+By modifying and tailoring modularity optimisation techniques, studied in the first part of the report, for this specific application, we identified communities within that were not detectable using naive modularity methods, indicating a notable improvement.
+Moreover, we constructed time-evolving financial networks from the same data set, by using a time windowing procedure, to represent the temporal evolution of correlation structure of the assets. 
+Investigating community detection in dynamic networks, by analysing Laplacian dynamics on multislice networks, led to a more general notion of modularity that is also applicable to time-evolving networks.
+We focused on one particular algorithm that has been designed to optimise the generalised modularity function, and is present in the literature, known as the generalised Louvain method.
+By tailoring the inputs to this method, based on our notion of modified modularity (that was successfully applied in the static network regime), we applied this method which enabled us to observe the dynamic community structure of FTSE 100 stocks in a turbulent period for financial markets worldwide.
+
+%-----------------------------------------------------
+%   Future Work Section
+%-----------------------------------------------------
+
+\section{Future Work}
+\label{sec:futureWork}
+
+We outline several ideas for potential future research directions that we have discovered through our work during the project.
+We divide our recommendations for future work into two areas; the first is a more general outlook on community detection algorithms, and the second focuses on the financial networks application specifically.
+
+We would like to make two general points on the topic of community detection in networks.
+Firstly, there is a lack of a widely accepted prescription defining a community within a network.
+There are several statistical models which generate networks reflecting community structure that one finds intuitive, but I believe there is a lack of consensus on an appropriate benchmark within the research community.
+Determining such a benchmark enables the provision of a specification which any community detection algorithm can be judged against.
+Secondly, as the reader may have noticed, we did not consider overlapping community structure at any time during the project, instead we only focused on non-overlapping communities (i.e. each node may only belong to one community).
+However, we believe the community structure of real-world networks, and in particular social networks, is better represented by modelling through overlapping communities.
+The reason why we did not focus on this, and the potential research questions involve a better definition of the concept of overlapping communities and the introduction of reliable statistical models which can generate graphs with overlapping community structure.
+
+There are two ways to extend our approach of community detection to financial networks.
+The first simply involves gathering more empirical financial data sets, both across different asset classes and different worldwide markets.
+By applying the methods on more data sets, we can provide a deeper understanding of community structure in financial markets worldwide not just the stocks on the FTSE 100 exchange.
+Examples include price data on equity, bond, commodity and foreign exchange markets.
+A more exploratory direction is the design of dynamic community detection algorithms with better empirical computational complexity and run time than the generalised Louvain method, since with more data and assets to capture in the network, this will become a problem.
+We understand this is a big step forward since there are not many reliable dynamic community detection algorithms present in the literature (it currently seems challenging enough to find appropriate methods in the static network case), and the generalised Louvain method is probably the best, but it would represent a huge achievement with important applications across many disciplines and empirical data sets.

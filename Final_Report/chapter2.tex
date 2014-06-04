@@ -394,11 +394,11 @@ Then we can re-write \cref{def:hcmNormlaisedAdjacencyMatrix2} as
 \end{equation}
 
 One can interpret $\lambda$ as a signal-to-noise ratio, $\vecvar{u}$ as a signal (i.e. the ground-truth node assignments we which to infer) and $\matvar{Z}$ as zero-mean noise with \iid entries.
-We have essentially represented the problem of inferring the hidden community from the graph by a problem of estimating a rank-1 matrix in noise. Notice that for the generalisation with $k$ communities, we would get a rank-k matrix plus noise for the normalised adjacency matrix.
+We have essentially represented the problem of inferring the hidden community from the graph by a problem of estimating a rank-1 matrix in noise. Notice that for the generalisation with $k$ communities, we would get a rank-$k$ matrix plus noise for the normalised adjacency matrix.
 
 Assume we generate a network associated with a normalised adjacency matrix, $\widetilde{\matvar{A}}$, defined in \cref{def:hcmNormlaisedAdjacencyMatrixDecomposed} and are interested in reconstructing the vector of node assignments, $\vecvar{u}$.
 This problem has been investigated in many application under the guise of `Low-rank deformation of Wigner matrices' \cite{Mon13}.
-Moreover much is known about the eigenvalue spectrum of such matrices. There is a very important spectral phase transition that exists: if $\lambda < 1$, the top eigenvector of the adjacency matrix, $\matvar{A}$, is orthogonal to the vector we wish to reconstruct (i.e. $\innerP{\vecvar{v}_{1}(\matvar{A}),\vecvar{u} } \approx 0$), whereas, if $\lambda > 1$, the top eigenvector of $\matvar{A}$ is correlated with the vector we wish to reconstruct and $\innerP{\vecvar{v}_{1}(\matvar{A}),\vecvar{u}} \approx (1 - \lambda^{-2})$ \cite{Mon13}.
+Moreover, much is known about the eigenvalue spectra of such matrices. There is a very important spectral phase transition that exists: if $\lambda < 1$, the top eigenvector of the adjacency matrix, $\matvar{A}$, is orthogonal to the vector we wish to reconstruct (i.e. $\innerP{\vecvar{v}_{1}(\matvar{A}),\vecvar{u} } \approx 0$), whereas, if $\lambda > 1$, the top eigenvector of $\matvar{A}$ is correlated with the vector we wish to reconstruct and $\innerP{\vecvar{v}_{1}(\matvar{A}),\vecvar{u}} \approx (1 - \lambda^{-2})$ \cite{Mon13}.
 In the latter regime, one eigenvector pops out of the semicircle lobe, as illustrated in \cref{fig:spectralPhaseTransitionWignerPlots}.
 This particular eigenvector is associated with the eigenvalue $\lambda + \lambda^{-1}$ \cite{Mon13}.
 
@@ -421,10 +421,10 @@ This particular eigenvector is associated with the eigenvalue $\lambda + \lambda
 \end{figure}
 
 This result is key since it specifically describes a threshold where traditional spectral methods such as standard principal component analysis (PCA) will not work (i.e. when $\lambda < 1$) and when it will produce a reconstructed vector correlated with the ground-truth (i.e. when $\lambda > 1$).
-Moreover, we now have sufficient motivation to investigate methods where we can do better; more specifically we wish to study algorithms where we can essentially `beat' this spectral threshold by producing a reconstructed vector correlated with the ground-truth in the regime where $\lambda < 1$.
+Furthermore, we now have sufficient motivation to investigate methods where we can do better; more specifically we wish to study algorithms where we can essentially `beat' this spectral threshold by producing a reconstructed vector correlated with the ground-truth in the regime where $\lambda < 1$.
 There is hope of achieving the improvement over standard PCA since we observe that the structure of the principal eigenvector of the matrix has two special properties.
 Firslty, it is \emphT{non-negative} (since the elements are node assignments or indicator variables and are thus either zero or one) and, secondly, it is \emphT{sparse} (since we are interested in the regime where the size of the hidden community or clique is small relative to the size of the graph).
-We will see how to utilise of this observation in more detail in \cref{subsec:nonLinearPowerIteration} since it forms the basis of a class of algorithms.
+We will see how to utilise of these properties in more detail in \cref{subsec:nonLinearPowerIteration} since it forms the basis of a class of algorithms.
 
 %--------------------------------
 %   Financial Background Section   
@@ -443,18 +443,28 @@ We will see how to utilise of this observation in more detail in \cref{subsec:no
 Financial assets are instruments claiming to have monetary value that can be bought and sold. Financial assets can be separated into broad classes, with examples including stocks, bonds or real estate \cite{Kuh12d,BKM13}.
 The values of these assets is reflected in their price, which varies with time. Investors may wish to decide between which asset classes to invest in at any time, a process known as \emphT{asset allocation} \cite{BKM13}.
 Also, within a particular asset class, an investor wishes to allocate money to specific assets, a process known as \emphT{portfolio selection} \cite{BKM13}.
-For this report, we will focus on portfolio selection of stocks in our application of community detection algorithms, due to data availability constraints; however a very similar scheme may be used to tackle asset allocation also.
+For this report, we will focus on portfolio selection of stocks in our application of community detection algorithms, due to data availability constraints; however a very similar setting may be used to tackle asset allocation also.
 
-Investors tend not to consider the prices of assets they have invested in, but rather the \emphT{return} generated. Let us consider a financial asset whose price at time $t$ is $p(t)$. One popular measure of return is called the \emphT{rate of return} \cite{Kuh12e,BKM13} at a time $t$, denoted by $r(t)$, which is defined as
+Investors tend not to consider the prices of assets they have invested in, but rather the \emphT{return} generated.
+Let us consider a financial asset whose price at time $t$ is $p(t)$.
+One popular measure of return is called the \emphT{rate of return} \cite{Kuh12e,BKM13} at a time $t$, denoted by $r(t)$, which is defined as
 \begin{equation}
 	\label{eq:rateOfReturn}
 	r(t_{0}) = \frac{p(t_{1}) - p(t_{0})}{p(t_{0})}
 \end{equation}
 where we can interpret $t_{1}$ as the time when the investor sold the asset, and $t_{0}$ as the time when the investor bought the asset.
 
-Critically, the rate of return is sensitive to large changes for longer time horizons \cite{Onn02}. In particular, we can consider a different measure of return, which is equivalent to a return with a constant interest rate \cite{Onn02}. We can generalise the concept interest rates with the simple example of an investor placing money (investing) in a bank account, as explained in \cite{Kuh12c,Lue98}.
-The amount of money initially invested is referred to as the \emphT{principal}. We then assume money grows by a multiplicative factor, where the gain is paid into the account by the bank. This process is often called \emphT{compounding}. The time at which the interest is compounded, is called the \emphT{compounding period}.
-\emphT{Compound interest} involves interest being paid on both the principal and the accumulated interest up to the present \cite{Onn02}. Typically, we are interested in the number of compounding periods in one year (i.e. the number of times the interest on our principal is compounded each year) \cite{Kuh12c}. Denote the principal by $w_{0}$, the amount in the account at time $t$ by $w_{t}$, the interest rate by $y$ and the number of compounding periods in a year by $m$. Then the amount within the account holdings after 1 year is given by
+Critically, the rate of return is sensitive to large changes for longer time horizons \cite{Onn02}.
+In particular, we can consider a different measure of return, which is equivalent to a return with a constant interest rate \cite{Onn02}.
+We can generalise the concept interest rates with the simple example of an investor placing money (investing) in a bank account, as explained in \cite{Kuh12c,Lue98}.
+The amount of money initially invested is referred to as the \emphT{principal}.
+We then assume money grows by a multiplicative factor, where the gain is paid into the account by the bank.
+This process is often called \emphT{compounding}.
+The time at which the interest is compounded is called the \emphT{compounding period}.
+\emphT{Compound interest} involves interest being paid on both the principal and the accumulated interest up to the present \cite{Onn02}.
+Typically, we are interested in the number of compounding periods in one year (i.e. the number of times the interest on our principal is compounded each year) \cite{Kuh12c}.
+Denote the principal by $w_{0}$, the amount in the account at time $t$ by $w_{t}$, the interest rate by $y$ and the number of compounding periods in a year by $m$.
+Then the amount within the account holdings after 1 year is given by
 \begin{equation}
 	\label{eq:compoundInterest}
 	w_{1} = w_{0} (1 + (y/m))^{m}
@@ -466,7 +476,8 @@ We can imagine diving a year into infinitesimally small compounding periods, and
 	w_{t} = \lim_{m {\to} \infty} w_{0}(1 + (y/m))^{mt} = w_{0}\exp{yt}
 \end{equation}
 
-If we divide \cref{eq:continuousCompounding} by the initial investment $w_{0}$, and take the natural logarithm, we get a representation for the return, $r = yt$. This indicates that taking the natural logarithm results in a constant interest rate.
+If we divide \cref{eq:continuousCompounding} by the initial investment $w_{0}$, and take the natural logarithm, we get a representation for the return, $r = yt$.
+This indicates that taking the natural logarithm results in a constant interest rate.
 We have thus arrived at another measure for return, called the \emphT{logarithmic return}, which is defined by
 \begin{equation}
 	\label{eq:logarithmicReturn}
@@ -475,8 +486,10 @@ We have thus arrived at another measure for return, called the \emphT{logarithmi
 where, once more, we can interpret $t_{1}$ as the time when the investor sold the asset, and $t_{0}$ as the time when the investor bought the asset.
 
 There are several advantages to using logarithmic returns, as explained in \cite{QuaWp}, which we will briefly summarise.
-Firstly, if we assume asset prices have a \emphT{log normal} distribution, then the logarithmic returns are conveniently normally distributed \cite{QuaWp}. The reasons why assuming a log normal distribution may be appropriate for dynamic pricing of assets is beyond the scope of this report.
-Secondly, for small rates of return, the logarithmic return is approximately equal to the rate of return \cite{QuaWp}. To see this, consider the approximation result from \cref{eq:logarithApproximation} combined with \cref{eq:rateOfReturn,eq:logarithmicReturn}.
+Firstly, if we assume asset prices have a \emphT{log normal} distribution, then the logarithmic returns are conveniently normally distributed \cite{QuaWp}.
+The reasons why assuming a log normal distribution may be appropriate for dynamic pricing of assets is beyond the scope of this report.
+Secondly, for small rates of return, the logarithmic return is approximately equal to the rate of return \cite{QuaWp}.
+To see this, consider the approximation result from \cref{eq:logarithApproximation} combined with \cref{eq:rateOfReturn,eq:logarithmicReturn}.
 \begin{equation}
 	\label{eq:logarithApproximation}
 	\natlog{1 + x} \approx x \text{, for } x \ll 1
@@ -484,7 +497,8 @@ Secondly, for small rates of return, the logarithmic return is approximately equ
 Thirdly, we benefit from numerical stability since the addition of small numbers is numerically stable, whilst multiplying small numbers is subject to \emphT{arithmetic underflow} \cite{QuaWp}.
 
 However, there are disadvantages to using the logarithmic return, including the issue that the derivation is only correct if the interest rate is constant \cite{QuaWp,Onn02}.
-Nevertheless, the logarithmic return is widely used in the literature (e.g. see \cite{Onn02,OCK+02,OKK03,FPM+10,FPW+11,MG13}), and hence we shall use it for the rest of the report, and the reader should note we shall use the terms `return' and `logarithmic return' interchangeably from now on. An example plot of price and logarithmic return for a stock is shown in \cref{fig:priceAndLogReturn}.
+Nevertheless, the logarithmic return is widely used in the literature (e.g. see \cite{Onn02,OCK+02,OKK03,FPM+10,FPW+11,MG13}), and hence we shall use it for the rest of the report, and the reader should note we shall use the terms `return' and `logarithmic return' interchangeably from now on.
+An example plot of price and logarithmic return for a stock is shown in \cref{fig:priceAndLogReturn}.
 
 %--- FIGURE
 \begin{figure}
@@ -502,7 +516,7 @@ Nevertheless, the logarithmic return is widely used in the literature (e.g. see 
 
 The term \emphT{portfolio} relates to investing in a combination of different assets.
 We can characterise a portfolio by \emphT{portfolio weights}, where the weight of an asset within the portfolio is given by the ratio of the value of the position in the asset divided by the total value of the portfolio.
-We are particularly interested in the return of the portfolio, which is related to the mean of the returns of the individual assets that make up the portfolio and the risk of the portfolio, which is related to the variance of the returns of the individual assets.
+We are particularly interested in the return of the portfolio, which is related to the mean of the returns of the individual assets that make up the portfolio, and the risk of the portfolio, which is related to the variance of the returns of the individual assets.
 This is the source of the term mean-variance portfolio theory.
 We realise an intuitive and inherit trade-off between risk and return; if the investor wishes to realise a larger return, he must bear a higher risk.
 A more detailed explanation of this relationship is given in \cite{Lue98,Kuh12e}.
@@ -554,7 +568,7 @@ Note that the standard deviation of the returns of the portfolio (or any asset) 
 This formulation serves a key question; given estimates of each assets returns, variances and covariances (which one can obtain from historical data), how does one pick a selection of these assets, for any given time period, in order to form the best portfolio for the investor?
 We see in \cref{eq:portfolioVariance}, that by simply investing in assets which have a lower correlation with one another (i.e. a lower value of $\rho_{ij}$), we can reduce the variance, and thus, the risk of the portfolio.
 This process is known as \emphT{diversification} \cite{Lue98,BKM13}.
-Therefore, for any given time period (and possibly dynamically), finding groups of assets, where the returns have higher correlation within groups and lower correlation between groups would help by presenting `baskets' of assets that the investor can pick from knowing selecting from a range of baskets would be beneficial (of course which assets to select from inside the basket relates to the risk-return trade off).
+Therefore, for any given time period, finding groups of assets, where the returns have higher correlation within groups and lower correlation between groups would help by presenting `baskets' of assets that the investor can pick from knowing selecting from a range of baskets would be beneficial (of course which assets to select from inside the basket relates to the particular investor's preferences).
 This serves as the main motivation for the application of community detection algorithms within financial networks.
 
 %-------------------------------------------
@@ -568,7 +582,7 @@ From \cref{subsec:portfolioTheoryBackground}, we understand one way to help mini
 In order to study all possible correlations between all available assets, we construct a weighted, undirected and fully-connected network of assets, which we call the \emphT{financial network}. The following model has been considered by \cite{PGR+99,OCK+02,OKK03,FPM+10,MG13}.
 
 Let us consider the situation where the investor is faced with $n$ financial assets, and has access to historical price data for all these assets for $T$ time steps.
-The time steps may be trading days, or weeks, for instance, and the appropriate choice will depend on the type of assets available.
+The time steps may be trading days, or weeks, for instance, and the appropriate choice will depend on the type of assets considered.
 
 We proceed to construct a graph with $n$ nodes, where each nodes represents an asset, and assign to the $i$-th node a single time series, denoted by $X_{i}$, which is defined as
 \begin{equation}
@@ -596,7 +610,7 @@ where the $\mean{\cdots}$ notation denotes a time average, so that
 	\label{eq:temporalMeanProduct}
 	\mean{X_{i}X_{j}} = \frac{1}{T} \sum_{t=1}^{T} x_{i}(t)x_{j}(t)
 \end{equation}
-We also assume each time series $X_{i}$ has been standardised (before we assign to node $i$) by using
+We also assume each time series $X_{i}$ has been standardised (before we it assign to node $i$) by using
 \begin{equation}
 	\label{eq:standardiseTimeSeries}
 	X_{i} \coloneqq \frac{X_{i} - \mean{X_{i}}}{\sqrt{\mean{X_{i}^{2}} - \mean{X_{i}}^{2}}}
@@ -614,7 +628,7 @@ Note that the cross correlation values is just a sample estimate for the correla
 
 We can then characterise the financial network by the correlation matrix, which we also refer to as the network's weighted adjacency matrix.
 
-In \cref{fig:exampleCrossCorrelationMatrix}, we have plotted a correlation matrix using data of 80 stocks listed on the FTSE 100 (see \cref{app:listFTSE100Stocks} for a list) between 2011 and 2013. Notice that the main diagonal has all elements equal to one, as you would expect, and that there are very few negative elements (i.e. very few assets that are anti-correlated with one another).
+In \cref{fig:exampleCrossCorrelationMatrix}, we have plotted a correlation matrix using data of 80 stocks listed on the FTSE 100 (see \cref{app:listFTSE100Stocks} for a list) between 2011 and 2013. Notice that the main diagonal has all elements equal to one, as you would expect, and that there are very few negative elements (i.e. there are very few assets which are anti-correlated with one another).
 
 %--- FIGURE
 \begin{figure}
@@ -624,7 +638,7 @@ In \cref{fig:exampleCrossCorrelationMatrix}, we have plotted a correlation matri
 \end{figure}
 
 The problem statement can now summarised.
-Given a financial network, how can we group nodes into communities where correlations are higher within the communities and lower between the communities?
+Given a financial network, how can we group nodes into communities where aggregate correlations are higher within the communities and lower between the communities?
 Contrary to graphs with community structure described in \cref{sec:communityStructureBackground}, the weights of the edges rather than the topology of the network are crucial in determining community memberships.
 In other words, we focus solely on the weighted adjacency matrix of the graph.
-Also the reader should note that the correlations between asset returns will vary over time, and thus representing this relationship dynamically (rather than over a one long period of time) is very important since investors may wish to change their positions in order to react to the dynamics of market conditions.
+Also the reader should note that the correlations between asset returns will vary over time, and thus representing this relationship dynamically (rather than over one long period of time) is very important since investors may wish to change their positions in order to react to the dynamics of market conditions.
