@@ -1,0 +1,407 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Beamer Presentation
+% LaTeX Template
+% Version 1.0 (10/11/12)
+%
+% This template has been downloaded from:
+% http://www.LaTeXTemplates.com
+%
+% License:
+% CC BY-NC-SA 3.0 (http://creativecommons.org/licenses/by-nc-sa/3.0/)
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%----------------------------------------------------------------------------------------
+%	PACKAGES AND THEMES
+%----------------------------------------------------------------------------------------
+
+% uncomment to prevent displaying images/comment to display images
+%\PassOptionsToPackage{draft}{graphicx}
+
+\documentclass{beamer}
+
+\mode<presentation> {
+
+% The Beamer class comes with a number of default slide themes
+% which change the colors and layouts of slides. Below this is a list
+% of all the themes, uncomment each in turn to see what they look like.
+
+%\usetheme{default}
+%\usetheme{AnnArbor}
+%\usetheme{Antibes}
+%\usetheme{Bergen}
+%\usetheme{Berkeley}
+%\usetheme{Berlin}
+%\usetheme{Boadilla}
+%\usetheme{CambridgeUS}
+%\usetheme{Copenhagen}
+%\usetheme{Darmstadt}
+%\usetheme{Dresden}
+%\usetheme{Frankfurt}
+%\usetheme{Goettingen}
+%\usetheme{Hannover}
+%\usetheme{Ilmenau}
+%\usetheme{JuanLesPins}
+%\usetheme{Luebeck}
+\usetheme{Madrid}
+%\usetheme{Malmoe}
+%\usetheme{Marburg}
+%\usetheme{Montpellier}
+%\usetheme{PaloAlto}
+%\usetheme{Pittsburgh}
+%\usetheme{Rochester}
+%\usetheme{Singapore}
+%\usetheme{Szeged}
+%\usetheme{Warsaw}
+
+% As well as themes, the Beamer class has a number of color themes
+% for any slide theme. Uncomment each of these in turn to see how it
+% changes the colors of your current slide theme.
+
+%\usecolortheme{albatross}
+%\usecolortheme{beaver}
+%\usecolortheme{beetle}
+%\usecolortheme{crane}
+%\usecolortheme{dolphin}
+%\usecolortheme{dove}
+%\usecolortheme{fly}
+%\usecolortheme{lily}
+%\usecolortheme{orchid}
+%\usecolortheme{rose}
+%\usecolortheme{seagull}
+%\usecolortheme{seahorse}
+%\usecolortheme{whale}
+%\usecolortheme{wolverine}
+\usecolortheme{sidebartab}
+
+\setbeamertemplate{footline} % To remove the footer line in all slides uncomment this line
+%\setbeamertemplate{footline}[page number] % To replace the footer line in all slides with a simple slide count uncomment this line
+
+%\setbeamertemplate{navigation symbols}{} % To remove the navigation symbols from the bottom of all slides uncomment this line
+}
+
+\usepackage{graphicx} % Allows including images
+
+\usepackage{booktabs} % Allows the use of \toprule, \midrule and \bottomrule in tables
+
+%----------------------------------------------------------------------------------------
+%	DEFINITIONS OF NEW SETTINGS
+%----------------------------------------------------------------------------------------
+
+\usepackage{subcaption}
+\usepackage{tabularx}
+\usepackage[nodayofweek]{datetime}
+
+\graphicspath{ {./images/} }
+
+\setbeamertemplate{itemize items}[triangle]
+\setbeamertemplate{enumerate items}[default]
+
+\newenvironment{variableblock}[3]{%
+  \setbeamercolor{block title}{#2}
+  \setbeamercolor{block body}{#3}
+  \begin{block}{#1}}{\end{block}}
+
+\usepackage{amssymb}% http://ctan.org/pkg/amssymb
+\usepackage{pifont}% http://ctan.org/pkg/pifont
+\newcommand{\cmark}{\ding{51}}%
+\newcommand{\xmark}{\ding{55}}%
+
+%----------------------------------------------------------------------------------------
+%	TITLE PAGE
+%----------------------------------------------------------------------------------------
+
+\title[Community Detection in Networks]{Community Detection in Networks} % The short title appears at the bottom of every slide, the full title is only on the title page
+
+\author{Hesam Ipakchi} % Your name
+\institute[Imperial College London] % Your institution as it will appear on the bottom of every slide, may be shorthand to save space
+{
+Imperial College London \\ % Your institution for the title page
+\medskip
+\textit{hesam.ipakchi10@imperial.ac.uk} % Your email address
+}
+\newdate{presentationDate}{24}{06}{2014}
+\date{\displaydate{presentationDate}} % Date, can be changed to a custom date
+
+\begin{document}
+
+\begin{frame}
+\titlepage % Print the title page as the first slide
+\end{frame}
+
+%----------------------------------------------------------------------------------------
+%	PRESENTATION SLIDES
+%----------------------------------------------------------------------------------------
+
+\begin{frame}
+	\frametitle{Outline}
+	\begin{itemize}
+		\vfill\item Community structure in networks
+		\begin{itemize}
+			\item Intuitive Definition
+			\item Example illustrations
+		\end{itemize}
+		\vfill\item Community detection algorithms
+		\begin{itemize}
+			\item Algorithms studied
+			\item Synthetic data testing set-up
+			\item Comparison using results from testing
+		\end{itemize}
+		\vfill\item Application on financial networks
+		\begin{itemize}
+			\item Motivation
+			\item Application on a static network
+			\item Extension to dynamic (time-evolving) networks
+		\end{itemize}
+	\end{itemize}
+\end{frame}
+
+%----------------------------------------------------------------------------------------
+
+\begin{frame}
+	\frametitle{Community structure in networks}
+	\begin{itemize}
+		\vfill\item Networks are represented by graphs, consisting of nodes and edges
+		\vfill\item \textbf{\textcolor{blue}{Communities}} are groups of nodes with denser connections within groups and sparser connections between groups
+		\vfill\item \textbf{\textcolor{blue}{Community detection}} algorithms involve partitioning the network into communities
+		\vfill\item Many real-world applications including social networks, biological networks, financial networks...
+	\end{itemize}
+\end{frame}
+
+%----------------------------------------------------------------------------------------
+
+\begin{frame}
+	\frametitle{Example illustrations}
+	\begin{columns}[c]
+		\column{.5\textwidth} % Left column and width
+		\begin{figure}
+			\centering
+			\includegraphics[width=1.0\linewidth]{ppmExampleGraph.png}
+		\end{figure}
+		\column{.5\textwidth} % Right column and width
+		\begin{figure}
+			\centering
+			\includegraphics[width=1.0\linewidth]{hcmExampleGraph.png}
+		\end{figure}
+	\end{columns}
+\end{frame}
+
+%----------------------------------------------------------------------------------------
+
+\begin{frame}
+	\frametitle{Community detection algorithms}
+	Study a range of algorithms based on different techniques:
+	\begin{itemize}
+		\vfill\item Spectral clustering
+		\vfill\item Modularity Optimisation
+		\begin{itemize}
+			\item Greedy algorithms
+			\item Spectral algorithms
+			\item Simulated annealing
+		\end{itemize}
+		\vfill\item Belief propagation
+		\vfill\item Non-linear power iteration
+	\end{itemize}
+	\begin{variableblock}{}{}{bg=white,fg=red}
+		\centering
+		\textbf{NOT} considering massive data sets or overlapping communities!
+	\end{variableblock}
+\end{frame}
+
+%----------------------------------------------------------------------------------------
+
+\begin{frame}
+	\frametitle{Statistical block models}
+	Compare algorithms in a synthetic data testing framework
+	\begin{itemize}
+		\vfill\item Use statistical block models to generate random graphs which exhibit community structure
+		\vfill\item Tweaking model parameters captures varying network properties (e.g. size, sparsity, number of communities, edge-occurrence probabilities)
+		\vfill\item Provides theoretical setting to test and compare algorithms
+		\vfill\item Two popular models: planted partition model, `hidden clique model'
+	\end{itemize}
+\end{frame}
+
+%----------------------------------------------------------------------------------------
+
+\begin{frame}
+	\frametitle{Synthetic data testing set-up}
+	For each community detection algorithm:
+	\begin{itemize}
+		\vfill\item Decide upon an appropriate generative model for this specific algorithm
+		\vfill\item Construct synthetic data set by generating various networks with different underlying parameters of the model
+		\vfill\item Apply the algorithm to each network in the data set and measure accuracy
+	\end{itemize}
+\end{frame}
+
+%----------------------------------------------------------------------------------------
+
+\begin{frame}
+	\frametitle{Comparison of algorithms}
+	\begin{table}
+		\begin{tabular}{l l l}
+			\toprule
+			\textbf{Algorithm} & \textbf{Advantages} \textcolor{green}{\cmark} & \textbf{Disadvantages} \textcolor{red}{\xmark}\\
+			\midrule
+			Spectral Clustering & Simple & Accuracy $\downarrow$ as sparsity $\uparrow$ \\
+			& & Quite slow \\
+			& & Need \# communities \\
+			& & as an input \\
+			\midrule
+			Greedy method & Simple & Accuracy $\downarrow$ as sparsity $\uparrow$ \\
+			& Fast & \\
+			& Works on larger graphs & \\
+			\midrule
+			Belief propagation & Very good accuracy & \\
+			& Very fast (for sparse) & \\
+			& Works on larger graphs & \\
+			\bottomrule
+		\end{tabular}
+	\end{table}
+	\begin{variableblock}{}{}{bg=white,fg=black}
+		\centering
+		\textcolor{red}{\textbf{Problem:}} generative models are not well representative of real-world networks!
+	\end{variableblock}
+\end{frame}
+
+%----------------------------------------------------------------------------------------
+
+\begin{frame}
+	\frametitle{Financial Networks: Motivation}
+	Consider portfolio selection problem for investor: how to select assets to form the `best' portfolio that aligns with risk and return preferences?
+	\begin{itemize}
+		\vfill\item Famous technique: \textcolor{blue}{\textbf{mean-variance portfolio theory}}
+		\vfill\item \textcolor{blue}{\textbf{Idea:}} construct portfolio which generates the mean return desired but with lowest variance of all possible selections.
+		\vfill\item Ideal case: make portfolio with lowest possible inter-asset correlations
+		\vfill\item Use sample estimates of mean, variance and cross-correlation of asset returns from historical data
+		\vfill\item Also beneficial for dynamic rebalancing of portfolio for risk management
+	\end{itemize}
+\end{frame}
+
+%----------------------------------------------------------------------------------------
+
+\begin{frame}
+	\frametitle{Financial Networks: Construction}
+	One possible approach: construct a undirected, fully connected and weighted graph!
+	\begin{itemize}
+		\vfill\item Each node represents an asset, with the (standardised) time series of returns for the asset associated with the node
+		\vfill\item Weight of an edge connecting two nodes is the cross-correlation between the two time series' associated with those nodes (based on time averages)
+		\vfill\item Weighted adjacency matrix of the graph is the empirical correlation matrix of the asset returns!
+	\end{itemize}
+	\textcolor{blue}{\textbf{Idea:}} communities in financial networks represent groups of assets whose aggregate average correlation is higher within groups and lower between groups \\
+	$\therefore$ provide investors with (small number of) `baskets' of assets
+\end{frame}
+
+%----------------------------------------------------------------------------------------
+
+\begin{frame}
+	\frametitle{Our data set}
+	\begin{itemize}
+		\vfill\item Collected daily price data for 80 stocks traded on FTSE 100 exchange between 01/01/2004 and 11/11/2013
+	\end{itemize}
+	\begin{figure}
+		\centering
+		\begin{subfigure}{.5\textwidth}
+			\centering
+			\includegraphics[width=0.8\linewidth]{correlationMatrix_FTSE100_n_80_T_2501.png}
+		\end{subfigure}%
+		\begin{subfigure}{.5\textwidth}
+			\centering
+			\includegraphics[width=0.8\linewidth]{priceAndLogReturnTimeSeries.png}
+		\end{subfigure}
+	\end{figure}
+\end{frame}
+
+%----------------------------------------------------------------------------------------
+
+\begin{frame}
+	\frametitle{Community detection approach}
+	Underlying technique: \textcolor{blue}{\textbf{modularity optimisation}}
+	\begin{itemize}
+		\vfill\item First consider two `naive' modularity maximisation methods: greedy algorithm and spectral relaxation
+		\vfill\item Then consider two `modified' modularity methods, tailored for this specific application: spectral clustering and Louvain method
+		\vfill\item \textcolor{blue}{\textbf{Result:}} able to detect finer-tuned and more communities using tailored approach $\implies$ higher quality partitions and notable improvement for adapted modularity techniques
+	\end{itemize}
+	\begin{variableblock}{}{}{bg=white,fg=black}
+		\centering
+		\textcolor{red}{\textbf{Problem:}} only considered one static network so far! Require \textcolor{blue}{\textbf{dynamic}} community detection to capture time-evolving correlation structure
+	\end{variableblock}
+\end{frame}
+
+%----------------------------------------------------------------------------------------
+
+\begin{frame}
+	\frametitle{Extension to dynamic networks}
+	Need to alter our approach:
+	\begin{enumerate}
+		\vfill\item Construct time-evolving networks from data set
+		\begin{itemize}
+			\vfill\item Use \textcolor{blue}{\textbf{time-windowing}} procedure to generate set of `network slices' and create one correlation matrix per time window
+			\vfill\item For our data set: window size of 100, overlap length of 10 $\implies$ 240 correlation matrices
+		\end{itemize}
+		\vfill\item Apply dynamic community detection algorithm
+		\begin{itemize}
+			\vfill\item Consider the \textcolor{blue}{\textbf{generalised Louvain method}} previously applied to empirical neuroscience data in the literature
+			\vfill\item Similar procedure to Louvain method but designed to optimise a generalised notion of modularity for dynamic networks
+			\vfill\item Use modified modularity matrices as input for each network slice to tailor the method for our application
+		\end{itemize}
+	\end{enumerate}
+\end{frame}
+
+%----------------------------------------------------------------------------------------
+
+\begin{frame}
+	\frametitle{Evaluation}
+	\begin{columns}[c]
+		\column{.5\textwidth} % Left column and width
+		\begin{itemize}
+			\vfill\item Able to understand \textcolor{blue}{\textbf{temporal evolution of communities}} with smooth transitions in community memberships obtained
+			\vfill\item Similar procedure is applicable for \textcolor{blue}{\textbf{different asset classes}} if data sets are collected
+		\end{itemize}
+		\column{.5\textwidth} % Right column and width
+		\begin{figure}
+			\centering
+			\includegraphics[width=1.0\linewidth]{testMultiSliceLouvainMethodCommunities_omega_1.png}
+		\end{figure}
+	\end{columns}
+	\begin{variableblock}{}{}{bg=white,fg=black}
+		\centering
+		\textcolor{red}{\textbf{But...}} the generalised Louvain method is slow and performance depends on appropriate parameter choice
+	\end{variableblock}
+\end{frame}
+
+%----------------------------------------------------------------------------------------
+
+\begin{frame}
+	\frametitle{Future work}
+	Some directions for research in this area...
+	\begin{itemize}
+		\vfill\item Lack of a consensus on precise definition of a `community' $\implies$ \textcolor{blue}{\textbf{no single benchmark}} to compare algorithms exists
+		\vfill\item Little focus on \textcolor{blue}{\textbf{overlapping communities}} which could lead to better models for real-world networks
+		\vfill\item Increase in availability of time-stamped network data sets enables the study and application of \textcolor{blue}{\textbf{dynamic community detection}} algorithms
+		\vfill\item Significant improvements in \textcolor{blue}{\textbf{computational complexity}} enables partitioning of networks with up to millions of nodes, but algorithms are approximate methods and not very reliable
+	\end{itemize}
+\end{frame}
+
+%----------------------------------------------------------------------------------------
+
+\begin{frame}
+	\frametitle{Summary}
+	\begin{itemize}
+		\vfill\item Introduced concept of community structure in networks and motivated use for community detection algorithms
+		\vfill\item Mentioned several community detection algorithms and described the synthetic-data testing framework used to compare them
+		\vfill\item Considered a real-world application of financial networks
+		\vfill\item Identified time-evolving communities consisting of FTSE 100 stocks over the last decade
+		\vfill\item Several interesting and important research directions exist
+	\end{itemize}
+\end{frame}
+
+%----------------------------------------------------------------------------------------
+
+\begin{frame}
+	\Huge{\centerline{\textcolor{red}{Thanks for listening!}}}
+	\Huge{\centerline{Any Questions?}}
+\end{frame}
+
+%----------------------------------------------------------------------------------------
+
+\end{document}

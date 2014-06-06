@@ -6,14 +6,14 @@
 
 %----------------------------------------------------------------------------------------
 
-Within this report we have studied the topic of community detection in networks, with two principal contributions outlined, involving the exploration of algorithms and their application to both controlled environments (realised by synthetically-generated data) and empirical data (representing real-world networks).
+Within this report we have studied the topic of community detection in networks, with two principal contributions outlined, involving the exploration of algorithms and their application to both controlled environments (realised by synthetically-generated data) and empirical data (representing real-world financial networks).
 
 Firstly, we analysed a range of community detection algorithms, with different techniques underpinning them, that are present in the literature, and tested them on synthetic data.
 By undertaking this approach, through the generation of networks with community structure using well-known statistical block models, we have studied the performance of these algorithms on networks with varying properties.
 This enabled us to advocate the use of certain algorithms depending on the properties of the underlying network we wish to detect communities from.
 Particular highlights include the belief propagation algorithm, which performed better than all the other methods in terms of accuracy in the sparse regime and is more extensible to larger-scale sparse networks due to lower computational complexity.
 We also noted that this BP algorithm was specifically designed to detect communities created from the statistical generative model, which is not well representative of many real-world networks.
-On the other hand, the modularity optimisation methods studied, and specifically the greedy algorithms, have performed well on a range of real-world networks but with lower accuracy than the BP algorithm in sparse synthetically-generated networks.
+On the other hand, the modularity optimisation methods studied, and specifically the greedy algorithms, have performed well on a range of real-world networks.
 
 Our second task involved the application of community detection algorithms to real-world, time-evolving financial networks, where we partition the network to uncover isolated groups of assets that are, on aggregate, more highly correlated within groups than between groups.
 We motivated this problem by discussing its practicality in mean-variance portfolio theory, where investors could start with a mesoscopic-level grouping of assets for selecting their portfolios.
