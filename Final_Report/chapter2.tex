@@ -6,7 +6,7 @@
 
 %----------------------------------------------------------------------------------------
 
-In this chapter we will describe all the technical background required to understand and detail the different settings we investigate.
+In this chapter we will describe all the technical background required to understand, in detail, the different settings we investigate.
 Initially, we will highlight some basic results in graph theory.
 Then, we will outline the problem of community detection and present statistical models used to generate random graphs with community structure to be used as a testing playground for algorithms.
 Following this, we will discuss basic concepts within finance required to understand the behaviour of financial assets that will provide the motivation for applying community detection algorithms to financial networks.
@@ -21,7 +21,7 @@ Following this, we will discuss basic concepts within finance required to unders
 We assume the reader is familiar with some basic concepts in linear algebra such as matrix multiplication, eigenvectors and eigenvalues of matrices. Rather, we will cover some basic tools within spectral graph theory using definitions from \cite{For10,New06a, Spi12, Spi07}. Spectral graph theory is the study of graphs through the eigenvalues and eigenvectors of matrices associated with the graphs \cite{Spi12}. We begin by defining some basic notions about graphs.
 \begin{definition}
 	\label{def:graph}
-	A \emphT{graph} $\graphvar{G}$ is a pair of sets (V,E), where V is a set of \emphT{vertices} or \emphT{nodes} and $E \subset V^{2}$, the set of unordered pairs of elements of V. The elements of E are called \emphT{edges} or \emphT{links}.
+	A \emphT{graph} $\graphvar{G}$ is a pair of sets $(V,E)$, where $V$ is a set of \emphT{vertices} or \emphT{nodes} and $E \subset V^{2}$, the set of unordered pairs of elements of $V$. The elements of $E$ are called \emphT{edges} or \emphT{links}.
 \end{definition}
 \begin{definition}
 	\label{def:undirectedGraph}

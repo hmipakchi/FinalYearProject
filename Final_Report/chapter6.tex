@@ -177,7 +177,7 @@ Multislice networks are essentially combinations of networks (slices) coupled th
 This is a general setting that includes time-evolving networks and is thus suitable for our application.
 The idea considered by \cite{MRM+10} is to derive a generalisation of community detection to multislice networks by formulating an appropriate null model derived from Laplacian dynamics, a concept introduced by Lambiotte et al. \cite{LDB08}.
 We shall provide a summary of the derivations available from \cite{LDB08,Lam10,MRM+10} that highlights the approach.
-Then we will discuss one algorithm to optimise generalised modularity in time-dependent networks known as the \emphT{generalised Louvain method}, described also in \cite{MRM+10,BPW+13}.
+Then we will discuss one algorithm to optimise generalised modularity in time-dependent networks known as the \emphT{generalised Louvain method}, described also in \cite{MRM+10,MFF+11,BPW+13}.
 
 %-----------------------------------------------------
 %   Laplacian Dynamics and Stability Sub Section
@@ -205,7 +205,7 @@ Therefore,
 	\label{eq:densityRandomWalker}
 	p_{i}(t+1) = \sum_{j} \frac{A_{ij}}{d_{j}} p_{j}(t)
 \end{equation}
-where $p_{i}(t)$ represents the density of a random walker on node $i$ at time $t$, $A_{ij}$ is the $(i,j)$-th element of the network's adjacency matrix and $d_{j} = \sum_{i} A_{ij}$ is the strength of node $i$.
+where $p_{i}(t)$ represents the density of a random walker on node $i$ at time $t$, $A_{ij}$ is the $(i,j)$-th element of the network's adjacency matrix and $d_{j} = \sum_{i} A_{ij}$ is the strength of node $j$.
 In order to find the stationary distribution, we solve the following equation
 \begin{equation}
 	\label{eq:solveDensityRandomWalkerStationaryDistribution}
@@ -309,7 +309,7 @@ Therefore, only the variable $\omega$ is required to adjust the couplings betwee
 
 We have seen the derivation for the generalised modularity function which we can use to partition dynamic networks, such as time-evolving financial networks.
 However, as we have seen with standard modularity optimisation, it is NP-hard to find the global optimum partition, thus we seek approximation methods which give near-optimal solutions.
-One such algorithm is the generalised Louvain method, developed by Mucha et al. \cite{MRM+10}.
+One such algorithm is the generalised Louvain method described in \cite{MRM+10,MFF+11}.
 As the name suggests, it uses a procedure similar to the Louvain method we have discussed throughout the report, but works for dynamic networks also.
 This algorithm has been implemented by Mucha et al. in MATLAB, and the code is available from \cite{GenLou}.
 We remark that the decision of the parameters $\gamma_{s}$ and $\omega$ are important and do alter the communities generated, and intelligent choice of such parameters depending on the specific application is required to provide `good' partitions.
