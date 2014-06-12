@@ -189,14 +189,14 @@ Then we will discuss one algorithm to optimise generalised modularity in time-de
 We first consider a quality function, called \emphT{stability}, developed by \cite{LDB08}.
 One idea motivating stability is that the flow of probability on a network should be trapped in a community for a long period of time \cite{Lam10}.
 Let $\graphvar{M}(t)$ be an ergodic Markov process on the network.
-Due to the ergodicity property, any initial configuration will eventually reach the same steady state distribution.
-Suppose the process $\graphvar{M}(t)$ is the motion of a random walker on the network and consider a partition of the network given by $\graphvar{P} = \{ G_{1},\dots,G_{k} \}$, where $G_{i}$ represents the $i$-th community.
+Due to the ergodicity property, any initial configuration will eventually reach the same steady state distribution \cite{LDB08}.
+Suppose the process $\graphvar{M}(t)$ is the motion of a random walker on the network and consider a partition of the network given by $\graphvar{P} = \{ G_{1},\dots,G_{k} \}$, where $G_{i}$ represents the $i$-th community \cite{LDB08}.
 We define the stability, denoted by $R_{\graphvar{M}(t)}$, by
 \begin{equation}
 	\label{eq:stability}
 	R_{\graphvar{M}(t)} = \sum_{C \in \graphvar{P}} P(C,t) - P(C,\infty)
 \end{equation}
-where $P(C,t)$ is the probability of the walker being within the community $C$ both initially and at the time $t$.
+where $P(C,t)$ is the probability of the walker being within the community $C$ both initially and at the time $t$ \cite{LDB08}.
 This definition arises from the autocovariance function of a Markov process on the network, and, intuitively, stability measures the quality of a partition based on how persistent it is \cite{DYB08}.
 
 Lambiotte et al. \cite{LDB08} consider normalised Laplacian dynamics to model an unbiased discrete-time random walker on the network, where the probability of moving from one node to another is proportional to the weight of the edge which connects them.
@@ -205,13 +205,13 @@ Therefore,
 	\label{eq:densityRandomWalker}
 	p_{i}(t+1) = \sum_{j} \frac{A_{ij}}{d_{j}} p_{j}(t)
 \end{equation}
-where $p_{i}(t)$ represents the density of a random walker on node $i$ at time $t$, $A_{ij}$ is the $(i,j)$-th element of the network's adjacency matrix and $d_{j} = \sum_{i} A_{ij}$ is the strength of node $j$.
+where $p_{i}(t)$ represents the density of a random walker on node $i$ at time $t$, $A_{ij}$ is the $(i,j)$-th element of the network's adjacency matrix and $d_{j} = \sum_{i} A_{ij}$ is the strength of node $j$ \cite{LDB08}.
 In order to find the stationary distribution, we solve the following equation
 \begin{equation}
 	\label{eq:solveDensityRandomWalkerStationaryDistribution}
 	p_{i}^{*} = \sum_{j} \frac{A_{ij}}{d_{j}} p_{j}^{*}
 \end{equation}
-which results in the steady state distribution given by $p_{i}^{*} = d_{i}/2m$, where $2m = \sum_{i} d_{i} = \sum_{ij} A_{ij}$.
+which results in the steady state distribution given by $p_{i}^{*} = d_{i}/2m$, where $2m = \sum_{i} d_{i} = \sum_{ij} A_{ij}$ \cite{LDB08}.
 Notice that this is the same null model considered for our derivation of the modularity function.
 Proceeding to find the stability at time $t=1$,
 \begin{equation}
@@ -220,7 +220,7 @@ Proceeding to find the stability at time $t=1$,
 \end{equation}
 which is equivalent to our formulation of modularity, $Q$, considered for undirected networks.
 
-In order to encompass time as a parameter within the formulation, we consider a continuous-time process associated with the random walker.
+In order to encompass time as a parameter within the formulation, we consider a continuous-time process associated with the random walker \cite{LDB08}.
 Consider independent and identical homogeneous Poisson processes defined on each node of the graph \cite{LDB08}, so that the walkers moving at a constant rate from each node, then
 \begin{equation}
 	\label{eq:densityRandomWalkerContinuousTime}
@@ -263,23 +263,23 @@ An example for the most general case is illustrated in \cref{fig:exampleMultisli
 	\caption[Illustration of an example multislice network with three slices.]{\label{fig:exampleMultisliceNetwork} Illustration of an example multislice network with three slices. We can differentiate between the \emphT{inter-slice} connections represented by $C_{jrs}$ and the \emphT{intra-slice} connections represented by $A_{ijs}$. The couplings are only between adjacent slices, as would be appropriate for ordered slices. We have obtained this illustration from \cite{OxNet}.}
 \end{figure}
 
-This approach requires a generalisation of the stability function.
-Replace the $p_{i}^{*} p_{j}^{*}$ independent contribution from \cref{eq:stabilityContinuousTimeApproximation} with a conditional independent contribution $\rho_{i \given j} p_{j}^{*}$, where $\rho_{i \given j}$ is the conditional probability at stationarity of jumping from node $j$ to node $i$ along the edge type allowed in the network (in our case, this will be edges between nodes in a given slice or between the same node in different slices).
-By considering the linearisation of the exponential, we can write the stability of a partition as
+This approach requires a generalisation of the stability function \cite{MRM+10}.
+Replace the $p_{i}^{*} p_{j}^{*}$ independent contribution from \cref{eq:stabilityContinuousTimeApproximation} with a conditional independent contribution $\rho_{i \given j} p_{j}^{*}$, where $\rho_{i \given j}$ is the conditional probability at stationarity of jumping from node $j$ to node $i$ along the edge type allowed in the network (in our case, this will be edges between nodes in a given slice or between the same node in different slices) \cite{MRM+10}.
+By considering the linearisation of the exponential \cite{MRM+10}, we can write the stability of a partition as
 \begin{equation}
 	\label{eq:multisliceStability}
 	R(t) = \sum_{ij} \left( tL_{ij} p_{j}^{*} - \rho_{i \given j} p_{j}^{*} \right) \delta(g_{i},g_{j})
 \end{equation}
-We can represent each slice, $s$, of a multislice network by adjacencies $A_{ijs}$ between nodes $i$ and $j$ with the inter-slice couplings, denoted by $C_{jrs}$, representing the connection between node $j$ in slice $r$ to itself in slice $s$.
-Let us define the notation, $d_{js} = \sum_{i} A_{ijs}$ and $c_{js} = \sum_{r} C_{jsr}$, whilst defining the multislice strength of node $j$ in slice $s$ by $\kappa_{js} = k_{js} + c_{js}$.
+We can represent each slice, $s$, of a multislice network by adjacencies $A_{ijs}$ between nodes $i$ and $j$ with the inter-slice couplings, denoted by $C_{jrs}$, representing the connection between node $j$ in slice $r$ to itself in slice $s$ \cite{MRM+10}.
+Let us define the notation, $d_{js} = \sum_{i} A_{ijs}$ and $c_{js} = \sum_{r} C_{jsr}$, whilst defining the multislice strength of node $j$ in slice $s$ by $\kappa_{js} = k_{js} + c_{js}$ \cite{MRM+10}.
 We can now re-write \cref{eq:densityRandomWalkerContinuousTime} to give the continuous-time Laplacian dynamics equation
 \begin{equation}
 	\label{eq:continuousTimeLaplacianDynamics}
 	\timeDiff{p_{is}} = \sum_{jr} \left( A_{ijs} \delta_{sr} +\delta_{ij} C_{jsr} \right) \frac{p_{jr}}{\kappa_{jr}} - p_{is}
 \end{equation}
-The steady state distribution becomes $p_{jr}^{*} = \kappa_{jr}/2\mu$, where $2\mu = \sum_{jr} \kappa_{jr}$.
-Notice that the $\rho_{is \given jr}$ term accounts for two contributions, one from the intra-slice step where $s=r$, and the other from the inter-slice step where $i=j$.
-The intra-slice step contribution is given by $\left( k_{is}/2m_{s} \right) \left( k_{js}/\kappa_{js} \right)$, whilst the inter-slice step contribution is given by $\left( C_{isr}/c_{ir} \right) \left( c_{ir}/\kappa_{ir} \right)$, where $m_{s} = \sum_{i} k_{is}$.
+The steady state distribution becomes $p_{jr}^{*} = \kappa_{jr}/2\mu$, where $2\mu = \sum_{jr} \kappa_{jr}$ \cite{MRM+10}.
+Notice that the $\rho_{is \given jr}$ term accounts for two contributions, one from the intra-slice step where $s=r$, and the other from the inter-slice step where $i=j$ \cite{MRM+10}.
+The intra-slice step contribution is given by $\left( k_{is}/2m_{s} \right) \left( k_{js}/\kappa_{js} \right)$, whilst the inter-slice step contribution is given by $\left( C_{isr}/c_{ir} \right) \left( c_{ir}/\kappa_{ir} \right)$, where $m_{s} = \sum_{i} k_{is}$ \cite{MRM+10}.
 We can now write the stationary distribution as
 \begin{equation}
 	\label{eq:continuousTimeLaplacianDynamicsStationaryDistribution}
@@ -290,13 +290,13 @@ Substituting \cref{eq:continuousTimeLaplacianDynamicsStationaryDistribution} int
 	\label{eq:multisliceModularity}
 	Q = \frac{1}{2\mu} \sum_{ijsr} \left[ \left( A_{ijs} - \gamma \frac{k_{is}k_{js}}{2m_{s}} \right) \delta_{sr} + (1-\gamma) \delta_{ij} C_{jsr} \right] \delta(g_{is},g_{jr})
 \end{equation}
-We can also reweight the conditional probabilities which will allow for more flexible resolution parameters, where we have a different resolution parameter for each slice.
+We can also reweight the conditional probabilities which will allow for more flexible resolution parameters, where we have a different resolution parameter for each slice \cite{MRM+10}.
 This gives our final expression for the multislice generalisation of modularity
 \begin{equation}
 	\label{eq:multisliceModularityReweighted}
 	Q = \frac{1}{2\mu} \sum_{ijsr} \left[ \left( A_{ijs} - \gamma_{s} \frac{k_{is}k_{js}}{2m_{s}} \right) \delta_{sr} + \delta_{ij} C_{jsr} \right] \delta(g_{is},g_{jr})
 \end{equation}
-where the resolution parameters for the inter-slice couplings have been absorbed into the magnitude of the elements of $C_{jsr}$.
+where the resolution parameters for the inter-slice couplings have been absorbed into the magnitude of the elements of $C_{jsr}$ \cite{MRM+10}.
 As in \cite{MRM+10}, we assume, for simplicity, $C_{jsr} \in \{ 0,\omega \}$ indicating the presence ($\omega$) or absence (0) of inter-slice edges.
 Therefore, only the variable $\omega$ is required to adjust the couplings between communities in different network slices \cite{BPW+13}.
 
